@@ -1,4 +1,4 @@
-type RequestParamsType = {
+export type RequestParamsType = {
   endpoint: string;
   method: string;
   body?: Record<string, any>;

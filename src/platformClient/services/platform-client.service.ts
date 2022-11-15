@@ -1,14 +1,13 @@
-import { decode } from 'jsonwebtoken';
 import { ExceptionMappingType } from '../../exception/types/exception-mapping.type';
 import { ErrorCodeEnum } from '../enums/error-code.enum';
 import { HttpException } from '../../exception/exceptions/http.exception';
-import {
-  defaultCreateTokenEndpoint,
-  defaultGraphqlEndpoint,
-  defaultHost,
-  defaultServiceAccountEmail,
-} from '../constants';
+import { defaultGraphqlEndpoint, defaultHost } from '../../constants';
+import { PlatformClientOptionsType } from '../types/platform-client-options.type';
 import { NotificationClientService } from '../../notificationClient/services/notification-client.service';
+import { AuthorisationClientService } from '../../authorisationClient/services/authorisation-client.service';
+import { getSdk, Sdk, SdkFunctionWrapper } from '../../generated/sdk';
+import { GraphQLClient } from 'graphql-request';
+import {GqlRequestParamsType} from "../types/gql-request-params.type";
 
 export class PlatformClientService {
   private readonly graphqlUrl: string;
@@ -16,9 +15,9 @@ export class PlatformClientService {
   private readonly jwtSecret: string;
   private readonly apiKey: string;
   private readonly tenantId: string;
-  private readonly tokenStorage: Record<string, string>;
-  private readonly serviceAccountEmail = defaultServiceAccountEmail;
+  public readonly authorisation: AuthorisationClientService;
   public readonly notifications: NotificationClientService;
+  private readonly gqlSdk: Sdk;
 
   constructor(options: PlatformClientOptionsType) {
     this.jwtSecret = options.jwtSecret;
@@ -31,7 +30,9 @@ export class PlatformClientService {
       this.graphqlUrl = defaultHost + '/v01/server/graphql';
       this.host = defaultHost;
     }
-    this.notifications = new NotificationClientService(this);
+    this.authorisation = new AuthorisationClientService(options);
+    this.gqlSdk = getSdk(new GraphQLClient(this.graphqlUrl), this.sdkWrapper);
+    this.notifications = new NotificationClientService(this.gqlSdk);
   }
 
   private static exceptionMapping: ExceptionMappingType = {
@@ -43,32 +44,8 @@ export class PlatformClientService {
     return e;
   }
 
-  private async createToken(email: string): Promise<string> {
-    const token = await this.request({
-      endpoint: defaultCreateTokenEndpoint,
-      method: 'POST',
-      body: { email, tenantId: this.tenantId, apiKey: this.apiKey },
-    });
-    this.tokenStorage[email] = token;
-    return token;
-  }
-
-  public async getToken(email?: string): Promise<string> {
-    const internalEmail = email ? email : this.serviceAccountEmail;
-    let token = this.tokenStorage[internalEmail];
-    if (token) {
-      const { exp } = decode(token);
-      if (Date.now() >= exp * 1000) {
-        token = await this.createToken(internalEmail);
-      }
-    } else {
-      token = await this.createToken(internalEmail);
-    }
-    return token;
-  }
-
-  public async gqlRequest({ query, variables, headers, resultField }: GqlRequestParamsType): Promise<any> {
-    const token = await this.getToken();
+  private async gqlRequest({ query, variables, headers, resultField }: GqlRequestParamsType): Promise<any> {
+    const token = await this.authorisation.getToken();
     const fetchResult = await fetch(this.graphqlUrl, {
       method: 'POST',
       headers: {
@@ -90,20 +67,11 @@ export class PlatformClientService {
     });
   }
 
-  public async request({ endpoint, body, headers, method }: RequestParamsType): Promise<any> {
-    const token = await this.getToken();
-    const fetchResult = await fetch(this.host + endpoint, {
-      method,
-      headers: {
-        ...headers,
-        'content-type': 'application/json',
-        'roq-platform-authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-
-    return fetchResult.json().then((json) => {
-      return json || null;
-    });
-  }
+  private sdkWrapper: SdkFunctionWrapper = async (action, _operationName, _operationType) => {
+    const token = await this.authorisation.getToken();
+    const headers = {
+      'roq-platform-authorization': `Bearer ${token}`,
+    };
+    return action(headers);
+  };
 }

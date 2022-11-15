@@ -1,19 +1,11 @@
 overwrite: true
 schema: "https://www.main-bvxea6i-ycorogwwlxijw.de-2.platformsh.site/v01/server/graphql"
-documents: "src/modules/*/graphql/index.ts"
+documents: "src/**/graphql.graphql"
 generates:
-  src/generated/types.ts:
+  src/generated/sdk.ts:
     plugins:
       - typescript
-    config:
-      namingConvention:
-        enumValues: "change-case#upperCase"
-      scalars:
-        Date: string
-        JsonObject: Record<string, unknown>
-  sdk.ts:
-    plugins:
-      - typescript
+      - typescript-operations
       - typescript-graphql-request
     config:
       scalars:

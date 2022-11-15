@@ -1,8 +1,11 @@
-import { PlatformClientService } from '../../platformClient/services/platform-client.service';
+import { Sdk } from '../../generated/sdk';
 
 export class NotificationClientService {
-  private client: PlatformClientService;
-  constructor(client: PlatformClientService) {
-    this.client = client;
+  private gqlSdk: Sdk;
+  public createNotification: Sdk['createNotification'];
+
+  constructor(gqlSdk: Sdk) {
+    this.gqlSdk = gqlSdk;
+    this.createNotification = this.gqlSdk.createNotification;
   }
 }
