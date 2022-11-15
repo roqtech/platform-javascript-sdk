@@ -24,13 +24,14 @@ export class AuthorisationClientService {
   }
 
   private async createToken(email: string): Promise<string> {
-    const token = await this.request({
+    const { accessToken } = await this.request({
       endpoint: defaultCreateTokenEndpoint,
       method: 'POST',
       body: { email, tenantId: this.tenantId, apiKey: this.apiKey },
     });
-    this.tokenStorage[email] = token;
-    return token;
+
+    this.tokenStorage[email] = accessToken;
+    return accessToken;
   }
 
   public async getToken(email?: string): Promise<string> {
