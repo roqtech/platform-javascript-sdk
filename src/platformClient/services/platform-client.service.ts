@@ -1,13 +1,9 @@
-import { ExceptionMappingType } from '../../exception/types/exception-mapping.type';
-import { ErrorCodeEnum } from '../enums/error-code.enum';
-import { HttpException } from '../../exception/exceptions/http.exception';
 import { defaultGraphqlEndpoint, defaultHost } from '../../constants';
 import { PlatformClientOptionsType } from '../types/platform-client-options.type';
 import { NotificationClientService } from '../../notificationClient/services/notification-client.service';
 import { AuthorisationClientService } from '../../authorisationClient/services/authorisation-client.service';
 import { getSdk, Sdk, SdkFunctionWrapper } from '../../generated/sdk';
 import { GraphQLClient } from 'graphql-request';
-import {GqlRequestParamsType} from "../types/gql-request-params.type";
 
 export class PlatformClientService {
   private readonly graphqlUrl: string;
@@ -33,38 +29,6 @@ export class PlatformClientService {
     this.authorisation = new AuthorisationClientService(options);
     this.gqlSdk = getSdk(new GraphQLClient(this.graphqlUrl), this.sdkWrapper);
     this.notifications = new NotificationClientService(this.gqlSdk);
-  }
-
-  private static exceptionMapping: ExceptionMappingType = {
-    [ErrorCodeEnum.FORBIDDEN]: HttpException,
-    [ErrorCodeEnum.UNAUTHORIZED_EXCEPTION]: HttpException,
-  };
-
-  static parseException(e: Error): HttpException {
-    return e;
-  }
-
-  private async gqlRequest({ query, variables, headers, resultField }: GqlRequestParamsType): Promise<any> {
-    const token = await this.authorisation.getToken();
-    const fetchResult = await fetch(this.graphqlUrl, {
-      method: 'POST',
-      headers: {
-        ...headers,
-        'content-type': 'application/json',
-        'roq-platform-authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    });
-
-    return fetchResult.json().then((json) => {
-      if (json?.errors?.[0]) {
-        throw PlatformClientService.parseException(json?.errors[0]);
-      }
-      return json?.data?.[resultField] || null;
-    });
   }
 
   private sdkWrapper: SdkFunctionWrapper = async (action, _operationName, _operationType) => {
