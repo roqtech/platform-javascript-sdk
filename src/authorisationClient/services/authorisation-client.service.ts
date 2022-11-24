@@ -1,6 +1,11 @@
 import { decode, JwtPayload } from 'jsonwebtoken';
 import fetch from 'node-fetch';
-import { defaultCreateTokenEndpoint, defaultHost, defaultServiceAccountEmail } from '../../constants';
+import {
+  defaultCreateTokenEndpoint,
+  defaultHost,
+  defaultServiceAccountEmail,
+  defaultUserTokenEndpoint
+} from '../../constants';
 import { PlatformClientOptionsType } from '../../platformClient/types/platform-client-options.type';
 import { RequestParamsType } from '../types/request-params.type';
 
@@ -32,6 +37,15 @@ export class AuthorisationClientService {
 
     this.tokenStorage[email] = accessToken;
     return accessToken;
+  }
+
+  async createUserToken(userReference: string, expiresIn?: string): Promise<string> {
+    const token = await this.request({
+      endpoint: defaultUserTokenEndpoint,
+      method: 'POST',
+      body: { userReference, expiresIn },
+    });
+    return token?.accessToken;
   }
 
   public async getToken(email?: string): Promise<string> {
