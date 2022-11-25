@@ -830,13 +830,13 @@ export type MessageStatusModel = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptUserInvite: UserInviteModel;
+  addUser: UserModel;
   cancelUserInvite: UserInviteModel;
   createFileAssociation: FileAssociationModel;
   createFileUploadUrl: FileModel;
   createNotification: NotificationCreateModel;
   createPermission: PermissionModel;
   createRole: RoleModel;
-  createUser: UserModel;
   createUserGroup: UserGroupModel;
   /** Create Single UserInvite */
   createUserInvite: UserInviteModel;
@@ -900,6 +900,11 @@ export type MutationAcceptUserInviteArgs = {
 };
 
 
+export type MutationAddUserArgs = {
+  user: UserCreateDto;
+};
+
+
 export type MutationCancelUserInviteArgs = {
   id: Scalars['ID'];
 };
@@ -927,11 +932,6 @@ export type MutationCreatePermissionArgs = {
 
 export type MutationCreateRoleArgs = {
   role: RoleCreateDto;
-};
-
-
-export type MutationCreateUserArgs = {
-  user: UserCreateDto;
 };
 
 
@@ -1838,6 +1838,7 @@ export type NotifiedUserFilterArgType = {
   locale?: InputMaybe<StringFilterArgType>;
   optedInAt?: InputMaybe<DateFilterArgType>;
   phone?: InputMaybe<StringFilterArgType>;
+  search?: InputMaybe<Scalars['String']>;
   timezone?: InputMaybe<StringFilterArgType>;
 };
 
@@ -1855,6 +1856,7 @@ export type NotifiedUserModel = {
   timezone?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
+  userReference: Scalars['String'];
 };
 
 export type NumberFilterArgType = {
@@ -2565,6 +2567,7 @@ export type UserCreateDto = {
   optedInAt?: InputMaybe<Scalars['Date']>;
   phone?: InputMaybe<Scalars['String']>;
   timezone?: InputMaybe<Scalars['String']>;
+  userReference: Scalars['String'];
 };
 
 export type UserFilterArgType = {
@@ -2579,6 +2582,7 @@ export type UserFilterArgType = {
   optedInAt?: InputMaybe<DateFilterArgType>;
   phone?: InputMaybe<StringFilterArgType>;
   roleId?: InputMaybe<IdFilterArgType>;
+  search?: InputMaybe<Scalars['String']>;
   timezone?: InputMaybe<StringFilterArgType>;
   userGroupId?: InputMaybe<UserGroupIdFilterArgType>;
   userGroupName?: InputMaybe<UserGroupNameFilterArgType>;
@@ -2947,6 +2951,7 @@ export type UserModel = {
   userGroups?: Maybe<UserGroupPageModel>;
   userInviteId?: Maybe<Scalars['ID']>;
   userProviders: UserProviderPageModel;
+  userReference: Scalars['String'];
   userTokens: UserTokenPageModel;
 };
 
@@ -3245,11 +3250,26 @@ export type CreateNotificationMutationVariables = Exact<{
 
 export type CreateNotificationMutation = { __typename?: 'Mutation', createNotification: { __typename?: 'NotificationCreateModel', webNotifications?: boolean | null } };
 
+export type AddUserMutationVariables = Exact<{
+  user: UserCreateDto;
+}>;
+
+
+export type AddUserMutation = { __typename?: 'Mutation', addUser: { __typename?: 'UserModel', id: string, userReference: string } };
+
 
 export const CreateNotificationDocument = gql`
     mutation createNotification($notificationData: NotificationCreateDto!) {
   createNotification(notification: $notificationData) {
     webNotifications
+  }
+}
+    `;
+export const AddUserDocument = gql`
+    mutation addUser($user: UserCreateDto!) {
+  addUser(user: $user) {
+    id
+    userReference
   }
 }
     `;
@@ -3263,6 +3283,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     createNotification(variables: CreateNotificationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateNotificationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateNotificationMutation>(CreateNotificationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createNotification', 'mutation');
+    },
+    addUser(variables: AddUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddUserMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddUserMutation>(AddUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addUser', 'mutation');
     }
   };
 }

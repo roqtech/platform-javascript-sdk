@@ -1,9 +1,10 @@
 import { defaultGraphqlEndpoint, defaultHost } from '../../constants';
 import { PlatformClientOptionsType } from '../types/platform-client-options.type';
 import { NotificationClientService } from '../../notificationClient/services/notification-client.service';
-import { AuthorisationClientService } from '../../authorisationClient/services/authorisation-client.service';
+import { AuthorisationClientService } from '../../authorisationClient';
 import { getSdk, Sdk, SdkFunctionWrapper } from '../../generated/sdk';
 import { GraphQLClient } from 'graphql-request';
+import { UserClientService } from '../../userClient';
 
 export class PlatformClientService {
   private readonly graphqlUrl: string;
@@ -13,6 +14,7 @@ export class PlatformClientService {
   private readonly tenantId: string;
   public readonly authorisation: AuthorisationClientService;
   public readonly notifications: NotificationClientService;
+  public readonly user: UserClientService;
   private readonly gqlSdk: Sdk;
 
   constructor(options: PlatformClientOptionsType) {
@@ -29,6 +31,7 @@ export class PlatformClientService {
     this.authorisation = new AuthorisationClientService(options);
     this.gqlSdk = getSdk(new GraphQLClient(this.graphqlUrl), this.sdkWrapper);
     this.notifications = new NotificationClientService(this.gqlSdk);
+    this.user = new UserClientService(this.gqlSdk);
   }
 
   private sdkWrapper: SdkFunctionWrapper = async (action, _operationName, _operationType) => {
