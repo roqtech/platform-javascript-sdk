@@ -38,9 +38,9 @@ export class PlatformClientService {
     }
     this.graphqlClient = new GraphQLClient(this.graphqlUrl);
 
-    const initialised = this.initialise(this.authorisation.getToken);
-
     this.authorisation = new AuthorisationClientService(options);
+
+    const initialised = this.initialise(this.authorisation.getToken.bind(this.authorisation));
 
     this.notifications = initialised.notifications;
     this.user = initialised.user;

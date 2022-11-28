@@ -1,5 +1,5 @@
-mutation createNotification($notificationData: NotificationCreateDto!) {
-  createNotification(notification: $notificationData) {
+mutation notify($notification: NotificationCreateDto!){
+  notify(notification: $notification) {
     webNotifications
   }
 }

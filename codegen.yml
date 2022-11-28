@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://www.main-bvxea6i-ycorogwwlxijw.de-2.platformsh.site/v01/server/graphql"
+schema: "https://snapshotp.roq-platform.com/v01/server/graphql"
 documents: "src/**/graphql.graphql"
 generates:
   src/generated/sdk.ts:

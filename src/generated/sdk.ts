@@ -32,6 +32,18 @@ export type BooleanFilterArgType = {
   notEqualTo?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ChannelPreferenceModel = {
+  __typename?: 'ChannelPreferenceModel';
+  channel: Scalars['String'];
+  enabled: Scalars['Boolean'];
+};
+
+export type ChannelPreferencePageModel = {
+  __typename?: 'ChannelPreferencePageModel';
+  data: Array<ChannelPreferenceModel>;
+  totalCount: Scalars['Int'];
+};
+
 export type CheckUserInviteTokenModel = {
   __typename?: 'CheckUserInviteTokenModel';
   email?: Maybe<Scalars['String']>;
@@ -644,34 +656,70 @@ export type IdFilterArgType = {
   valueNotIn?: InputMaybe<Array<Scalars['ID']>>;
 };
 
-export type MailNonUserDto = {
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  locale: Scalars['String'];
+export type IntegrationCredentialsDto = {
+  accountSid?: InputMaybe<Scalars['String']>;
+  apiKey?: InputMaybe<Scalars['String']>;
+  applicationId?: InputMaybe<Scalars['String']>;
+  clientId?: InputMaybe<Scalars['String']>;
+  domain?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['String']>;
+  host?: InputMaybe<Scalars['String']>;
+  messageProfileId?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  port?: InputMaybe<Scalars['String']>;
+  projectName?: InputMaybe<Scalars['String']>;
+  region?: InputMaybe<Scalars['String']>;
+  secretKey?: InputMaybe<Scalars['String']>;
+  secure?: InputMaybe<Scalars['Boolean']>;
+  senderName?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
+  user?: InputMaybe<Scalars['String']>;
 };
 
-export type MailRecipientDto = {
-  allUsers: Scalars['Boolean'];
-  excludedUserIds?: InputMaybe<Array<Scalars['String']>>;
-  nonUsers?: InputMaybe<Array<MailNonUserDto>>;
-  userGroups?: InputMaybe<MailUserGroupDto>;
-  userIds?: InputMaybe<Array<Scalars['String']>>;
+export type IntegrationCredentialsModel = {
+  __typename?: 'IntegrationCredentialsModel';
+  accountSid?: Maybe<Scalars['String']>;
+  apiKey?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['String']>;
+  clientId?: Maybe<Scalars['String']>;
+  domain?: Maybe<Scalars['String']>;
+  from?: Maybe<Scalars['String']>;
+  host?: Maybe<Scalars['String']>;
+  messageProfileId?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  port?: Maybe<Scalars['String']>;
+  projectName?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  secretKey?: Maybe<Scalars['String']>;
+  secure?: Maybe<Scalars['Boolean']>;
+  senderName?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  user?: Maybe<Scalars['String']>;
 };
 
-export type MailSendDto = {
-  directlyInjectedVariables?: InputMaybe<Scalars['String']>;
-  entities: Array<MailSendEntitiesDto>;
-  /** Unique key of mail type */
-  mailType?: InputMaybe<Scalars['String']>;
-  recipients: MailRecipientDto;
-  subject?: InputMaybe<Scalars['String']>;
+export type IntegrationDto = {
+  active: Scalars['Boolean'];
+  channel: Scalars['String'];
+  check?: InputMaybe<Scalars['Boolean']>;
+  credentials: IntegrationCredentialsDto;
+  providerId: Scalars['String'];
 };
 
-export type MailSendEntitiesDto = {
-  alias?: InputMaybe<Scalars['String']>;
-  type: Scalars['String'];
-  uuid: Scalars['String'];
+export type IntegrationModel = {
+  __typename?: 'IntegrationModel';
+  active: Scalars['Boolean'];
+  channel: Scalars['String'];
+  createdAt: Scalars['Date'];
+  credentials: IntegrationCredentialsModel;
+  id: Scalars['ID'];
+  providerId: Scalars['String'];
+  updatedAt: Scalars['Date'];
+};
+
+export type IntegrationPageModel = {
+  __typename?: 'IntegrationPageModel';
+  data: Array<IntegrationModel>;
+  totalCount: Scalars['Int'];
 };
 
 export type MailTypeCreateDto = {
@@ -790,15 +838,10 @@ export type MailTypeUpdateDto = {
   description?: InputMaybe<Scalars['String']>;
 };
 
-export type MailUserGroupDto = {
-  operator: MailUserGroupOperatorEnum;
-  userGroupIds?: InputMaybe<Array<Scalars['String']>>;
+export type MarkMessageDto = {
+  read: Scalars['Boolean'];
+  seen: Scalars['Boolean'];
 };
-
-export enum MailUserGroupOperatorEnum {
-  And = 'AND',
-  Or = 'OR'
-}
 
 export type MessageModel = {
   __typename?: 'MessageModel';
@@ -834,7 +877,6 @@ export type Mutation = {
   cancelUserInvite: UserInviteModel;
   createFileAssociation: FileAssociationModel;
   createFileUploadUrl: FileModel;
-  createNotification: NotificationCreateModel;
   createPermission: PermissionModel;
   createRole: RoleModel;
   createUserGroup: UserGroupModel;
@@ -859,9 +901,8 @@ export type Mutation = {
   deleteUserTokens: Array<Scalars['ID']>;
   makeFilePrivate: FileModel;
   makeFilePublic: FileModel;
-  markAllAsReadNotification: Scalars['Boolean'];
-  markAsReadNotification: NotificationInAppModel;
-  markAsUnreadNotification: NotificationInAppModel;
+  markMessageSeen: Array<NotificationModel>;
+  notify: NotificationCreateModel;
   relateRolesToUser: Scalars['Boolean'];
   relateRolesToUserGroup: Scalars['Boolean'];
   relateUserGroupsToRole: Scalars['Boolean'];
@@ -870,7 +911,7 @@ export type Mutation = {
   relateUsersToUserGroup: Scalars['Boolean'];
   resendUserInvite: UserInviteModel;
   rotateRefreshToken: UserTokenModel;
-  sendMail: Scalars['Boolean'];
+  sendMail: NotificationCreateModel;
   /** Create UserInvite and send email */
   sendUserInvites: CreateUserInvitesModel;
   syncEventSubscribers: Scalars['Boolean'];
@@ -882,7 +923,7 @@ export type Mutation = {
   unrelateUsersFromUserGroup: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
-  updateNotificationTypeUserPreference: NotificationTypeUserPreferenceModel;
+  updateNotificationPreference: NotificationPreferenceModel;
   updatePermission: PermissionModel;
   updateRole: RoleModel;
   updateUser: UserModel;
@@ -890,7 +931,6 @@ export type Mutation = {
   updateUserGroupRoles: Array<Scalars['ID']>;
   updateUserInvite: UserInviteModel;
   updateUserRoles: Array<Scalars['ID']>;
-  upsertNotificationTypeUserPreference: NotificationTypeUserPreferenceModel;
   verifyUserRefreshToken: UserTokenModel;
 };
 
@@ -917,11 +957,6 @@ export type MutationCreateFileAssociationArgs = {
 
 export type MutationCreateFileUploadUrlArgs = {
   createFileDto: FileCreateDto;
-};
-
-
-export type MutationCreateNotificationArgs = {
-  notification: NotificationCreateDto;
 };
 
 
@@ -1035,13 +1070,14 @@ export type MutationMakeFilePublicArgs = {
 };
 
 
-export type MutationMarkAsReadNotificationArgs = {
-  id: Scalars['ID'];
+export type MutationMarkMessageSeenArgs = {
+  mark: MarkMessageDto;
+  messageIds: Array<Scalars['String']>;
 };
 
 
-export type MutationMarkAsUnreadNotificationArgs = {
-  id: Scalars['ID'];
+export type MutationNotifyArgs = {
+  notification: NotificationCreateDto;
 };
 
 
@@ -1092,7 +1128,7 @@ export type MutationRotateRefreshTokenArgs = {
 
 
 export type MutationSendMailArgs = {
-  params: MailSendDto;
+  notification: NotificationGuestCreateDto;
 };
 
 
@@ -1154,9 +1190,9 @@ export type MutationUpdateFileStatusArgs = {
 };
 
 
-export type MutationUpdateNotificationTypeUserPreferenceArgs = {
-  id: Scalars['ID'];
-  notificationTypeUserPreference: NotificationTypeUserPreferenceUpdateDto;
+export type MutationUpdateNotificationPreferenceArgs = {
+  id: Scalars['String'];
+  preference: UpdateNotificationPreferenceDto;
 };
 
 
@@ -1202,17 +1238,131 @@ export type MutationUpdateUserRolesArgs = {
 };
 
 
-export type MutationUpsertNotificationTypeUserPreferenceArgs = {
-  notificationTypeUserPreference: NotificationTypeUserPreferenceUpsertDto;
-};
-
-
 export type MutationVerifyUserRefreshTokenArgs = {
   userToken: UserRefreshTokenVerifyDto;
 };
 
+export enum NotificationActionTypeEnum {
+  Clicked = 'clicked',
+  Primary = 'primary',
+  Secondary = 'secondary'
+}
+
+export type NotificationActivityJobExecutionDetailsModel = {
+  __typename?: 'NotificationActivityJobExecutionDetailsModel';
+  detail?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  providerId?: Maybe<Scalars['String']>;
+  raw?: Maybe<Scalars['String']>;
+  source?: Maybe<NotificationExecutionDetailsSourceEnum>;
+  status: NotificationExecutionDetailsStatusEnum;
+};
+
+export type NotificationActivityJobModel = {
+  __typename?: 'NotificationActivityJobModel';
+  digest?: Maybe<Scalars['JsonObject']>;
+  executionDetails?: Maybe<Array<NotificationActivityJobExecutionDetailsModel>>;
+  payload?: Maybe<Scalars['JsonObject']>;
+  providerId?: Maybe<Scalars['String']>;
+  status: Scalars['String'];
+  step?: Maybe<NotificationTemplateStepModel>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type NotificationActivityModel = {
+  __typename?: 'NotificationActivityModel';
+  channels: Array<NotificationChannelEnum>;
+  createdAt: Scalars['Date'];
+  id: Scalars['String'];
+  jobs: Array<NotificationActivityJobModel>;
+  payload?: Maybe<Scalars['JsonObject']>;
+  template: NotificationActivityTemplateModel;
+  to?: Maybe<NotificationActivityToModel>;
+  transactionId?: Maybe<Scalars['String']>;
+  user?: Maybe<NotificationActivityUserModel>;
+};
+
+export type NotificationActivityPageModel = {
+  __typename?: 'NotificationActivityPageModel';
+  data: Array<NotificationActivityModel>;
+  totalCount: Scalars['Int'];
+};
+
+export type NotificationActivityTemplateModel = {
+  __typename?: 'NotificationActivityTemplateModel';
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  triggers?: Maybe<Array<NotificationTemplateTriggerModel>>;
+};
+
+export type NotificationActivityToModel = {
+  __typename?: 'NotificationActivityToModel';
+  email?: Maybe<Scalars['String']>;
+  roqIdentifier?: Maybe<Scalars['String']>;
+};
+
+export type NotificationActivityUserModel = {
+  __typename?: 'NotificationActivityUserModel';
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+};
+
+export type NotificationCtaActionButtonModel = {
+  __typename?: 'NotificationCTAActionButtonModel';
+  content?: Maybe<Scalars['String']>;
+  resultContent?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type NotificationCtaActionModel = {
+  __typename?: 'NotificationCTAActionModel';
+  buttons?: Maybe<NotificationCtaActionButtonModel>;
+  result?: Maybe<NotificationCtaActionResultModel>;
+  status?: Maybe<NotificationActionTypeEnum>;
+};
+
+export type NotificationCtaActionResultModel = {
+  __typename?: 'NotificationCTAActionResultModel';
+  payload?: Maybe<Scalars['JsonObject']>;
+  type?: Maybe<NotificationActionTypeEnum>;
+};
+
+export type NotificationCtaDataModel = {
+  __typename?: 'NotificationCTADataModel';
+  url?: Maybe<Scalars['String']>;
+};
+
+export type NotificationCtaModel = {
+  __typename?: 'NotificationCTAModel';
+  action?: Maybe<NotificationCtaActionModel>;
+  data?: Maybe<NotificationCtaDataModel>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type NotificationCategoryModel = {
+  __typename?: 'NotificationCategoryModel';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export enum NotificationChannelEnum {
+  Chat = 'chat',
+  Email = 'email',
+  InApp = 'inApp',
+  Push = 'push',
+  Sms = 'sms'
+}
+
+export type NotificationChannelModel = {
+  __typename?: 'NotificationChannelModel';
+  providerId: NotificationChannelEnum;
+};
+
 export type NotificationCreateDto = {
-  entities: Array<NotificationEntitiesCreateDto>;
+  data?: InputMaybe<Array<NotificationTemplateVariableDto>>;
   key: Scalars['String'];
   recipients: NotificationRecipientDto;
 };
@@ -1222,140 +1372,123 @@ export type NotificationCreateModel = {
   webNotifications?: Maybe<Scalars['Boolean']>;
 };
 
-export type NotificationEntitiesCreateDto = {
-  alias?: InputMaybe<Scalars['String']>;
-  type: Scalars['String'];
-  uuid: Scalars['ID'];
-};
-
-export type NotificationFilterArgType = {
-  content?: InputMaybe<StringFilterArgType>;
-  createdAt?: InputMaybe<DateFilterArgType>;
-  id?: InputMaybe<IdFilterArgType>;
-  locale?: InputMaybe<StringFilterArgType>;
-  read?: InputMaybe<BooleanFilterArgType>;
-  title?: InputMaybe<StringFilterArgType>;
-  userId?: InputMaybe<StringFilterArgType>;
-};
-
-export type NotificationInAppCreateDto = {
-  content: Scalars['String'];
-  icon: Scalars['String'];
-  locale: Scalars['String'];
-  notificationTypeChannelWebId: Scalars['ID'];
-  read: Scalars['Boolean'];
-  title: Scalars['String'];
-  userId: Scalars['String'];
-};
-
-export type NotificationInAppFilterArgType = {
-  content?: InputMaybe<StringFilterArgType>;
-  createdAt?: InputMaybe<DateFilterArgType>;
-  id?: InputMaybe<IdFilterArgType>;
-  locale?: InputMaybe<StringFilterArgType>;
-  notificationTypeChannelWebId?: InputMaybe<IdFilterArgType>;
-  read?: InputMaybe<BooleanFilterArgType>;
-  title?: InputMaybe<StringFilterArgType>;
-  userId?: InputMaybe<StringFilterArgType>;
-};
-
-export type NotificationInAppModel = {
-  __typename?: 'NotificationInAppModel';
-  content: Scalars['String'];
-  createdAt: Scalars['Date'];
-  icon: Scalars['String'];
-  id: Scalars['ID'];
-  locale: Scalars['String'];
-  notificationTypeChannelWebId: Scalars['String'];
-  read: Scalars['Boolean'];
-  title: Scalars['String'];
-  updatedAt: Scalars['Date'];
-  userId: Scalars['String'];
-};
-
-export type NotificationInAppOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationInAppOrderSortEnum;
-};
-
-export enum NotificationInAppOrderSortEnum {
-  Content = 'content',
-  CreatedAt = 'createdAt',
-  Locale = 'locale',
-  NotificationTypeChannelWebId = 'notificationTypeChannelWebId',
-  Read = 'read',
-  Title = 'title',
-  UpdatedAt = 'updatedAt',
-  UserId = 'userId'
+export enum NotificationExecutionDetailsSourceEnum {
+  Credentials = 'CREDENTIALS',
+  Internal = 'INTERNAL',
+  Payload = 'PAYLOAD',
+  Webhook = 'WEBHOOK'
 }
 
-export type NotificationInAppPageModel = {
-  __typename?: 'NotificationInAppPageModel';
-  data: Array<NotificationInAppModel>;
+export enum NotificationExecutionDetailsStatusEnum {
+  Failed = 'FAILED',
+  Pending = 'PENDING',
+  Queued = 'QUEUED',
+  ReadConfirmation = 'READ_CONFIRMATION',
+  Success = 'SUCCESS'
+}
+
+export type NotificationGuestCreateDto = {
+  data?: InputMaybe<Array<NotificationTemplateVariableDto>>;
+  emails: Array<Scalars['String']>;
+  key: Scalars['String'];
+  locale: Scalars['String'];
+};
+
+export type NotificationLocalizedTemplateCreateDto = {
+  channel: NotificationChannelEnum;
+  content: Scalars['String'];
+  icon?: InputMaybe<Scalars['String']>;
+  key: Scalars['String'];
+  locale: Scalars['String'];
+  subject?: InputMaybe<Scalars['String']>;
+  templateId: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type NotificationLocalizedTemplateFilterArgType = {
+  channel?: InputMaybe<StringFilterArgType>;
+  content?: InputMaybe<StringFilterArgType>;
+  icon?: InputMaybe<StringFilterArgType>;
+  id?: InputMaybe<IdFilterArgType>;
+  key?: InputMaybe<StringFilterArgType>;
+  locale?: InputMaybe<StringFilterArgType>;
+  subject?: InputMaybe<StringFilterArgType>;
+  templateId?: InputMaybe<StringFilterArgType>;
+  title?: InputMaybe<StringFilterArgType>;
+};
+
+export type NotificationLocalizedTemplateModel = {
+  __typename?: 'NotificationLocalizedTemplateModel';
+  channel?: Maybe<NotificationChannelEnum>;
+  content?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  icon?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
+  key?: Maybe<Scalars['String']>;
+  locale?: Maybe<Scalars['String']>;
+  subject?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Date']>;
+};
+
+export type NotificationLocalizedTemplateOrderArgType = {
+  order: OrderEnum;
+  sort: NotificationLocalizedTemplateOrderSortEnum;
+};
+
+export enum NotificationLocalizedTemplateOrderSortEnum {
+  Channel = 'channel',
+  Content = 'content',
+  CreatedAt = 'createdAt',
+  Key = 'key',
+  Locale = 'locale',
+  UpdatedAt = 'updatedAt'
+}
+
+export type NotificationLocalizedTemplatePageModel = {
+  __typename?: 'NotificationLocalizedTemplatePageModel';
+  data: Array<NotificationLocalizedTemplateModel>;
   totalCount: Scalars['Int'];
 };
 
-export type NotificationInAppSearchArgType = {
-  key: NotificationInAppSearchKeyEnum;
+export type NotificationLocalizedTemplateSearchArgType = {
+  key: NotificationLocalizedTemplateSearchKeyEnum;
   value: Scalars['String'];
 };
 
-export enum NotificationInAppSearchKeyEnum {
-  Locale = 'locale',
-  NotificationTypeChannelWebId = 'notificationTypeChannelWebId',
-  Title = 'title',
-  UserId = 'userId'
+export enum NotificationLocalizedTemplateSearchKeyEnum {
+  Key = 'key'
 }
 
-export type NotificationInAppUpdateDto = {
+export type NotificationLocalizedTemplateUpdateDto = {
   content?: InputMaybe<Scalars['String']>;
-  icon: Scalars['String'];
+  icon?: InputMaybe<Scalars['String']>;
+  key?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
-  notificationTypeChannelWebId?: InputMaybe<Scalars['String']>;
-  read?: InputMaybe<Scalars['Boolean']>;
+  subject?: InputMaybe<Scalars['String']>;
+  templateId?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
-  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type NotificationModel = {
   __typename?: 'NotificationModel';
+  channel: NotificationChannelEnum;
   content: Scalars['String'];
   createdAt: Scalars['Date'];
-  icon: Scalars['String'];
-  id: Scalars['ID'];
-  locale: Scalars['String'];
-  notificationTypeChannelWeb?: Maybe<NotificationTypeChannelWebModel>;
-  notificationTypeChannelWebId?: Maybe<Scalars['ID']>;
+  email?: Maybe<Scalars['String']>;
+  errorId?: Maybe<Scalars['String']>;
+  errorText?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastSeenDate?: Maybe<Scalars['String']>;
+  providerId?: Maybe<Scalars['String']>;
   read: Scalars['Boolean'];
-  title: Scalars['String'];
-  updatedAt: Scalars['Date'];
-  user: NotifiedUserModel;
-  userId: Scalars['String'];
+  seen: Scalars['Boolean'];
+  status: NotificationStatusEnum;
+  templateIdentifier: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
 };
-
-
-export type NotificationModelUserArgs = {
-  filter?: InputMaybe<NotifiedUserFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserOrderArgType>;
-  search?: InputMaybe<UserSearchArgType>;
-};
-
-export type NotificationOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationOrderSortEnum;
-};
-
-export enum NotificationOrderSortEnum {
-  Content = 'content',
-  CreatedAt = 'createdAt',
-  Locale = 'locale',
-  Read = 'read',
-  Title = 'title',
-  UpdatedAt = 'updatedAt',
-  UserId = 'userId'
-}
 
 export type NotificationPageModel = {
   __typename?: 'NotificationPageModel';
@@ -1363,460 +1496,127 @@ export type NotificationPageModel = {
   totalCount: Scalars['Int'];
 };
 
+export type NotificationPreferenceModel = {
+  __typename?: 'NotificationPreferenceModel';
+  channelPreferences: ChannelPreferencePageModel;
+  enabled: Scalars['Boolean'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type NotificationRecipientDto = {
-  allUsers: Scalars['Boolean'];
-  excludedUserIds?: InputMaybe<Array<Scalars['String']>>;
+  allUsers?: InputMaybe<Scalars['Boolean']>;
+  excludedUserReferences?: InputMaybe<Array<Scalars['String']>>;
   userGroups?: InputMaybe<NotificationUserGroupDto>;
-  userIds?: InputMaybe<Array<Scalars['String']>>;
+  userReferences?: InputMaybe<Array<Scalars['String']>>;
 };
 
-export type NotificationSearchArgType = {
-  key: NotificationSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum NotificationSearchKeyEnum {
-  Locale = 'locale',
-  Title = 'title',
-  UserId = 'userId'
+export enum NotificationStatusEnum {
+  Error = 'error',
+  Sent = 'sent',
+  Warning = 'warning'
 }
 
-export type NotificationTypeCategoryCreateDto = {
+export type NotificationTemplateCreateDto = {
+  active: Scalars['Boolean'];
   description?: InputMaybe<Scalars['String']>;
-  key: Scalars['String'];
+  name: Scalars['String'];
+  notificationGroupId: Scalars['ID'];
 };
 
-export type NotificationTypeCategoryFilterArgType = {
-  description?: InputMaybe<StringFilterArgType>;
-  id?: InputMaybe<IdFilterArgType>;
-  key?: InputMaybe<StringFilterArgType>;
-  notificationTypeId?: InputMaybe<IdFilterArgType>;
-};
-
-export type NotificationTypeCategoryModel = {
-  __typename?: 'NotificationTypeCategoryModel';
+export type NotificationTemplateModel = {
+  __typename?: 'NotificationTemplateModel';
+  active: Scalars['Boolean'];
   createdAt: Scalars['Date'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  key: Scalars['String'];
-  notificationTypes: NotificationTypePageModel;
+  name?: Maybe<Scalars['String']>;
+  notificationGroup?: Maybe<NotificationCategoryModel>;
+  preferenceSettings?: Maybe<NotificationTemplatePreferenceModel>;
+  steps?: Maybe<Array<NotificationTemplateStepModel>>;
+  triggers?: Maybe<Array<NotificationTemplateTriggerModel>>;
   updatedAt: Scalars['Date'];
 };
 
-
-export type NotificationTypeCategoryModelNotificationTypesArgs = {
-  filter?: InputMaybe<NotificationTypeFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeOrderArgType>;
-  search?: InputMaybe<NotificationTypeSearchArgType>;
-};
-
-export type NotificationTypeCategoryOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationTypeCategoryOrderSortEnum;
-};
-
-export enum NotificationTypeCategoryOrderSortEnum {
-  CreatedAt = 'createdAt',
-  Description = 'description',
-  Key = 'key',
-  UpdatedAt = 'updatedAt'
-}
-
-export type NotificationTypeCategoryPageModel = {
-  __typename?: 'NotificationTypeCategoryPageModel';
-  data: Array<NotificationTypeCategoryModel>;
+export type NotificationTemplatePageModel = {
+  __typename?: 'NotificationTemplatePageModel';
+  data: Array<NotificationTemplateModel>;
   totalCount: Scalars['Int'];
 };
 
-export type NotificationTypeCategorySearchArgType = {
-  key: NotificationTypeCategorySearchKeyEnum;
-  value: Scalars['String'];
+export type NotificationTemplatePreferenceModel = {
+  __typename?: 'NotificationTemplatePreferenceModel';
+  chat?: Maybe<Scalars['Boolean']>;
+  email?: Maybe<Scalars['Boolean']>;
+  in_app?: Maybe<Scalars['Boolean']>;
+  push?: Maybe<Scalars['Boolean']>;
+  sms?: Maybe<Scalars['Boolean']>;
 };
 
-export enum NotificationTypeCategorySearchKeyEnum {
-  Key = 'key'
-}
-
-export type NotificationTypeCategoryUpdateDto = {
-  description?: InputMaybe<Scalars['String']>;
+export type NotificationTemplatePreferenceUpdateDto = {
+  chat?: InputMaybe<Scalars['Boolean']>;
+  email?: InputMaybe<Scalars['Boolean']>;
+  in_app?: InputMaybe<Scalars['Boolean']>;
+  push?: InputMaybe<Scalars['Boolean']>;
+  sms?: InputMaybe<Scalars['Boolean']>;
 };
 
-export type NotificationTypeChannelMailCreateDto = {
-  isActive: Scalars['Boolean'];
-  mailTypeId: Scalars['String'];
-  notificationTypeId: Scalars['ID'];
+export type NotificationTemplateStepModel = {
+  __typename?: 'NotificationTemplateStepModel';
+  active?: Maybe<Scalars['Boolean']>;
+  id?: Maybe<Scalars['String']>;
+  template?: Maybe<NotificationTemplateStepTemplateModel>;
 };
 
-export type NotificationTypeChannelMailFilterArgType = {
-  id?: InputMaybe<IdFilterArgType>;
-  isActive?: InputMaybe<BooleanFilterArgType>;
-  key?: InputMaybe<StringFilterArgType>;
-  mailTypeId?: InputMaybe<StringFilterArgType>;
-  notificationTypeId?: InputMaybe<IdFilterArgType>;
+export type NotificationTemplateStepTemplateModel = {
+  __typename?: 'NotificationTemplateStepTemplateModel';
+  active?: Maybe<Scalars['Boolean']>;
+  content?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
+  subject?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  variables?: Maybe<Array<Scalars['JsonObject']>>;
 };
 
-export type NotificationTypeChannelMailModel = {
-  __typename?: 'NotificationTypeChannelMailModel';
-  createdAt: Scalars['Date'];
-  id: Scalars['ID'];
-  isActive: Scalars['Boolean'];
-  key: Scalars['String'];
-  mailTypeId: Scalars['String'];
-  notificationType: NotificationTypeModel;
-  notificationTypeId: Scalars['ID'];
-  updatedAt: Scalars['Date'];
-};
-
-
-export type NotificationTypeChannelMailModelNotificationTypeArgs = {
-  filter?: InputMaybe<NotificationTypeFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeOrderArgType>;
-  search?: InputMaybe<NotificationTypeSearchArgType>;
-};
-
-export type NotificationTypeChannelMailOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationTypeChannelMailOrderSortEnum;
-};
-
-export enum NotificationTypeChannelMailOrderSortEnum {
-  CreatedAt = 'createdAt',
-  IsActive = 'isActive',
-  Key = 'key',
-  MailTypeId = 'mailTypeId',
-  UpdatedAt = 'updatedAt'
-}
-
-export type NotificationTypeChannelMailPageModel = {
-  __typename?: 'NotificationTypeChannelMailPageModel';
-  data: Array<NotificationTypeChannelMailModel>;
-  totalCount: Scalars['Int'];
-};
-
-export type NotificationTypeChannelMailSearchArgType = {
-  key: NotificationTypeChannelMailSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum NotificationTypeChannelMailSearchKeyEnum {
-  Key = 'key',
-  MailTypeId = 'mailTypeId'
-}
-
-export type NotificationTypeChannelMailUpdateDto = {
-  isActive?: InputMaybe<Scalars['Boolean']>;
-  mailTypeId?: InputMaybe<Scalars['String']>;
-  notificationTypeId?: InputMaybe<Scalars['ID']>;
-};
-
-export type NotificationTypeChannelWebCreateDto = {
-  isActive: Scalars['Boolean'];
-  notificationTypeId: Scalars['ID'];
-};
-
-export type NotificationTypeChannelWebFilterArgType = {
-  id?: InputMaybe<IdFilterArgType>;
-  isActive?: InputMaybe<BooleanFilterArgType>;
-  key?: InputMaybe<StringFilterArgType>;
-  notificationTypeChannelWebLocalizedId?: InputMaybe<IdFilterArgType>;
-  notificationTypeId?: InputMaybe<IdFilterArgType>;
-};
-
-export type NotificationTypeChannelWebLocalizedCreateDto = {
-  content: Scalars['String'];
-  icon: Scalars['String'];
-  key: Scalars['String'];
-  locale: Scalars['String'];
-  notificationTypeChannelWebId?: InputMaybe<Scalars['ID']>;
-  title: Scalars['String'];
-};
-
-export type NotificationTypeChannelWebLocalizedFilterArgType = {
-  content?: InputMaybe<StringFilterArgType>;
-  icon?: InputMaybe<StringFilterArgType>;
-  id?: InputMaybe<IdFilterArgType>;
-  key?: InputMaybe<StringFilterArgType>;
-  locale?: InputMaybe<StringFilterArgType>;
-  notificationTypeChannelWebId?: InputMaybe<IdFilterArgType>;
-  title?: InputMaybe<StringFilterArgType>;
-};
-
-export type NotificationTypeChannelWebLocalizedModel = {
-  __typename?: 'NotificationTypeChannelWebLocalizedModel';
-  content: Scalars['String'];
-  createdAt: Scalars['Date'];
-  icon: Scalars['String'];
-  id: Scalars['ID'];
-  key: Scalars['String'];
-  locale: Scalars['String'];
-  notificationTypeChannelWeb: NotificationTypeChannelWebModel;
-  notificationTypeChannelWebId: Scalars['ID'];
-  title: Scalars['String'];
-  updatedAt: Scalars['Date'];
-};
-
-export type NotificationTypeChannelWebLocalizedOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationTypeChannelWebLocalizedOrderSortEnum;
-};
-
-export enum NotificationTypeChannelWebLocalizedOrderSortEnum {
-  Content = 'content',
-  CreatedAt = 'createdAt',
-  Icon = 'icon',
-  Key = 'key',
-  Locale = 'locale',
-  Title = 'title',
-  UpdatedAt = 'updatedAt'
-}
-
-export type NotificationTypeChannelWebLocalizedPageModel = {
-  __typename?: 'NotificationTypeChannelWebLocalizedPageModel';
-  data: Array<NotificationTypeChannelWebLocalizedModel>;
-  totalCount: Scalars['Int'];
-};
-
-export type NotificationTypeChannelWebLocalizedSearchArgType = {
-  key: NotificationTypeChannelWebLocalizedSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum NotificationTypeChannelWebLocalizedSearchKeyEnum {
-  Icon = 'icon',
-  Key = 'key',
-  Locale = 'locale',
-  Title = 'title'
-}
-
-export type NotificationTypeChannelWebLocalizedUpdateDto = {
-  content?: InputMaybe<Scalars['String']>;
-  icon?: InputMaybe<Scalars['String']>;
-  locale?: InputMaybe<Scalars['String']>;
-  notificationTypeChannelWebId?: InputMaybe<Scalars['ID']>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type NotificationTypeChannelWebModel = {
-  __typename?: 'NotificationTypeChannelWebModel';
-  createdAt: Scalars['Date'];
-  id: Scalars['ID'];
-  isActive: Scalars['Boolean'];
-  key: Scalars['String'];
-  notificationType: NotificationTypeModel;
-  notificationTypeId: Scalars['ID'];
-  updatedAt: Scalars['Date'];
-};
-
-
-export type NotificationTypeChannelWebModelNotificationTypeArgs = {
-  filter?: InputMaybe<NotificationTypeFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeOrderArgType>;
-  search?: InputMaybe<NotificationTypeSearchArgType>;
-};
-
-export type NotificationTypeChannelWebOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationTypeChannelWebOrderSortEnum;
-};
-
-export enum NotificationTypeChannelWebOrderSortEnum {
-  CreatedAt = 'createdAt',
-  IsActive = 'isActive',
-  Key = 'key',
-  UpdatedAt = 'updatedAt'
-}
-
-export type NotificationTypeChannelWebPageModel = {
-  __typename?: 'NotificationTypeChannelWebPageModel';
-  data: Array<NotificationTypeChannelWebModel>;
-  totalCount: Scalars['Int'];
-};
-
-export type NotificationTypeChannelWebSearchArgType = {
-  key: NotificationTypeChannelWebSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum NotificationTypeChannelWebSearchKeyEnum {
-  Key = 'key'
-}
-
-export type NotificationTypeChannelWebUpdateDto = {
-  isActive?: InputMaybe<Scalars['Boolean']>;
-  notificationTypeId?: InputMaybe<Scalars['ID']>;
-};
-
-export type NotificationTypeCreateDto = {
-  defaultUserActiveMail: Scalars['Boolean'];
-  defaultUserActiveWeb: Scalars['Boolean'];
-  description?: InputMaybe<Scalars['String']>;
-  isActive: Scalars['Boolean'];
-  key: Scalars['String'];
-  notificationTypeCategoryId: Scalars['ID'];
-};
-
-export type NotificationTypeFilterArgType = {
-  defaultUserActiveMail?: InputMaybe<BooleanFilterArgType>;
-  defaultUserActiveWeb?: InputMaybe<BooleanFilterArgType>;
-  description?: InputMaybe<StringFilterArgType>;
-  id?: InputMaybe<IdFilterArgType>;
-  isActive?: InputMaybe<BooleanFilterArgType>;
-  key?: InputMaybe<StringFilterArgType>;
-  notificationTypeCategoryId?: InputMaybe<IdFilterArgType>;
-  notificationTypeChannelMailId?: InputMaybe<IdFilterArgType>;
-  notificationTypeChannelWebId?: InputMaybe<IdFilterArgType>;
-  notificationTypeUserPreferenceId?: InputMaybe<IdFilterArgType>;
-};
-
-export type NotificationTypeModel = {
-  __typename?: 'NotificationTypeModel';
-  createdAt: Scalars['Date'];
-  defaultUserActiveMail: Scalars['Boolean'];
-  defaultUserActiveWeb: Scalars['Boolean'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  isActive: Scalars['Boolean'];
-  key: Scalars['String'];
-  notificationTypeCategoryId?: Maybe<Scalars['ID']>;
-  notificationTypeChannelMailId?: Maybe<Scalars['ID']>;
-  notificationTypeChannelWeb?: Maybe<NotificationTypeChannelWebModel>;
-  notificationTypeChannelWebId?: Maybe<Scalars['ID']>;
-  notificationTypeUserPreferences: NotificationTypeUserPreferencePageModel;
-  updatedAt: Scalars['Date'];
-};
-
-
-export type NotificationTypeModelNotificationTypeChannelWebArgs = {
-  filter?: InputMaybe<NotificationTypeChannelWebFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeChannelWebOrderArgType>;
-  search?: InputMaybe<NotificationTypeChannelWebSearchArgType>;
-};
-
-
-export type NotificationTypeModelNotificationTypeUserPreferencesArgs = {
-  filter?: InputMaybe<NotificationTypeUserPreferenceFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeUserPreferenceOrderArgType>;
-  search?: InputMaybe<NotificationTypeUserPreferenceSearchArgType>;
-};
-
-export type NotificationTypeOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationTypeOrderSortEnum;
-};
-
-export enum NotificationTypeOrderSortEnum {
-  CreatedAt = 'createdAt',
-  DefaultUserActiveMail = 'defaultUserActiveMail',
-  DefaultUserActiveWeb = 'defaultUserActiveWeb',
-  Description = 'description',
-  IsActive = 'isActive',
-  Key = 'key',
-  UpdatedAt = 'updatedAt'
-}
-
-export type NotificationTypePageModel = {
-  __typename?: 'NotificationTypePageModel';
-  data: Array<NotificationTypeModel>;
-  totalCount: Scalars['Int'];
-};
-
-export type NotificationTypeSearchArgType = {
-  key: NotificationTypeSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum NotificationTypeSearchKeyEnum {
-  Key = 'key'
-}
-
-export type NotificationTypeUpdateDto = {
-  defaultUserActiveMail?: InputMaybe<Scalars['Boolean']>;
-  defaultUserActiveWeb?: InputMaybe<Scalars['Boolean']>;
-  description?: InputMaybe<Scalars['String']>;
-  isActive?: InputMaybe<Scalars['Boolean']>;
-  notificationTypeCategoryId?: InputMaybe<Scalars['ID']>;
-};
-
-export type NotificationTypeUserPreferenceCreateDto = {
-  mail: Scalars['Boolean'];
-  notificationTypeId: Scalars['ID'];
-  web: Scalars['Boolean'];
-};
-
-export type NotificationTypeUserPreferenceFilterArgType = {
-  id?: InputMaybe<IdFilterArgType>;
-  key?: InputMaybe<StringFilterArgType>;
-  mail?: InputMaybe<BooleanFilterArgType>;
-  notificationTypeId?: InputMaybe<IdFilterArgType>;
-  userId?: InputMaybe<StringFilterArgType>;
-  web?: InputMaybe<BooleanFilterArgType>;
-};
-
-export type NotificationTypeUserPreferenceModel = {
-  __typename?: 'NotificationTypeUserPreferenceModel';
-  createdAt: Scalars['Date'];
-  id: Scalars['ID'];
-  key?: Maybe<Scalars['String']>;
-  mail: Scalars['Boolean'];
-  notificationType: NotificationTypeModel;
-  notificationTypeId: Scalars['ID'];
-  updatedAt: Scalars['Date'];
-  userId: Scalars['ID'];
-  web: Scalars['Boolean'];
-};
-
-export type NotificationTypeUserPreferenceOrderArgType = {
-  order: OrderEnum;
-  sort: NotificationTypeUserPreferenceOrderSortEnum;
-};
-
-export enum NotificationTypeUserPreferenceOrderSortEnum {
-  CreatedAt = 'createdAt',
-  Key = 'key',
-  Mail = 'mail',
-  UpdatedAt = 'updatedAt',
-  UserId = 'userId',
-  Web = 'web'
-}
-
-export type NotificationTypeUserPreferencePageModel = {
-  __typename?: 'NotificationTypeUserPreferencePageModel';
-  data: Array<NotificationTypeUserPreferenceModel>;
-  totalCount: Scalars['Int'];
-};
-
-export type NotificationTypeUserPreferenceSearchArgType = {
-  key: NotificationTypeUserPreferenceSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum NotificationTypeUserPreferenceSearchKeyEnum {
-  Key = 'key',
-  UserId = 'userId'
-}
-
-export type NotificationTypeUserPreferenceUpdateDto = {
-  mail?: InputMaybe<Scalars['Boolean']>;
-  notificationTypeId?: InputMaybe<Scalars['ID']>;
-  userId?: InputMaybe<Scalars['String']>;
-  web?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type NotificationTypeUserPreferenceUpsertDto = {
+export type NotificationTemplateStepUpdateDto = {
+  active?: InputMaybe<Scalars['Boolean']>;
   id?: InputMaybe<Scalars['ID']>;
-  mail: Scalars['Boolean'];
-  notificationTypeId: Scalars['ID'];
-  web: Scalars['Boolean'];
+};
+
+export type NotificationTemplateTriggerModel = {
+  __typename?: 'NotificationTemplateTriggerModel';
+  identifier: Scalars['String'];
+  subscriberVariables: Array<NotificationTriggerVariableModel>;
+  type: Scalars['String'];
+  variables: Array<NotificationTriggerVariableModel>;
+};
+
+export type NotificationTemplateUpdateDto = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  notificationGroupId?: InputMaybe<Scalars['ID']>;
+  preferenceSettings?: InputMaybe<NotificationTemplatePreferenceUpdateDto>;
+  steps?: InputMaybe<Array<NotificationTemplateStepUpdateDto>>;
+};
+
+export type NotificationTemplateVariableDto = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type NotificationTriggerVariableModel = {
+  __typename?: 'NotificationTriggerVariableModel';
+  name: Scalars['String'];
+};
+
+export type NotificationUserCreateDto = {
+  avatar?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  roqIdentifier: Scalars['ID'];
 };
 
 export type NotificationUserGroupDto = {
@@ -1829,34 +1629,24 @@ export enum NotificationUserGroupOperatorEnum {
   Or = 'OR'
 }
 
-export type NotifiedUserFilterArgType = {
-  active?: InputMaybe<BooleanFilterArgType>;
-  email?: InputMaybe<StringFilterArgType>;
-  firstName?: InputMaybe<StringFilterArgType>;
-  id?: InputMaybe<IdFilterArgType>;
-  lastName?: InputMaybe<StringFilterArgType>;
-  locale?: InputMaybe<StringFilterArgType>;
-  optedInAt?: InputMaybe<DateFilterArgType>;
-  phone?: InputMaybe<StringFilterArgType>;
-  search?: InputMaybe<Scalars['String']>;
-  timezone?: InputMaybe<StringFilterArgType>;
+export type NotificationUserModel = {
+  __typename?: 'NotificationUserModel';
+  avatar?: Maybe<Scalars['String']>;
+  channels?: Maybe<Array<NotificationChannelModel>>;
+  createdAt?: Maybe<Scalars['Date']>;
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  roqIdentifier?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Date']>;
 };
 
-export type NotifiedUserModel = {
-  __typename?: 'NotifiedUserModel';
-  active?: Maybe<Scalars['Boolean']>;
-  createdAt: Scalars['Date'];
-  email: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  lastName?: Maybe<Scalars['String']>;
-  locale?: Maybe<Scalars['String']>;
-  optedInAt?: Maybe<Scalars['Date']>;
-  phone?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  updatedAt: Scalars['Date'];
-  userReference: Scalars['String'];
+export type NotificationUserPageModel = {
+  __typename?: 'NotificationUserPageModel';
+  data: Array<NotificationUserModel>;
+  totalCount: Scalars['Int'];
 };
 
 export type NumberFilterArgType = {
@@ -1983,13 +1773,9 @@ export type Query = {
   fileCategoryContentTypes: FileCategoryContentTypePageModel;
   files: FilePageModel;
   mailType: MailTypeModel;
-  notificationType: NotificationTypeModel;
-  notificationTypeCategories: NotificationTypeCategoryPageModel;
-  notificationTypeChannelWeb: NotificationTypeChannelWebModel;
-  notificationTypeUserPreference: NotificationTypeUserPreferenceModel;
-  notificationTypeUserPreferences: NotificationTypeUserPreferencePageModel;
-  notificationTypes: NotificationTypePageModel;
-  notificationsInAppForCurrentUser: NotificationInAppPageModel;
+  notificationCategories: Array<NotificationCategoryModel>;
+  notificationPreference: Array<NotificationPreferenceModel>;
+  notifications: NotificationPageModel;
   permission: PermissionModel;
   permissions: PermissionPageModel;
   role: RoleModel;
@@ -1998,6 +1784,7 @@ export type Query = {
   translationKey: TranslationKeyModel;
   translationKeys: TranslationKeyPageModel;
   translations: TranslationPageModel;
+  unseenNotificationsCount: Scalars['Float'];
   user: UserModel;
   userGroup: UserGroupModel;
   userGroups: UserGroupPageModel;
@@ -2078,54 +1865,9 @@ export type QueryMailTypeArgs = {
 };
 
 
-export type QueryNotificationTypeArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryNotificationTypeCategoriesArgs = {
-  filter?: InputMaybe<NotificationTypeCategoryFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeCategoryOrderArgType>;
-  search?: InputMaybe<NotificationTypeCategorySearchArgType>;
-};
-
-
-export type QueryNotificationTypeChannelWebArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryNotificationTypeUserPreferenceArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryNotificationTypeUserPreferencesArgs = {
-  filter?: InputMaybe<NotificationTypeUserPreferenceFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeUserPreferenceOrderArgType>;
-  search?: InputMaybe<NotificationTypeUserPreferenceSearchArgType>;
-};
-
-
-export type QueryNotificationTypesArgs = {
-  filter?: InputMaybe<NotificationTypeFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationTypeOrderArgType>;
-  search?: InputMaybe<NotificationTypeSearchArgType>;
-};
-
-
-export type QueryNotificationsInAppForCurrentUserArgs = {
-  filter?: InputMaybe<NotificationInAppFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<NotificationInAppOrderArgType>;
-  search?: InputMaybe<NotificationInAppSearchArgType>;
+export type QueryNotificationsArgs = {
+  page?: InputMaybe<Scalars['Float']>;
+  seen?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -2401,8 +2143,8 @@ export type StringFilterArgType = {
 
 export type TemplateBulkCompileDto = {
   content: Scalars['String'];
-  directlyInjectedVariables?: InputMaybe<Scalars['JsonObject']>;
-  entities: Array<TemplateCompileEntityDto>;
+  data?: InputMaybe<Scalars['JsonObject']>;
+  entities?: InputMaybe<Array<TemplateCompileEntityDto>>;
   metaObjects?: InputMaybe<Array<Scalars['JsonObject']>>;
 };
 
@@ -2556,6 +2298,11 @@ export type TranslationUpdateDto = {
 export type TranslationUpsertDto = {
   locale: Scalars['String'];
   value: Scalars['String'];
+};
+
+export type UpdateNotificationPreferenceDto = {
+  channel?: InputMaybe<Scalars['String']>;
+  enable: Scalars['Boolean'];
 };
 
 export type UserCreateDto = {
@@ -3243,12 +2990,12 @@ export type UserValidateEmailTokenCreateDto = {
   userId: Scalars['String'];
 };
 
-export type CreateNotificationMutationVariables = Exact<{
-  notificationData: NotificationCreateDto;
+export type NotifyMutationVariables = Exact<{
+  notification: NotificationCreateDto;
 }>;
 
 
-export type CreateNotificationMutation = { __typename?: 'Mutation', createNotification: { __typename?: 'NotificationCreateModel', webNotifications?: boolean | null } };
+export type NotifyMutation = { __typename?: 'Mutation', notify: { __typename?: 'NotificationCreateModel', webNotifications?: boolean | null } };
 
 export type AddUserMutationVariables = Exact<{
   user: UserCreateDto;
@@ -3258,9 +3005,9 @@ export type AddUserMutationVariables = Exact<{
 export type AddUserMutation = { __typename?: 'Mutation', addUser: { __typename?: 'UserModel', id: string, userReference: string } };
 
 
-export const CreateNotificationDocument = gql`
-    mutation createNotification($notificationData: NotificationCreateDto!) {
-  createNotification(notification: $notificationData) {
+export const NotifyDocument = gql`
+    mutation notify($notification: NotificationCreateDto!) {
+  notify(notification: $notification) {
     webNotifications
   }
 }
@@ -3281,8 +3028,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    createNotification(variables: CreateNotificationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateNotificationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateNotificationMutation>(CreateNotificationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createNotification', 'mutation');
+    notify(variables: NotifyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotifyMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NotifyMutation>(NotifyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'notify', 'mutation');
     },
     addUser(variables: AddUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<AddUserMutation>(AddUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addUser', 'mutation');
