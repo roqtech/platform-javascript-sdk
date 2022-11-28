@@ -7,7 +7,7 @@ import {
   defaultUserTokenEndpoint
 } from '../../constants';
 import { PlatformClientOptionsType } from '../../platformClient/types/platform-client-options.type';
-import { RequestParamsType } from '../types/request-params.type';
+import { RequestParamsType } from '../types';
 
 export class AuthorisationClientService {
   private readonly host: string;
@@ -40,9 +40,13 @@ export class AuthorisationClientService {
   }
 
   async createUserToken(userReference: string, expiresIn?: string): Promise<string> {
+    const serviceToken = await this.getToken();
     const token = await this.request({
       endpoint: defaultUserTokenEndpoint,
       method: 'POST',
+      headers: {
+        'roq-platform-authorization': `Bearer ${serviceToken}`,
+      },
       body: { userReference, expiresIn },
     });
     return token?.accessToken;
