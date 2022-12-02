@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://snapshotp.roq-platform.com/v01/server/graphql"
+schema: "https://mars-pp.roq-platform.com/v01/server/graphql"
 documents: "src/**/graphql.graphql"
 generates:
   src/generated/sdk.ts:

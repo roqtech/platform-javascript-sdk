@@ -670,8 +670,9 @@ export type IntegrationCredentialsDto = {
   projectName?: InputMaybe<Scalars['String']>;
   region?: InputMaybe<Scalars['String']>;
   secretKey?: InputMaybe<Scalars['String']>;
-  secure?: InputMaybe<Scalars['Boolean']>;
+  secure?: InputMaybe<Scalars['String']>;
   senderName?: InputMaybe<Scalars['String']>;
+  serviceAccount?: InputMaybe<Scalars['String']>;
   token?: InputMaybe<Scalars['String']>;
   user?: InputMaybe<Scalars['String']>;
 };
@@ -691,8 +692,9 @@ export type IntegrationCredentialsModel = {
   projectName?: Maybe<Scalars['String']>;
   region?: Maybe<Scalars['String']>;
   secretKey?: Maybe<Scalars['String']>;
-  secure?: Maybe<Scalars['Boolean']>;
+  secure?: Maybe<Scalars['String']>;
   senderName?: Maybe<Scalars['String']>;
+  serviceAccount?: Maybe<Scalars['String']>;
   token?: Maybe<Scalars['String']>;
   user?: Maybe<Scalars['String']>;
 };
@@ -874,6 +876,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   acceptUserInvite: UserInviteModel;
   addUser: UserModel;
+  addUsersToUserGroup: Scalars['Boolean'];
   cancelUserInvite: UserInviteModel;
   createFileAssociation: FileAssociationModel;
   createFileUploadUrl: FileModel;
@@ -908,7 +911,7 @@ export type Mutation = {
   relateUserGroupsToRole: Scalars['Boolean'];
   relateUserGroupsToUser: Scalars['Boolean'];
   relateUsersToRole: Scalars['Boolean'];
-  relateUsersToUserGroup: Scalars['Boolean'];
+  removeUsersFromUserGroup: Scalars['Boolean'];
   resendUserInvite: UserInviteModel;
   rotateRefreshToken: UserTokenModel;
   sendMail: NotificationCreateModel;
@@ -920,7 +923,6 @@ export type Mutation = {
   unrelateUserGroupsFromRole: Scalars['Boolean'];
   unrelateUserGroupsFromUser: Scalars['Boolean'];
   unrelateUsersFromRole: Scalars['Boolean'];
-  unrelateUsersFromUserGroup: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
@@ -942,6 +944,12 @@ export type MutationAcceptUserInviteArgs = {
 
 export type MutationAddUserArgs = {
   user: UserCreateDto;
+};
+
+
+export type MutationAddUsersToUserGroupArgs = {
+  id: Scalars['ID'];
+  userIds: Array<Scalars['ID']>;
 };
 
 
@@ -1111,9 +1119,9 @@ export type MutationRelateUsersToRoleArgs = {
 };
 
 
-export type MutationRelateUsersToUserGroupArgs = {
+export type MutationRemoveUsersFromUserGroupArgs = {
   id: Scalars['ID'];
-  relation: UserGroupUserRelationDto;
+  userIds: Array<Scalars['ID']>;
 };
 
 
@@ -1169,12 +1177,6 @@ export type MutationUnrelateUserGroupsFromUserArgs = {
 export type MutationUnrelateUsersFromRoleArgs = {
   id: Scalars['ID'];
   relation: RoleUserRelationDto;
-};
-
-
-export type MutationUnrelateUsersFromUserGroupArgs = {
-  id: Scalars['ID'];
-  relation: UserGroupUserRelationDto;
 };
 
 
@@ -1369,7 +1371,12 @@ export type NotificationCreateDto = {
 
 export type NotificationCreateModel = {
   __typename?: 'NotificationCreateModel';
-  webNotifications?: Maybe<Scalars['Boolean']>;
+  usersNotified: NotificationCreateUserModel;
+};
+
+export type NotificationCreateUserModel = {
+  __typename?: 'NotificationCreateUserModel';
+  count: Scalars['Int'];
 };
 
 export enum NotificationExecutionDetailsSourceEnum {
@@ -1621,7 +1628,7 @@ export type NotificationUserCreateDto = {
 
 export type NotificationUserGroupDto = {
   operator: NotificationUserGroupOperatorEnum;
-  userGroupIds?: InputMaybe<Array<Scalars['String']>>;
+  userGroupReferences?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum NotificationUserGroupOperatorEnum {
@@ -2337,132 +2344,19 @@ export type UserFilterArgType = {
   userTokenId?: InputMaybe<IdFilterArgType>;
 };
 
-export type UserGroupConfigCreateDto = {
-  defaultRoleIds?: InputMaybe<Array<Scalars['ID']>>;
-  entity: Scalars['String'];
-  groupRelationField?: InputMaybe<Scalars['String']>;
-  isUserInMultipleGroups?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  nameField?: InputMaybe<Scalars['String']>;
-  type: UserGroupConfigTypeEnum;
-  userGroupType: Scalars['String'];
-  userRelationEntity?: InputMaybe<Scalars['String']>;
-  userRelationField?: InputMaybe<Scalars['String']>;
-};
-
-export type UserGroupConfigFilterArgType = {
-  entity?: InputMaybe<StringFilterArgType>;
-  groupRelationField?: InputMaybe<StringFilterArgType>;
-  id?: InputMaybe<IdFilterArgType>;
-  isUserInMultipleGroups?: InputMaybe<BooleanFilterArgType>;
-  name?: InputMaybe<StringFilterArgType>;
-  nameField?: InputMaybe<StringFilterArgType>;
-  type?: InputMaybe<StringFilterArgType>;
-  userGroupConfigId?: InputMaybe<IdFilterArgType>;
-  userGroupType?: InputMaybe<StringFilterArgType>;
-  userRelationEntity?: InputMaybe<StringFilterArgType>;
-  userRelationField?: InputMaybe<StringFilterArgType>;
-};
-
-export type UserGroupConfigModel = {
-  __typename?: 'UserGroupConfigModel';
-  createdAt: Scalars['Date'];
-  defaultRoles: RolePageModel;
-  entity: Scalars['String'];
-  groupRelationField?: Maybe<Scalars['String']>;
-  hasMembers: Scalars['Boolean'];
-  id: Scalars['ID'];
-  isUserInMultipleGroups: Scalars['Boolean'];
-  name?: Maybe<Scalars['String']>;
-  nameField?: Maybe<Scalars['String']>;
-  type: UserGroupConfigTypeEnum;
-  updatedAt: Scalars['Date'];
-  userGroupType: Scalars['String'];
-  userRelationEntity?: Maybe<Scalars['String']>;
-  userRelationField?: Maybe<Scalars['String']>;
-};
-
-
-export type UserGroupConfigModelDefaultRolesArgs = {
-  filter?: InputMaybe<RoleFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<RoleOrderArgType>;
-  search?: InputMaybe<RoleSearchArgType>;
-};
-
-export type UserGroupConfigOrderArgType = {
-  order: OrderEnum;
-  sort: UserGroupConfigOrderSortEnum;
-};
-
-export enum UserGroupConfigOrderSortEnum {
-  CreatedAt = 'createdAt',
-  Entity = 'entity',
-  GroupRelationField = 'groupRelationField',
-  IsUserInMultipleGroups = 'isUserInMultipleGroups',
-  Name = 'name',
-  NameField = 'nameField',
-  Type = 'type',
-  UpdatedAt = 'updatedAt',
-  UserGroupType = 'userGroupType',
-  UserRelationEntity = 'userRelationEntity',
-  UserRelationField = 'userRelationField'
-}
-
-export type UserGroupConfigPageModel = {
-  __typename?: 'UserGroupConfigPageModel';
-  data: Array<UserGroupConfigModel>;
-  totalCount: Scalars['Int'];
-};
-
-export type UserGroupConfigSearchArgType = {
-  key: UserGroupConfigSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum UserGroupConfigSearchKeyEnum {
-  Entity = 'entity',
-  GroupRelationField = 'groupRelationField',
-  Name = 'name',
-  NameField = 'nameField',
-  UserGroupType = 'userGroupType',
-  UserRelationEntity = 'userRelationEntity',
-  UserRelationField = 'userRelationField'
-}
-
-export enum UserGroupConfigTypeEnum {
-  BelongsTo = 'belongs_to',
-  IsA = 'is_a'
-}
-
-export type UserGroupConfigUpdateDto = {
-  defaultRoleIds?: InputMaybe<Array<Scalars['ID']>>;
-  entity?: InputMaybe<Scalars['String']>;
-  groupRelationField?: InputMaybe<Scalars['String']>;
-  isUserInMultipleGroups?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  nameField?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<UserGroupConfigTypeEnum>;
-  userGroupType?: InputMaybe<Scalars['String']>;
-  userRelationEntity?: InputMaybe<Scalars['String']>;
-  userRelationField?: InputMaybe<Scalars['String']>;
-};
-
 export type UserGroupCreateDto = {
   name: Scalars['String'];
-  remoteId: Scalars['String'];
-  type: Scalars['String'];
-  userGroupConfigId: Scalars['String'];
+  userGroupReference: Scalars['String'];
 };
 
 export type UserGroupFilterArgType = {
   id?: InputMaybe<IdFilterArgType>;
-  memberUserId?: InputMaybe<IdFilterArgType>;
   name?: InputMaybe<StringFilterArgType>;
-  remoteId?: InputMaybe<StringFilterArgType>;
   roleId?: InputMaybe<IdFilterArgType>;
   type?: InputMaybe<StringFilterArgType>;
+  userGroupReference?: InputMaybe<StringFilterArgType>;
+  userId?: InputMaybe<IdFilterArgType>;
+  userReference?: InputMaybe<StringFilterArgType>;
 };
 
 export type UserGroupIdFilterArgType = {
@@ -2479,10 +2373,10 @@ export type UserGroupModel = {
   id: Scalars['ID'];
   memberUsers?: Maybe<UserPageModel>;
   name: Scalars['String'];
-  remoteId: Scalars['String'];
   roles: RolePageModel;
   type: Scalars['String'];
   updatedAt: Scalars['Date'];
+  userGroupReference: Scalars['String'];
 };
 
 
@@ -2521,9 +2415,9 @@ export type UserGroupOrderArgType = {
 export enum UserGroupOrderSortEnum {
   CreatedAt = 'createdAt',
   Name = 'name',
-  RemoteId = 'remoteId',
   Type = 'type',
-  UpdatedAt = 'updatedAt'
+  UpdatedAt = 'updatedAt',
+  UserGroupReference = 'userGroupReference'
 }
 
 export type UserGroupPageModel = {
@@ -2543,18 +2437,13 @@ export type UserGroupSearchArgType = {
 
 export enum UserGroupSearchKeyEnum {
   Name = 'name',
-  RemoteId = 'remoteId',
-  Type = 'type'
+  Type = 'type',
+  UserGroupReference = 'userGroupReference'
 }
 
 export type UserGroupUpdateDto = {
   name?: InputMaybe<Scalars['String']>;
-  remoteId?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-};
-
-export type UserGroupUserRelationDto = {
-  userIds: Array<Scalars['ID']>;
+  userGroupReference?: InputMaybe<Scalars['String']>;
 };
 
 export type UserInviteCreateDto = {
@@ -2995,7 +2884,7 @@ export type NotifyMutationVariables = Exact<{
 }>;
 
 
-export type NotifyMutation = { __typename?: 'Mutation', notify: { __typename?: 'NotificationCreateModel', webNotifications?: boolean | null } };
+export type NotifyMutation = { __typename?: 'Mutation', notify: { __typename?: 'NotificationCreateModel', usersNotified: { __typename?: 'NotificationCreateUserModel', count: number } } };
 
 export type AddUserMutationVariables = Exact<{
   user: UserCreateDto;
@@ -3008,7 +2897,9 @@ export type AddUserMutation = { __typename?: 'Mutation', addUser: { __typename?:
 export const NotifyDocument = gql`
     mutation notify($notification: NotificationCreateDto!) {
   notify(notification: $notification) {
-    webNotifications
+    usersNotified {
+      count
+    }
   }
 }
     `;

@@ -1,5 +1,7 @@
 mutation notify($notification: NotificationCreateDto!){
   notify(notification: $notification) {
-    webNotifications
+    usersNotified{
+      count
+    }
   }
 }
