@@ -1,6 +1,6 @@
-mutation addUser($user: UserCreateDto!){
-  addUser(user: $user){
+mutation createUser($user: UserCreateDto!){
+  createUser(user: $user){
     id
-    userReference
+    reference
   }
 }

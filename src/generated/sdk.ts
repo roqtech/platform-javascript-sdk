@@ -875,13 +875,13 @@ export type MessageStatusModel = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptUserInvite: UserInviteModel;
-  addUser: UserModel;
   addUsersToUserGroup: Scalars['Boolean'];
   cancelUserInvite: UserInviteModel;
   createFileAssociation: FileAssociationModel;
   createFileUploadUrl: FileModel;
   createPermission: PermissionModel;
   createRole: RoleModel;
+  createUser: UserModel;
   createUserGroup: UserGroupModel;
   /** Create Single UserInvite */
   createUserInvite: UserInviteModel;
@@ -942,11 +942,6 @@ export type MutationAcceptUserInviteArgs = {
 };
 
 
-export type MutationAddUserArgs = {
-  user: UserCreateDto;
-};
-
-
 export type MutationAddUsersToUserGroupArgs = {
   id: Scalars['ID'];
   userIds: Array<Scalars['ID']>;
@@ -975,6 +970,11 @@ export type MutationCreatePermissionArgs = {
 
 export type MutationCreateRoleArgs = {
   role: RoleCreateDto;
+};
+
+
+export type MutationCreateUserArgs = {
+  user: UserCreateDto;
 };
 
 
@@ -1679,10 +1679,10 @@ export type ParticipantModel = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   id: Scalars['ID'];
+  isOptedIn: Scalars['Boolean'];
   isOwner: Scalars['Boolean'];
   lastName: Scalars['String'];
   locale: Scalars['String'];
-  optedInAt: Scalars['Date'];
   phone: Scalars['String'];
   timezone: Scalars['String'];
   updatedAt: Scalars['Date'];
@@ -2316,12 +2316,12 @@ export type UserCreateDto = {
   active?: InputMaybe<Scalars['Boolean']>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
+  isOptedIn?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
-  optedInAt?: InputMaybe<Scalars['Date']>;
   phone?: InputMaybe<Scalars['String']>;
+  reference: Scalars['String'];
   timezone?: InputMaybe<Scalars['String']>;
-  userReference: Scalars['String'];
 };
 
 export type UserFilterArgType = {
@@ -2346,17 +2346,16 @@ export type UserFilterArgType = {
 
 export type UserGroupCreateDto = {
   name: Scalars['String'];
-  userGroupReference: Scalars['String'];
+  reference: Scalars['String'];
 };
 
 export type UserGroupFilterArgType = {
   id?: InputMaybe<IdFilterArgType>;
   name?: InputMaybe<StringFilterArgType>;
+  reference?: InputMaybe<StringFilterArgType>;
   roleId?: InputMaybe<IdFilterArgType>;
   type?: InputMaybe<StringFilterArgType>;
-  userGroupReference?: InputMaybe<StringFilterArgType>;
   userId?: InputMaybe<IdFilterArgType>;
-  userReference?: InputMaybe<StringFilterArgType>;
 };
 
 export type UserGroupIdFilterArgType = {
@@ -2373,10 +2372,10 @@ export type UserGroupModel = {
   id: Scalars['ID'];
   memberUsers?: Maybe<UserPageModel>;
   name: Scalars['String'];
+  reference: Scalars['String'];
   roles: RolePageModel;
   type: Scalars['String'];
   updatedAt: Scalars['Date'];
-  userGroupReference: Scalars['String'];
 };
 
 
@@ -2415,9 +2414,9 @@ export type UserGroupOrderArgType = {
 export enum UserGroupOrderSortEnum {
   CreatedAt = 'createdAt',
   Name = 'name',
+  Reference = 'reference',
   Type = 'type',
-  UpdatedAt = 'updatedAt',
-  UserGroupReference = 'userGroupReference'
+  UpdatedAt = 'updatedAt'
 }
 
 export type UserGroupPageModel = {
@@ -2437,13 +2436,13 @@ export type UserGroupSearchArgType = {
 
 export enum UserGroupSearchKeyEnum {
   Name = 'name',
-  Type = 'type',
-  UserGroupReference = 'userGroupReference'
+  Reference = 'reference',
+  Type = 'type'
 }
 
 export type UserGroupUpdateDto = {
   name?: InputMaybe<Scalars['String']>;
-  userGroupReference?: InputMaybe<Scalars['String']>;
+  reference?: InputMaybe<Scalars['String']>;
 };
 
 export type UserInviteCreateDto = {
@@ -2576,10 +2575,11 @@ export type UserModel = {
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  isOptedIn?: Maybe<Scalars['Boolean']>;
   lastName?: Maybe<Scalars['String']>;
   locale?: Maybe<Scalars['String']>;
-  optedInAt?: Maybe<Scalars['Date']>;
   phone?: Maybe<Scalars['String']>;
+  reference: Scalars['String'];
   roles?: Maybe<RolePageModel>;
   timezone?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
@@ -2587,7 +2587,6 @@ export type UserModel = {
   userGroups?: Maybe<UserGroupPageModel>;
   userInviteId?: Maybe<Scalars['ID']>;
   userProviders: UserProviderPageModel;
-  userReference: Scalars['String'];
   userTokens: UserTokenPageModel;
 };
 
@@ -2657,7 +2656,6 @@ export enum UserOrderSortEnum {
   FirstName = 'firstName',
   LastName = 'lastName',
   Locale = 'locale',
-  OptedInAt = 'optedInAt',
   Phone = 'phone',
   Timezone = 'timezone',
   UpdatedAt = 'updatedAt'
@@ -2864,9 +2862,9 @@ export type UserUnreadMessagesModel = {
 export type UserUpdateDto = {
   email?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
+  isOptedIn?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
-  optedInAt?: InputMaybe<Scalars['Date']>;
   phone?: InputMaybe<Scalars['String']>;
   timezone?: InputMaybe<Scalars['String']>;
 };
@@ -2886,12 +2884,12 @@ export type NotifyMutationVariables = Exact<{
 
 export type NotifyMutation = { __typename?: 'Mutation', notify: { __typename?: 'NotificationCreateModel', usersNotified: { __typename?: 'NotificationCreateUserModel', count: number } } };
 
-export type AddUserMutationVariables = Exact<{
+export type CreateUserMutationVariables = Exact<{
   user: UserCreateDto;
 }>;
 
 
-export type AddUserMutation = { __typename?: 'Mutation', addUser: { __typename?: 'UserModel', id: string, userReference: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserModel', id: string, reference: string } };
 
 
 export const NotifyDocument = gql`
@@ -2903,11 +2901,11 @@ export const NotifyDocument = gql`
   }
 }
     `;
-export const AddUserDocument = gql`
-    mutation addUser($user: UserCreateDto!) {
-  addUser(user: $user) {
+export const CreateUserDocument = gql`
+    mutation createUser($user: UserCreateDto!) {
+  createUser(user: $user) {
     id
-    userReference
+    reference
   }
 }
     `;
@@ -2922,8 +2920,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     notify(variables: NotifyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotifyMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<NotifyMutation>(NotifyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'notify', 'mutation');
     },
-    addUser(variables: AddUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddUserMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<AddUserMutation>(AddUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addUser', 'mutation');
+    createUser(variables: CreateUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateUserMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateUserMutation>(CreateUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createUser', 'mutation');
     }
   };
 }

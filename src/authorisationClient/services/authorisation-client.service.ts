@@ -39,7 +39,7 @@ export class AuthorisationClientService {
     return accessToken;
   }
 
-  async createUserToken(userReference: string, expiresIn?: string): Promise<string> {
+  async createUserToken(data: { roqIdentifier: string, expiresIn?: string }): Promise<string> {
     const serviceToken = await this.getToken();
     const token = await this.request({
       endpoint: defaultUserTokenEndpoint,
@@ -47,7 +47,11 @@ export class AuthorisationClientService {
       headers: {
         'roq-platform-authorization': `Bearer ${serviceToken}`,
       },
-      body: { userReference, expiresIn },
+      body:{
+        tenantId: this.tenantId,
+        apiKey: this.apiKey,
+        ...data,
+      },
     });
     return token?.accessToken;
   }

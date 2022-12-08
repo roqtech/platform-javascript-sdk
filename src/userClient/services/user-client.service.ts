@@ -2,10 +2,10 @@ import { Sdk } from '../../generated/sdk';
 
 export class UserClientService {
   private gqlSdk: Sdk;
-  public addUser: Sdk['addUser'];
+  public createUser: Sdk['createUser'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
-    this.addUser = this.gqlSdk.addUser;
+    this.createUser = this.gqlSdk.createUser;
   }
 }
