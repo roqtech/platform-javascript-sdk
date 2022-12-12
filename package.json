@@ -29,6 +29,7 @@
     "npm": "7.24.2"
   },
   "dependencies": {
+    "graphql-tag": "^2.12.6",
     "graphql": "^16.6.0",
     "graphql-request": "5.0.0",
     "jsonwebtoken": "^8.5.1",

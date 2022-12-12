@@ -1513,9 +1513,9 @@ export type NotificationPreferenceModel = {
 
 export type NotificationRecipientDto = {
   allUsers?: InputMaybe<Scalars['Boolean']>;
-  excludedUserReferences?: InputMaybe<Array<Scalars['String']>>;
+  excludedUserIds?: InputMaybe<Array<Scalars['String']>>;
   userGroups?: InputMaybe<NotificationUserGroupDto>;
-  userReferences?: InputMaybe<Array<Scalars['String']>>;
+  userIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum NotificationStatusEnum {
@@ -1628,7 +1628,7 @@ export type NotificationUserCreateDto = {
 
 export type NotificationUserGroupDto = {
   operator: NotificationUserGroupOperatorEnum;
-  userGroupReferences?: InputMaybe<Array<Scalars['String']>>;
+  userGroupIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum NotificationUserGroupOperatorEnum {
