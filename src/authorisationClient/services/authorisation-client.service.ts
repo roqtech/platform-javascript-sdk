@@ -13,13 +13,13 @@ export class AuthorisationClientService {
   private readonly host: string;
   private readonly jwtSecret: string;
   private readonly apiKey: string;
-  private readonly tenantId: string;
+  private readonly environmentId: string;
   private readonly tokenStorage: Record<string, string> = {};
   private readonly serviceAccountEmail = defaultServiceAccountEmail;
 
   constructor(options: PlatformClientOptionsType) {
     this.jwtSecret = options.jwtSecret;
-    this.tenantId = options.tenantId;
+    this.environmentId = options.environmentId;
     this.apiKey = options.apiKey;
     if (options.host) {
       this.host = options.host;
@@ -32,7 +32,7 @@ export class AuthorisationClientService {
     const { accessToken } = await this.request({
       endpoint: defaultCreateTokenEndpoint,
       method: 'POST',
-      body: { email, tenantId: this.tenantId, apiKey: this.apiKey },
+      body: { email, environmentId: this.environmentId, apiKey: this.apiKey },
     });
 
     this.tokenStorage[email] = accessToken;
@@ -48,7 +48,7 @@ export class AuthorisationClientService {
         'roq-platform-authorization': `Bearer ${serviceToken}`,
       },
       body:{
-        tenantId: this.tenantId,
+        environmentId: this.environmentId,
         apiKey: this.apiKey,
         ...data,
       },

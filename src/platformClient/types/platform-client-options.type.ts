@@ -1,6 +1,6 @@
 export type PlatformClientOptionsType = {
   apiKey: string;
-  tenantId: string;
+  environmentId: string;
   jwtSecret: string;
   host?: string;
 };

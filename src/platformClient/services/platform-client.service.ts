@@ -13,7 +13,7 @@ export class PlatformClientService {
   private readonly host: string;
   private readonly jwtSecret: string;
   private readonly apiKey: string;
-  private readonly tenantId: string;
+  private readonly environmentId: string;
   private readonly graphqlClient: GraphQLClient;
 
   public readonly authorisation: AuthorisationClientService;
@@ -27,7 +27,7 @@ export class PlatformClientService {
 
   constructor(options: PlatformClientOptionsType) {
     this.jwtSecret = options.jwtSecret;
-    this.tenantId = options.tenantId;
+    this.environmentId = options.environmentId;
     this.apiKey = options.apiKey;
     if (options.host) {
       this.graphqlUrl = options.host + defaultGraphqlEndpoint;
