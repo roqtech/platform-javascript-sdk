@@ -39,7 +39,7 @@ export class AuthorisationClientService {
     return accessToken;
   }
 
-  async createUserToken(data: { roqIdentifier: string, expiresIn?: string }): Promise<string> {
+  async createUserToken(data: { userId: string, expiresIn?: string }): Promise<string> {
     const serviceToken = await this.getToken();
     const token = await this.request({
       endpoint: defaultUserTokenEndpoint,
