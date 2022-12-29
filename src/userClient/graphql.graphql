@@ -1,6 +1,42 @@
+fragment User on UserModel{
+  id
+  reference
+  firstName
+  lastName
+  active
+  email
+  phone
+  locale
+  isOptedIn
+  synced
+  tenantId
+  timezone
+  createdAt
+  updatedAt
+}
+
+
 mutation createUser($user: UserCreateDto!){
   createUser(user: $user){
+    ...User
+  }
+}
+
+mutation updateUser($id:ID!,$user: UserUpdateDto!){
+  updateUser(id:$id, user: $user){
     id
     reference
+    firstName
+    lastName
+    active
+    email
+    phone
+    locale
+    isOptedIn
+    synced
+    tenantId
+    timezone
+    createdAt
+    updatedAt
   }
 }

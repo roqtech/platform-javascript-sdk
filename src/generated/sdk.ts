@@ -21,12 +21,6 @@ export type AcceptUserInviteDto = {
   token: Scalars['String'];
 };
 
-export type AllTranslationKeyPageModel = {
-  __typename?: 'AllTranslationKeyPageModel';
-  data: Array<CustomTranslationKeyModel>;
-  totalCount: Scalars['Int'];
-};
-
 export type BooleanFilterArgType = {
   equalTo?: InputMaybe<Scalars['Boolean']>;
   notEqualTo?: InputMaybe<Scalars['Boolean']>;
@@ -55,7 +49,9 @@ export type ConversationFilterArgType = {
   conversationUserId?: InputMaybe<IdFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
   isGroup?: InputMaybe<BooleanFilterArgType>;
+  memberId?: InputMaybe<IdFilterArgType>;
   messageId?: InputMaybe<IdFilterArgType>;
+  ownerId?: InputMaybe<IdFilterArgType>;
 };
 
 export type ConversationModel = {
@@ -93,6 +89,11 @@ export type ConversationPageModel = {
 export type ConversationSearchArgType = {
   key: Scalars['String'];
   value: Scalars['String'];
+};
+
+export type ConversationUserCreateDto = {
+  conversationId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type ConversationUserModel = {
@@ -164,6 +165,21 @@ export type DeploymentInfoModel = {
 
 export type EntityNameFilterArgType = {
   equalTo?: InputMaybe<Scalars['String']>;
+};
+
+export type EnvironmentInitialiseDto = {
+  id: Scalars['String'];
+};
+
+export type EnvironmentModel = {
+  __typename?: 'EnvironmentModel';
+  id: Scalars['String'];
+};
+
+export type EnvironmentUpdateDto = {
+  fromEmail?: InputMaybe<Scalars['String']>;
+  roqOneFrontendUrl?: InputMaybe<Scalars['String']>;
+  sendGridApiKey?: InputMaybe<Scalars['String']>;
 };
 
 export type EventExampleDataCreateDto = {
@@ -354,14 +370,14 @@ export type FileAssociationBulkFilterArgType = {
 };
 
 export type FileAssociationCreateDto = {
-  entityIdentifier: Scalars['ID'];
   entityName: Scalars['String'];
+  entityReference: Scalars['ID'];
   fileId: Scalars['ID'];
 };
 
 export type FileAssociationFilterArgType = {
-  entityIdentifier?: InputMaybe<StringFilterArgType>;
   entityName?: InputMaybe<StringFilterArgType>;
+  entityReference?: InputMaybe<StringFilterArgType>;
   fileId?: InputMaybe<IdFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
 };
@@ -369,17 +385,12 @@ export type FileAssociationFilterArgType = {
 export type FileAssociationModel = {
   __typename?: 'FileAssociationModel';
   createdAt: Scalars['Date'];
-  entityIdentifier: Scalars['ID'];
   entityName: Scalars['String'];
+  entityReference: Scalars['ID'];
   file: FileModel;
   fileId: Scalars['ID'];
   id: Scalars['ID'];
   updatedAt: Scalars['Date'];
-};
-
-export type FileAssociationOptionsCreateDto = {
-  entityIdentifier: Scalars['ID'];
-  entityName: Scalars['String'];
 };
 
 export type FileAssociationOrderArgType = {
@@ -389,8 +400,8 @@ export type FileAssociationOrderArgType = {
 
 export enum FileAssociationOrderSortEnum {
   CreatedAt = 'createdAt',
-  EntityIdentifier = 'entityIdentifier',
   EntityName = 'entityName',
+  EntityReference = 'entityReference',
   UpdatedAt = 'updatedAt'
 }
 
@@ -406,36 +417,27 @@ export type FileAssociationSearchArgType = {
 };
 
 export enum FileAssociationSearchKeyEnum {
-  EntityIdentifier = 'entityIdentifier',
-  EntityName = 'entityName'
+  EntityName = 'entityName',
+  EntityReference = 'entityReference'
 }
 
-export type FileCategoryContentTypeFilterArgType = {
+export type FileCategoryContentGroupCreateDto = {
+  key: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type FileCategoryContentGroupFilterArgType = {
   fileCategoryId?: InputMaybe<IdFilterArgType>;
-  group?: InputMaybe<StringFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
   key?: InputMaybe<StringFilterArgType>;
   name?: InputMaybe<StringFilterArgType>;
 };
 
-export enum FileCategoryContentTypeGroupEnum {
-  Application = 'application',
-  Audio = 'audio',
-  Font = 'font',
-  Image = 'image',
-  Message = 'message',
-  Model = 'model',
-  Multipart = 'multipart',
-  Other = 'other',
-  Text = 'text',
-  Video = 'video'
-}
-
-export type FileCategoryContentTypeModel = {
-  __typename?: 'FileCategoryContentTypeModel';
+export type FileCategoryContentGroupModel = {
+  __typename?: 'FileCategoryContentGroupModel';
   createdAt: Scalars['Date'];
-  fileCategories?: Maybe<FileCategoryPageModel>;
-  group: FileCategoryContentTypeGroupEnum;
+  fileCategories: FileCategoryPageModel;
+  fileCategoryContentTypes: FileCategoryContentTypePageModel;
   id: Scalars['ID'];
   key: Scalars['String'];
   name: Scalars['String'];
@@ -443,12 +445,71 @@ export type FileCategoryContentTypeModel = {
 };
 
 
-export type FileCategoryContentTypeModelFileCategoriesArgs = {
+export type FileCategoryContentGroupModelFileCategoriesArgs = {
   filter?: InputMaybe<FileCategoryFilterArgType>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<FileCategoryOrderArgType>;
   search?: InputMaybe<FileCategorySearchArgType>;
+};
+
+
+export type FileCategoryContentGroupModelFileCategoryContentTypesArgs = {
+  filter?: InputMaybe<FileCategoryContentTypeFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<FileCategoryContentTypeOrderArgType>;
+  search?: InputMaybe<FileCategoryContentTypeSearchArgType>;
+};
+
+export type FileCategoryContentGroupOrderArgType = {
+  order: OrderEnum;
+  sort: FileCategoryContentGroupOrderSortEnum;
+};
+
+export enum FileCategoryContentGroupOrderSortEnum {
+  CreatedAt = 'createdAt',
+  Key = 'key',
+  Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
+
+export type FileCategoryContentGroupPageModel = {
+  __typename?: 'FileCategoryContentGroupPageModel';
+  data: Array<FileCategoryContentGroupModel>;
+  totalCount: Scalars['Int'];
+};
+
+export type FileCategoryContentGroupSearchArgType = {
+  key: FileCategoryContentGroupSearchKeyEnum;
+  value: Scalars['String'];
+};
+
+export enum FileCategoryContentGroupSearchKeyEnum {
+  Key = 'key',
+  Name = 'name'
+}
+
+export type FileCategoryContentGroupUpdateDto = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type FileCategoryContentTypeFilterArgType = {
+  fileCategoryContentGroup?: InputMaybe<StringFilterArgType>;
+  id?: InputMaybe<IdFilterArgType>;
+  key?: InputMaybe<StringFilterArgType>;
+  name?: InputMaybe<StringFilterArgType>;
+};
+
+export type FileCategoryContentTypeModel = {
+  __typename?: 'FileCategoryContentTypeModel';
+  createdAt: Scalars['Date'];
+  fileCategoryContentGroup: FileCategoryContentGroupModel;
+  fileCategoryContentGroupId: Scalars['ID'];
+  id: Scalars['ID'];
+  key: Scalars['String'];
+  name: Scalars['String'];
+  updatedAt: Scalars['Date'];
 };
 
 export type FileCategoryContentTypeOrderArgType = {
@@ -458,7 +519,6 @@ export type FileCategoryContentTypeOrderArgType = {
 
 export enum FileCategoryContentTypeOrderSortEnum {
   CreatedAt = 'createdAt',
-  Group = 'group',
   Key = 'key',
   Name = 'name',
   UpdatedAt = 'updatedAt'
@@ -476,20 +536,20 @@ export type FileCategoryContentTypeSearchArgType = {
 };
 
 export enum FileCategoryContentTypeSearchKeyEnum {
-  Group = 'group',
+  FileCategoryContentGroupId = 'fileCategoryContentGroupId',
   Key = 'key',
   Name = 'name'
 }
 
 export type FileCategoryCreateDto = {
-  fileCategoryContentTypeIds?: InputMaybe<Array<Scalars['ID']>>;
+  fileCategoryContentGroupIds?: InputMaybe<Array<Scalars['ID']>>;
+  isPublicByDefault?: InputMaybe<Scalars['Boolean']>;
   key: Scalars['String'];
   maxSize?: InputMaybe<Scalars['Float']>;
   name: Scalars['String'];
 };
 
 export type FileCategoryFilterArgType = {
-  fileCategoryContentTypeId?: InputMaybe<IdFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
   key?: InputMaybe<StringFilterArgType>;
   maxSize?: InputMaybe<NumberFilterArgType>;
@@ -499,7 +559,7 @@ export type FileCategoryFilterArgType = {
 export type FileCategoryModel = {
   __typename?: 'FileCategoryModel';
   createdAt: Scalars['Date'];
-  fileCategoryContentTypes?: Maybe<FileCategoryContentTypePageModel>;
+  fileCategoryContentGroups?: Maybe<FileCategoryContentGroupPageModel>;
   id: Scalars['ID'];
   key: Scalars['String'];
   maxSize?: Maybe<Scalars['Float']>;
@@ -508,12 +568,12 @@ export type FileCategoryModel = {
 };
 
 
-export type FileCategoryModelFileCategoryContentTypesArgs = {
-  filter?: InputMaybe<FileCategoryContentTypeFilterArgType>;
+export type FileCategoryModelFileCategoryContentGroupsArgs = {
+  filter?: InputMaybe<FileCategoryContentGroupFilterArgType>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<FileCategoryContentTypeOrderArgType>;
-  search?: InputMaybe<FileCategoryContentTypeSearchArgType>;
+  order?: InputMaybe<FileCategoryContentGroupOrderArgType>;
+  search?: InputMaybe<FileCategoryContentGroupSearchArgType>;
 };
 
 export type FileCategoryOrderArgType = {
@@ -546,25 +606,41 @@ export enum FileCategorySearchKeyEnum {
 }
 
 export type FileCategoryUpdateDto = {
-  fileCategoryContentTypeIds?: InputMaybe<Array<Scalars['ID']>>;
+  fileCategoryContentGroupIds?: InputMaybe<Array<Scalars['ID']>>;
+  isPublicByDefault: Scalars['Boolean'];
   maxSize?: InputMaybe<Scalars['Float']>;
   name?: InputMaybe<Scalars['String']>;
 };
 
 export type FileCreateDto = {
   contentType: Scalars['String'];
-  customMetaData?: InputMaybe<Scalars['JsonObject']>;
-  fileAssociationOptions?: InputMaybe<Array<FileAssociationOptionsCreateDto>>;
   fileCategory: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type FileCreateUploadModel = {
+  __typename?: 'FileCreateUploadModel';
+  contentType: Scalars['String'];
+  createdAt: Scalars['Date'];
+  createdByUserId: Scalars['ID'];
+  fileCategory: FileCategoryModel;
+  fileCategoryId: Scalars['ID'];
+  formFields: Scalars['JsonObject'];
+  id: Scalars['ID'];
+  isPublic: Scalars['Boolean'];
+  name: Scalars['String'];
+  status: FileStatusEnum;
+  updatedAt: Scalars['Date'];
+  uploadUrl: Scalars['String'];
+  userId?: Maybe<Scalars['String']>;
 };
 
 export type FileFilterArgType = {
   contentType?: InputMaybe<StringFilterArgType>;
   createdAt?: InputMaybe<DateFilterArgType>;
   createdByUserId?: InputMaybe<IdFilterArgType>;
-  entityIdentifiers?: InputMaybe<IdFilterArgType>;
   entityName?: InputMaybe<EntityNameFilterArgType>;
+  entityReferences?: InputMaybe<StringFilterArgType>;
   fileCategory?: InputMaybe<StringFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
   isPublic?: InputMaybe<BooleanFilterArgType>;
@@ -577,9 +653,9 @@ export type FileModel = {
   __typename?: 'FileModel';
   contentType: Scalars['String'];
   createdAt: Scalars['Date'];
+  createdByUser: UserModel;
   createdByUserId: Scalars['ID'];
-  customMetaData?: Maybe<Scalars['JsonObject']>;
-  fileAssociations?: Maybe<FileAssociationPageModel>;
+  fileAssociations: FileAssociationPageModel;
   fileCategory: FileCategoryModel;
   fileCategoryId: Scalars['ID'];
   id: Scalars['ID'];
@@ -587,7 +663,6 @@ export type FileModel = {
   name: Scalars['String'];
   status: FileStatusEnum;
   updatedAt: Scalars['Date'];
-  uploadUrl?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
 };
@@ -621,16 +696,6 @@ export type FilePageModel = {
   totalCount: Scalars['Int'];
 };
 
-export type FileSearchArgType = {
-  key: FileSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum FileSearchKeyEnum {
-  ContentType = 'contentType',
-  Name = 'name'
-}
-
 export enum FileStatusEnum {
   Cancelled = 'cancelled',
   Error = 'error',
@@ -640,7 +705,6 @@ export enum FileStatusEnum {
 }
 
 export type FileUpdateDto = {
-  customMetaData?: InputMaybe<Scalars['JsonObject']>;
   name?: InputMaybe<Scalars['String']>;
 };
 
@@ -724,123 +788,121 @@ export type IntegrationPageModel = {
   totalCount: Scalars['Int'];
 };
 
-export type MailTypeCreateDto = {
-  description?: InputMaybe<Scalars['String']>;
+export type MailCreateDto = {
+  data?: InputMaybe<Array<NotificationTemplateVariableDto>>;
+  emails: Array<Scalars['String']>;
   key: Scalars['String'];
+  locale: Scalars['String'];
 };
 
-export type MailTypeFilterArgType = {
-  description?: InputMaybe<StringFilterArgType>;
+export type MailCreateModel = {
+  __typename?: 'MailCreateModel';
+  mailsSent: MailCreateUserModel;
+};
+
+export type MailCreateUserModel = {
+  __typename?: 'MailCreateUserModel';
+  count: Scalars['Int'];
+};
+
+export type MailLocalizedTemplateCreateDto = {
+  content: Scalars['String'];
+  key: Scalars['String'];
+  locale: Scalars['String'];
+  subject: Scalars['String'];
+  templateId: Scalars['String'];
+};
+
+export type MailLocalizedTemplateFilterArgType = {
+  content?: InputMaybe<StringFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
   key?: InputMaybe<StringFilterArgType>;
-  mailTypeLocalizedId?: InputMaybe<IdFilterArgType>;
-};
-
-export type MailTypeLocalizedCreateDto = {
-  locale: Scalars['String'];
-  mailTypeId: Scalars['ID'];
-  subject: Scalars['String'];
-  template: Scalars['String'];
-};
-
-export type MailTypeLocalizedFilterArgType = {
-  id?: InputMaybe<IdFilterArgType>;
   locale?: InputMaybe<StringFilterArgType>;
-  mailTypeId?: InputMaybe<IdFilterArgType>;
   subject?: InputMaybe<StringFilterArgType>;
+  templateId?: InputMaybe<StringFilterArgType>;
 };
 
-export type MailTypeLocalizedModel = {
-  __typename?: 'MailTypeLocalizedModel';
-  createdAt: Scalars['Date'];
-  id: Scalars['ID'];
-  locale: Scalars['String'];
-  mailType: MailTypeModel;
-  mailTypeId: Scalars['ID'];
-  subject: Scalars['String'];
-  template: Scalars['String'];
-  updatedAt: Scalars['Date'];
+export type MailLocalizedTemplateModel = {
+  __typename?: 'MailLocalizedTemplateModel';
+  content?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  id?: Maybe<Scalars['ID']>;
+  key?: Maybe<Scalars['String']>;
+  locale?: Maybe<Scalars['String']>;
+  subject?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Date']>;
 };
 
-export type MailTypeLocalizedOrderArgType = {
+export type MailLocalizedTemplateOrderArgType = {
   order: OrderEnum;
-  sort: MailTypeLocalizedOrderSortEnum;
+  sort: MailLocalizedTemplateOrderSortEnum;
 };
 
-export enum MailTypeLocalizedOrderSortEnum {
+export enum MailLocalizedTemplateOrderSortEnum {
+  Content = 'content',
   CreatedAt = 'createdAt',
-  Locale = 'locale',
-  Subject = 'subject',
-  Template = 'template',
-  UpdatedAt = 'updatedAt'
-}
-
-export type MailTypeLocalizedPageModel = {
-  __typename?: 'MailTypeLocalizedPageModel';
-  data: Array<MailTypeLocalizedModel>;
-  totalCount: Scalars['Int'];
-};
-
-export type MailTypeLocalizedSearchArgType = {
-  key: MailTypeLocalizedSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum MailTypeLocalizedSearchKeyEnum {
-  Locale = 'locale',
-  Subject = 'subject',
-  Template = 'template'
-}
-
-export type MailTypeLocalizedUpdateDto = {
-  locale?: InputMaybe<Scalars['String']>;
-  mailTypeId?: InputMaybe<Scalars['ID']>;
-  subject?: InputMaybe<Scalars['String']>;
-  template?: InputMaybe<Scalars['String']>;
-};
-
-export type MailTypeModel = {
-  __typename?: 'MailTypeModel';
-  createdAt: Scalars['Date'];
-  description: Scalars['String'];
-  id: Scalars['ID'];
-  key: Scalars['String'];
-  updatedAt: Scalars['Date'];
-};
-
-export type MailTypeOrderArgType = {
-  order: OrderEnum;
-  sort: MailTypeOrderSortEnum;
-};
-
-export enum MailTypeOrderSortEnum {
-  CreatedAt = 'createdAt',
-  Description = 'description',
   Key = 'key',
+  Locale = 'locale',
   UpdatedAt = 'updatedAt'
 }
 
-export type MailTypePageModel = {
-  __typename?: 'MailTypePageModel';
-  data: Array<MailTypeModel>;
+export type MailLocalizedTemplatePageModel = {
+  __typename?: 'MailLocalizedTemplatePageModel';
+  data: Array<MailLocalizedTemplateModel>;
   totalCount: Scalars['Int'];
 };
 
-export type MailTypeSearchArgType = {
-  key: MailTypeSearchKeyEnum;
+export type MailLocalizedTemplateSearchArgType = {
+  key: MailLocalizedTemplateSearchKeyEnum;
   value: Scalars['String'];
 };
 
-export enum MailTypeSearchKeyEnum {
-  Description = 'description',
+export enum MailLocalizedTemplateSearchKeyEnum {
   Key = 'key'
 }
 
-export type MailTypeUpdateDto = {
-  description?: InputMaybe<Scalars['String']>;
+export type MailLocalizedTemplateUpdateDto = {
+  content?: InputMaybe<Scalars['String']>;
+  key?: InputMaybe<Scalars['String']>;
+  locale?: InputMaybe<Scalars['String']>;
+  subject?: InputMaybe<Scalars['String']>;
+  templateId?: InputMaybe<Scalars['String']>;
 };
 
-export type MarkMessageDto = {
+export type MailTemplateCreateDto = {
+  active: Scalars['Boolean'];
+  content: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  locale: Scalars['String'];
+  name: Scalars['String'];
+  subject: Scalars['String'];
+};
+
+export type MailTemplateModel = {
+  __typename?: 'MailTemplateModel';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['Date'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  key?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['Date'];
+};
+
+export type MailTemplatePageModel = {
+  __typename?: 'MailTemplatePageModel';
+  data: Array<MailTemplateModel>;
+  totalCount: Scalars['Int'];
+};
+
+export type MailTemplateUpdateDto = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type MarkNotificationsDto = {
   read: Scalars['Boolean'];
   seen: Scalars['Boolean'];
 };
@@ -874,82 +936,49 @@ export type MessageStatusModel = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  acceptUserInvite: UserInviteModel;
   addUsersToUserGroup: Scalars['Boolean'];
-  cancelUserInvite: UserInviteModel;
+  assignRolesToUser: Scalars['Boolean'];
+  createConversationUser: ConversationModel;
   createFileAssociation: FileAssociationModel;
-  createFileUploadUrl: FileModel;
-  createPermission: PermissionModel;
-  createRole: RoleModel;
+  createFileUpload: FileCreateUploadModel;
+  createTenant: TenantModel;
   createUser: UserModel;
   createUserGroup: UserGroupModel;
-  /** Create Single UserInvite */
-  createUserInvite: UserInviteModel;
-  /** Create multiple UserInvites */
-  createUserInvites: CreateUserInvitesModel;
-  createUserProvider: UserProviderModel;
-  createUserRefreshToken: UserTokenModel;
-  createUserResetPasswordToken: UserTokenModel;
-  createUserToken: UserTokenModel;
-  createUserValidateEmailToken: UserTokenModel;
-  deleteConversation: Array<Scalars['ID']>;
-  deleteConversationUser: Array<Scalars['ID']>;
-  deleteFileAssociation: Scalars['ID'];
   deleteFileAssociations: Array<Scalars['String']>;
-  deleteFiles: Array<Scalars['String']>;
-  deleteMessage: Array<Scalars['ID']>;
-  deleteMessageStatus: Array<Scalars['ID']>;
-  deletePermissions: Array<Scalars['ID']>;
-  deleteRoles: Array<Scalars['ID']>;
-  deleteUserTokens: Array<Scalars['ID']>;
+  deleteFiles: Array<Scalars['ID']>;
+  deleteTest: Array<Scalars['ID']>;
   makeFilePrivate: FileModel;
   makeFilePublic: FileModel;
-  markMessageSeen: Array<NotificationModel>;
+  markNotifications: Array<NotificationModel>;
   notify: NotificationCreateModel;
-  relateRolesToUser: Scalars['Boolean'];
-  relateRolesToUserGroup: Scalars['Boolean'];
-  relateUserGroupsToRole: Scalars['Boolean'];
-  relateUserGroupsToUser: Scalars['Boolean'];
   relateUsersToRole: Scalars['Boolean'];
   removeUsersFromUserGroup: Scalars['Boolean'];
-  resendUserInvite: UserInviteModel;
-  rotateRefreshToken: UserTokenModel;
-  sendMail: NotificationCreateModel;
-  /** Create UserInvite and send email */
-  sendUserInvites: CreateUserInvitesModel;
-  syncEventSubscribers: Scalars['Boolean'];
-  unrelateRolesFromUser: Scalars['Boolean'];
-  unrelateRolesFromUserGroup: Scalars['Boolean'];
-  unrelateUserGroupsFromRole: Scalars['Boolean'];
-  unrelateUserGroupsFromUser: Scalars['Boolean'];
+  sendMail: MailCreateModel;
+  unassignRolesFromUser: Scalars['Boolean'];
   unrelateUsersFromRole: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
-  updatePermission: PermissionModel;
-  updateRole: RoleModel;
   updateUser: UserModel;
   updateUserGroup: UserGroupModel;
-  updateUserGroupRoles: Array<Scalars['ID']>;
-  updateUserInvite: UserInviteModel;
-  updateUserRoles: Array<Scalars['ID']>;
-  verifyUserRefreshToken: UserTokenModel;
-};
-
-
-export type MutationAcceptUserInviteArgs = {
-  acceptUserInvite: AcceptUserInviteDto;
+  updateUserProfile: UserModel;
 };
 
 
 export type MutationAddUsersToUserGroupArgs = {
-  id: Scalars['ID'];
+  userGroupId: Scalars['ID'];
   userIds: Array<Scalars['ID']>;
 };
 
 
-export type MutationCancelUserInviteArgs = {
-  id: Scalars['ID'];
+export type MutationAssignRolesToUserArgs = {
+  roleIds: Array<Scalars['ID']>;
+  userId: Scalars['ID'];
+};
+
+
+export type MutationCreateConversationUserArgs = {
+  conversationUser: ConversationUserCreateDto;
 };
 
 
@@ -958,18 +987,13 @@ export type MutationCreateFileAssociationArgs = {
 };
 
 
-export type MutationCreateFileUploadUrlArgs = {
+export type MutationCreateFileUploadArgs = {
   createFileDto: FileCreateDto;
 };
 
 
-export type MutationCreatePermissionArgs = {
-  permission: PermissionCreateDto;
-};
-
-
-export type MutationCreateRoleArgs = {
-  role: RoleCreateDto;
+export type MutationCreateTenantArgs = {
+  tenant: TenantCreateDto;
 };
 
 
@@ -983,56 +1007,6 @@ export type MutationCreateUserGroupArgs = {
 };
 
 
-export type MutationCreateUserInviteArgs = {
-  userInvite: UserInviteCreateDto;
-};
-
-
-export type MutationCreateUserInvitesArgs = {
-  userInvites: UserInvitesCreateDto;
-};
-
-
-export type MutationCreateUserProviderArgs = {
-  userProvider: UserProviderCreateDto;
-};
-
-
-export type MutationCreateUserRefreshTokenArgs = {
-  userToken: UserRefreshTokenCreateDto;
-};
-
-
-export type MutationCreateUserResetPasswordTokenArgs = {
-  userToken: UserResetPasswordTokenCreateDto;
-};
-
-
-export type MutationCreateUserTokenArgs = {
-  userToken: UserTokenCreateDto;
-};
-
-
-export type MutationCreateUserValidateEmailTokenArgs = {
-  userToken: UserValidateEmailTokenCreateDto;
-};
-
-
-export type MutationDeleteConversationArgs = {
-  filter?: InputMaybe<DeleteFilterArgType>;
-};
-
-
-export type MutationDeleteConversationUserArgs = {
-  filter?: InputMaybe<DeleteFilterArgType>;
-};
-
-
-export type MutationDeleteFileAssociationArgs = {
-  id: Scalars['ID'];
-};
-
-
 export type MutationDeleteFileAssociationsArgs = {
   filter: FileAssociationBulkFilterArgType;
 };
@@ -1043,73 +1017,29 @@ export type MutationDeleteFilesArgs = {
 };
 
 
-export type MutationDeleteMessageArgs = {
+export type MutationDeleteTestArgs = {
   filter?: InputMaybe<DeleteFilterArgType>;
-};
-
-
-export type MutationDeleteMessageStatusArgs = {
-  filter?: InputMaybe<DeleteFilterArgType>;
-};
-
-
-export type MutationDeletePermissionsArgs = {
-  filter?: InputMaybe<DeleteFilterArgType>;
-};
-
-
-export type MutationDeleteRolesArgs = {
-  filter?: InputMaybe<DeleteFilterArgType>;
-};
-
-
-export type MutationDeleteUserTokensArgs = {
-  filter?: InputMaybe<DeleteUserTokenFilterArgType>;
 };
 
 
 export type MutationMakeFilePrivateArgs = {
-  fileId: Scalars['ID'];
+  id: Scalars['ID'];
 };
 
 
 export type MutationMakeFilePublicArgs = {
-  fileId: Scalars['ID'];
+  id: Scalars['ID'];
 };
 
 
-export type MutationMarkMessageSeenArgs = {
-  mark: MarkMessageDto;
+export type MutationMarkNotificationsArgs = {
+  mark: MarkNotificationsDto;
   messageIds: Array<Scalars['String']>;
 };
 
 
 export type MutationNotifyArgs = {
   notification: NotificationCreateDto;
-};
-
-
-export type MutationRelateRolesToUserArgs = {
-  id: Scalars['ID'];
-  relation: UserRoleRelationDto;
-};
-
-
-export type MutationRelateRolesToUserGroupArgs = {
-  id: Scalars['ID'];
-  relation: UserGroupRoleRelationDto;
-};
-
-
-export type MutationRelateUserGroupsToRoleArgs = {
-  id: Scalars['ID'];
-  relation: RoleUserGroupRelationDto;
-};
-
-
-export type MutationRelateUserGroupsToUserArgs = {
-  id: Scalars['ID'];
-  relation: UserUserGroupRelationDto;
 };
 
 
@@ -1120,57 +1050,19 @@ export type MutationRelateUsersToRoleArgs = {
 
 
 export type MutationRemoveUsersFromUserGroupArgs = {
-  id: Scalars['ID'];
+  userGroupId: Scalars['ID'];
   userIds: Array<Scalars['ID']>;
 };
 
 
-export type MutationResendUserInviteArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationRotateRefreshTokenArgs = {
-  userToken: UserRefreshTokenVerifyDto;
-};
-
-
 export type MutationSendMailArgs = {
-  notification: NotificationGuestCreateDto;
+  mail: MailCreateDto;
 };
 
 
-export type MutationSendUserInvitesArgs = {
-  userInvites: UserInvitesCreateDto;
-};
-
-
-export type MutationSyncEventSubscribersArgs = {
-  eventSubscribers: Array<EventSubscriberCreateDto>;
-};
-
-
-export type MutationUnrelateRolesFromUserArgs = {
-  id: Scalars['ID'];
-  relation: UserRoleRelationDto;
-};
-
-
-export type MutationUnrelateRolesFromUserGroupArgs = {
-  id: Scalars['ID'];
-  relation: UserGroupRoleRelationDto;
-};
-
-
-export type MutationUnrelateUserGroupsFromRoleArgs = {
-  id: Scalars['ID'];
-  relation: RoleUserGroupRelationDto;
-};
-
-
-export type MutationUnrelateUserGroupsFromUserArgs = {
-  id: Scalars['ID'];
-  relation: UserUserGroupRelationDto;
+export type MutationUnassignRolesFromUserArgs = {
+  roleIds: Array<Scalars['ID']>;
+  userId: Scalars['ID'];
 };
 
 
@@ -1181,13 +1073,13 @@ export type MutationUnrelateUsersFromRoleArgs = {
 
 
 export type MutationUpdateFileArgs = {
-  fileId: Scalars['ID'];
+  id: Scalars['ID'];
   updateFileDto: FileUpdateDto;
 };
 
 
 export type MutationUpdateFileStatusArgs = {
-  fileId: Scalars['ID'];
+  id: Scalars['ID'];
   status: FileStatusEnum;
 };
 
@@ -1195,18 +1087,6 @@ export type MutationUpdateFileStatusArgs = {
 export type MutationUpdateNotificationPreferenceArgs = {
   id: Scalars['String'];
   preference: UpdateNotificationPreferenceDto;
-};
-
-
-export type MutationUpdatePermissionArgs = {
-  id: Scalars['ID'];
-  permission: PermissionUpdateDto;
-};
-
-
-export type MutationUpdateRoleArgs = {
-  id: Scalars['ID'];
-  role: RoleUpdateDto;
 };
 
 
@@ -1222,26 +1102,9 @@ export type MutationUpdateUserGroupArgs = {
 };
 
 
-export type MutationUpdateUserGroupRolesArgs = {
+export type MutationUpdateUserProfileArgs = {
   id: Scalars['ID'];
-  relation: UserGroupRoleRelationDto;
-};
-
-
-export type MutationUpdateUserInviteArgs = {
-  id: Scalars['ID'];
-  userInvite: UserInviteUpdateDto;
-};
-
-
-export type MutationUpdateUserRolesArgs = {
-  id: Scalars['ID'];
-  relation: UserRoleRelationDto;
-};
-
-
-export type MutationVerifyUserRefreshTokenArgs = {
-  userToken: UserRefreshTokenVerifyDto;
+  user: UserUpdateProfileDto;
 };
 
 export enum NotificationActionTypeEnum {
@@ -1394,16 +1257,10 @@ export enum NotificationExecutionDetailsStatusEnum {
   Success = 'SUCCESS'
 }
 
-export type NotificationGuestCreateDto = {
-  data?: InputMaybe<Array<NotificationTemplateVariableDto>>;
-  emails: Array<Scalars['String']>;
-  key: Scalars['String'];
-  locale: Scalars['String'];
-};
-
 export type NotificationLocalizedTemplateCreateDto = {
   channel: NotificationChannelEnum;
   content: Scalars['String'];
+  defaultVariables?: InputMaybe<Array<NotificationTemplateDefaultVariableDto>>;
   icon?: InputMaybe<Scalars['String']>;
   key: Scalars['String'];
   locale: Scalars['String'];
@@ -1429,6 +1286,7 @@ export type NotificationLocalizedTemplateModel = {
   channel?: Maybe<NotificationChannelEnum>;
   content?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
+  defaultVariables?: Maybe<Array<NotificationTemplateVariableModel>>;
   icon?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
   key?: Maybe<Scalars['String']>;
@@ -1470,6 +1328,7 @@ export enum NotificationLocalizedTemplateSearchKeyEnum {
 
 export type NotificationLocalizedTemplateUpdateDto = {
   content?: InputMaybe<Scalars['String']>;
+  defaultVariables?: InputMaybe<Array<NotificationTemplateDefaultVariableDto>>;
   icon?: InputMaybe<Scalars['String']>;
   key?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -1484,8 +1343,6 @@ export type NotificationModel = {
   content: Scalars['String'];
   createdAt: Scalars['Date'];
   email?: Maybe<Scalars['String']>;
-  errorId?: Maybe<Scalars['String']>;
-  errorText?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   lastSeenDate?: Maybe<Scalars['String']>;
@@ -1514,6 +1371,7 @@ export type NotificationPreferenceModel = {
 export type NotificationRecipientDto = {
   allUsers?: InputMaybe<Scalars['Boolean']>;
   excludedUserIds?: InputMaybe<Array<Scalars['String']>>;
+  tenantIds?: InputMaybe<Array<Scalars['String']>>;
   userGroups?: InputMaybe<NotificationUserGroupDto>;
   userIds?: InputMaybe<Array<Scalars['String']>>;
 };
@@ -1528,7 +1386,11 @@ export type NotificationTemplateCreateDto = {
   active: Scalars['Boolean'];
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
-  notificationGroupId: Scalars['ID'];
+};
+
+export type NotificationTemplateDefaultVariableDto = {
+  key: Scalars['String'];
+  value?: InputMaybe<Scalars['String']>;
 };
 
 export type NotificationTemplateModel = {
@@ -1602,7 +1464,6 @@ export type NotificationTemplateUpdateDto = {
   active?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  notificationGroupId?: InputMaybe<Scalars['ID']>;
   preferenceSettings?: InputMaybe<NotificationTemplatePreferenceUpdateDto>;
   steps?: InputMaybe<Array<NotificationTemplateStepUpdateDto>>;
 };
@@ -1610,6 +1471,12 @@ export type NotificationTemplateUpdateDto = {
 export type NotificationTemplateVariableDto = {
   key: Scalars['String'];
   value: Scalars['String'];
+};
+
+export type NotificationTemplateVariableModel = {
+  __typename?: 'NotificationTemplateVariableModel';
+  key?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
 };
 
 export type NotificationTriggerVariableModel = {
@@ -1696,10 +1563,10 @@ export type ParticipantPageModel = {
 
 export type PermissionCreateDto = {
   key: Scalars['String'];
-  resolverMapping: Scalars['String'];
+  operation: ResourceOperationEnum;
+  platformEntity: Scalars['String'];
   roleId: Scalars['ID'];
   scope: PermissionScopeEnum;
-  userGroupType?: InputMaybe<Scalars['String']>;
 };
 
 export type PermissionFilterArgType = {
@@ -1708,7 +1575,6 @@ export type PermissionFilterArgType = {
   resolverMapping?: InputMaybe<StringFilterArgType>;
   roleId?: InputMaybe<IdFilterArgType>;
   scope?: InputMaybe<StringFilterArgType>;
-  userGroupType?: InputMaybe<StringFilterArgType>;
 };
 
 export type PermissionModel = {
@@ -1716,11 +1582,14 @@ export type PermissionModel = {
   createdAt: Scalars['Date'];
   id: Scalars['ID'];
   key: Scalars['String'];
+  name: Scalars['String'];
+  operation: Scalars['String'];
+  platformEntity?: Maybe<Scalars['String']>;
+  projectEntityId?: Maybe<Scalars['ID']>;
   role: RoleModel;
   roleId: Scalars['ID'];
   scope: PermissionScopeEnum;
   updatedAt: Scalars['Date'];
-  userGroupType?: Maybe<Scalars['String']>;
 };
 
 export type PermissionOrderArgType = {
@@ -1731,10 +1600,8 @@ export type PermissionOrderArgType = {
 export enum PermissionOrderSortEnum {
   CreatedAt = 'createdAt',
   Key = 'key',
-  ResolverMapping = 'resolverMapping',
   Scope = 'scope',
-  UpdatedAt = 'updatedAt',
-  UserGroupType = 'userGroupType'
+  UpdatedAt = 'updatedAt'
 }
 
 export type PermissionPageModel = {
@@ -1746,7 +1613,7 @@ export type PermissionPageModel = {
 export enum PermissionScopeEnum {
   All = 'all',
   Own = 'own',
-  UserGroup = 'userGroup'
+  Tenant = 'tenant'
 }
 
 export type PermissionSearchArgType = {
@@ -1755,78 +1622,53 @@ export type PermissionSearchArgType = {
 };
 
 export enum PermissionSearchKeyEnum {
-  Key = 'key',
-  ResolverMapping = 'resolverMapping',
-  UserGroupType = 'userGroupType'
+  Key = 'key'
 }
 
 export type PermissionUpdateDto = {
-  resolverMapping?: InputMaybe<Scalars['String']>;
+  operation: ResourceOperationEnum;
+  platformEntity: Scalars['String'];
   roleId: Scalars['ID'];
   scope?: InputMaybe<PermissionScopeEnum>;
-  userGroupType?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  allTranslationKeys: AllTranslationKeyPageModel;
-  checkUserInviteToken: CheckUserInviteTokenModel;
-  checkUserToken: CheckUserInviteTokenModel;
-  conversations: ConversationPageModel;
+  buildQueryPlan: Array<QueryPlanModel>;
   file: FileModel;
   fileCategories: FileCategoryPageModel;
   fileCategory: FileCategoryModel;
-  fileCategoryContentType: FileCategoryContentTypeModel;
+  fileCategoryContentGroup: FileCategoryContentGroupModel;
+  fileCategoryContentGroups: FileCategoryContentGroupPageModel;
   fileCategoryContentTypes: FileCategoryContentTypePageModel;
   files: FilePageModel;
-  mailType: MailTypeModel;
-  notificationCategories: Array<NotificationCategoryModel>;
   notificationPreference: Array<NotificationPreferenceModel>;
   notifications: NotificationPageModel;
-  permission: PermissionModel;
-  permissions: PermissionPageModel;
   role: RoleModel;
   roles: RolePageModel;
+  tenant: TenantModel;
+  tenants: TenantPageModel;
   translation: TranslationModel;
   translationKey: TranslationKeyModel;
   translationKeys: TranslationKeyPageModel;
   translations: TranslationPageModel;
-  unseenNotificationsCount: Scalars['Float'];
   user: UserModel;
   userGroup: UserGroupModel;
   userGroups: UserGroupPageModel;
-  userInvite: UserInviteModel;
-  userInvites: UserInvitePageModel;
   userProvider: UserProviderModel;
   userProviders: UserProviderPageModel;
-  userToken: UserTokenModel;
-  userTokens: UserTokenPageModel;
   users: UserPageModel;
 };
 
 
-export type QueryCheckUserInviteTokenArgs = {
-  token: Scalars['String'];
-};
-
-
-export type QueryCheckUserTokenArgs = {
-  token: Scalars['String'];
-  type: Scalars['String'];
-};
-
-
-export type QueryConversationsArgs = {
-  filter?: InputMaybe<ConversationFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<ConversationOrderArgType>;
-  search?: InputMaybe<ConversationSearchArgType>;
+export type QueryBuildQueryPlanArgs = {
+  entity: Scalars['String'];
+  operation: ResourceOperationEnum;
 };
 
 
 export type QueryFileArgs = {
-  fileId: Scalars['ID'];
+  id: Scalars['ID'];
 };
 
 
@@ -1844,8 +1686,17 @@ export type QueryFileCategoryArgs = {
 };
 
 
-export type QueryFileCategoryContentTypeArgs = {
+export type QueryFileCategoryContentGroupArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryFileCategoryContentGroupsArgs = {
+  filter?: InputMaybe<FileCategoryContentGroupFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<FileCategoryContentGroupOrderArgType>;
+  search?: InputMaybe<FileCategoryContentGroupSearchArgType>;
 };
 
 
@@ -1863,32 +1714,12 @@ export type QueryFilesArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<FileOrderArgType>;
-  search?: InputMaybe<FileSearchArgType>;
-};
-
-
-export type QueryMailTypeArgs = {
-  id: Scalars['ID'];
 };
 
 
 export type QueryNotificationsArgs = {
   page?: InputMaybe<Scalars['Float']>;
   seen?: InputMaybe<Scalars['Boolean']>;
-};
-
-
-export type QueryPermissionArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryPermissionsArgs = {
-  filter?: InputMaybe<PermissionFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<PermissionOrderArgType>;
-  search?: InputMaybe<PermissionSearchArgType>;
 };
 
 
@@ -1903,6 +1734,18 @@ export type QueryRolesArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<RoleOrderArgType>;
   search?: InputMaybe<RoleSearchArgType>;
+};
+
+
+export type QueryTenantArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTenantsArgs = {
+  filter?: InputMaybe<TenantFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1921,7 +1764,6 @@ export type QueryTranslationKeysArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<TranslationKeyOrderArgType>;
-  search?: InputMaybe<TranslationKeySearchArgType>;
   searchTerm?: InputMaybe<Scalars['String']>;
 };
 
@@ -1931,7 +1773,6 @@ export type QueryTranslationsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<TranslationOrderArgType>;
-  search?: InputMaybe<TranslationSearchArgType>;
 };
 
 
@@ -1954,20 +1795,6 @@ export type QueryUserGroupsArgs = {
 };
 
 
-export type QueryUserInviteArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryUserInvitesArgs = {
-  filter?: InputMaybe<UserInviteFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserInviteOrderArgType>;
-  search?: InputMaybe<UserInviteSearchArgType>;
-};
-
-
 export type QueryUserProviderArgs = {
   id: Scalars['ID'];
 };
@@ -1978,21 +1805,6 @@ export type QueryUserProvidersArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserProviderOrderArgType>;
-  search?: InputMaybe<UserProviderSearchArgType>;
-};
-
-
-export type QueryUserTokenArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryUserTokensArgs = {
-  filter?: InputMaybe<UserTokenFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserTokenOrderArgType>;
-  search?: InputMaybe<UserTokenSearchArgType>;
 };
 
 
@@ -2002,6 +1814,12 @@ export type QueryUsersArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserOrderArgType>;
   search?: InputMaybe<UserSearchArgType>;
+};
+
+export type QueryPlanModel = {
+  __typename?: 'QueryPlanModel';
+  kind: Scalars['String'];
+  queryPlan?: Maybe<Scalars['JsonObject']>;
 };
 
 export type ResolverMappingModel = {
@@ -2017,12 +1835,20 @@ export type ResolverMappingModel = {
   service: Scalars['String'];
 };
 
+export enum ResourceOperationEnum {
+  Create = 'create',
+  Delete = 'delete',
+  Read = 'read',
+  Update = 'update'
+}
+
 export type RoleCreateDto = {
   description?: InputMaybe<Scalars['String']>;
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
   permissionAssignments: Array<RolePermissionAssignDto>;
+  reference?: InputMaybe<Scalars['String']>;
 };
 
 export type RoleFilterArgType = {
@@ -2038,16 +1864,15 @@ export type RoleFilterArgType = {
 
 export type RoleModel = {
   __typename?: 'RoleModel';
-  createdAt: Scalars['Date'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
   permissionAssignments: PermissionPageModel;
-  updatedAt: Scalars['Date'];
+  reference?: Maybe<Scalars['String']>;
   userGroups: UserGroupPageModel;
-  users: UserPageModel;
+  users: UsersCountModel;
 };
 
 
@@ -2057,24 +1882,6 @@ export type RoleModelPermissionAssignmentsArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<PermissionOrderArgType>;
   search?: InputMaybe<PermissionSearchArgType>;
-};
-
-
-export type RoleModelUserGroupsArgs = {
-  filter?: InputMaybe<UserGroupFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserGroupOrderArgType>;
-  search?: InputMaybe<UserGroupSearchArgType>;
-};
-
-
-export type RoleModelUsersArgs = {
-  filter?: InputMaybe<UserFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserOrderArgType>;
-  search?: InputMaybe<UserSearchArgType>;
 };
 
 export type RoleOrderArgType = {
@@ -2101,9 +1908,9 @@ export type RolePageModel = {
 export type RolePermissionAssignDto = {
   id?: InputMaybe<Scalars['ID']>;
   key?: InputMaybe<Scalars['String']>;
-  resolverMapping?: InputMaybe<Scalars['String']>;
+  operation?: InputMaybe<ResourceOperationEnum>;
+  platformEntity?: InputMaybe<Scalars['String']>;
   scope?: InputMaybe<PermissionScopeEnum>;
-  userGroupType?: InputMaybe<Scalars['String']>;
 };
 
 export type RoleSearchArgType = {
@@ -2122,10 +1929,7 @@ export type RoleUpdateDto = {
   isSystemManaged?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   permissionAssignments: Array<RolePermissionAssignDto>;
-};
-
-export type RoleUserGroupRelationDto = {
-  userGroupIds: Array<Scalars['ID']>;
+  reference?: InputMaybe<Scalars['String']>;
 };
 
 export type RoleUserRelationDto = {
@@ -2167,19 +1971,30 @@ export type TemplateCompileEntityDto = {
   uuid: Scalars['String'];
 };
 
-export type TenantInitialiseDto = {
-  id: Scalars['String'];
+export type TenantCreateDto = {
+  name: Scalars['String'];
+  reference?: InputMaybe<Scalars['String']>;
+};
+
+export type TenantFilterArgType = {
+  id?: InputMaybe<IdFilterArgType>;
+  reference?: InputMaybe<StringFilterArgType>;
 };
 
 export type TenantModel = {
   __typename?: 'TenantModel';
-  id: Scalars['String'];
+  createdAt: Scalars['Date'];
+  id: Scalars['ID'];
+  isDefault: Scalars['Boolean'];
+  name: Scalars['String'];
+  reference?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['Date'];
 };
 
-export type TenantUpdateDto = {
-  fromEmail?: InputMaybe<Scalars['String']>;
-  roqOneFrontendUrl?: InputMaybe<Scalars['String']>;
-  sendGridApiKey?: InputMaybe<Scalars['String']>;
+export type TenantPageModel = {
+  __typename?: 'TenantPageModel';
+  data: Array<TenantModel>;
+  totalCount: Scalars['Int'];
 };
 
 export type TranslationCreateDto = {
@@ -2221,7 +2036,6 @@ export type TranslationKeyModelTranslationsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<TranslationOrderArgType>;
-  search?: InputMaybe<TranslationSearchArgType>;
 };
 
 export type TranslationKeyOrderArgType = {
@@ -2241,15 +2055,6 @@ export type TranslationKeyPageModel = {
   totalCount: Scalars['Int'];
 };
 
-export type TranslationKeySearchArgType = {
-  key: TranslationKeySearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum TranslationKeySearchKeyEnum {
-  Key = 'key'
-}
-
 export type TranslationKeyUpdateDto = {
   translations?: InputMaybe<Array<TranslationUpsertDto>>;
 };
@@ -2259,8 +2064,6 @@ export type TranslationModel = {
   createdAt: Scalars['Date'];
   id: Scalars['ID'];
   locale: Scalars['String'];
-  translationKey: TranslationKeyModel;
-  translationKeyId: Scalars['ID'];
   updatedAt: Scalars['Date'];
   value: Scalars['String'];
 };
@@ -2281,15 +2084,6 @@ export type TranslationPageModel = {
   data: Array<TranslationModel>;
   totalCount: Scalars['Int'];
 };
-
-export type TranslationSearchArgType = {
-  key: TranslationSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum TranslationSearchKeyEnum {
-  Value = 'VALUE'
-}
 
 export type TranslationTemplateDto = {
   content: Scalars['String'];
@@ -2321,13 +2115,12 @@ export type UserCreateDto = {
   locale?: InputMaybe<Scalars['String']>;
   phone?: InputMaybe<Scalars['String']>;
   reference: Scalars['String'];
+  tenantId?: InputMaybe<Scalars['ID']>;
   timezone?: InputMaybe<Scalars['String']>;
 };
 
 export type UserFilterArgType = {
-  acceptedUserInviteId?: InputMaybe<IdFilterArgType>;
   active?: InputMaybe<BooleanFilterArgType>;
-  createdUserInviteId?: InputMaybe<IdFilterArgType>;
   email?: InputMaybe<StringFilterArgType>;
   firstName?: InputMaybe<StringFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
@@ -2335,13 +2128,14 @@ export type UserFilterArgType = {
   locale?: InputMaybe<StringFilterArgType>;
   optedInAt?: InputMaybe<DateFilterArgType>;
   phone?: InputMaybe<StringFilterArgType>;
+  reference?: InputMaybe<StringFilterArgType>;
   roleId?: InputMaybe<IdFilterArgType>;
   search?: InputMaybe<Scalars['String']>;
+  tenantId?: InputMaybe<IdFilterArgType>;
   timezone?: InputMaybe<StringFilterArgType>;
   userGroupId?: InputMaybe<UserGroupIdFilterArgType>;
   userGroupName?: InputMaybe<UserGroupNameFilterArgType>;
   userProviderId?: InputMaybe<IdFilterArgType>;
-  userTokenId?: InputMaybe<IdFilterArgType>;
 };
 
 export type UserGroupCreateDto = {
@@ -2368,32 +2162,22 @@ export type UserGroupIdFilterArgType = {
 
 export type UserGroupModel = {
   __typename?: 'UserGroupModel';
-  createdAt: Scalars['Date'];
   id: Scalars['ID'];
-  memberUsers?: Maybe<UserPageModel>;
   name: Scalars['String'];
   reference: Scalars['String'];
   roles: RolePageModel;
   type: Scalars['String'];
-  updatedAt: Scalars['Date'];
+  userGroupType?: Maybe<UserGroupTypeModel>;
+  users?: Maybe<UserPageModel>;
 };
 
 
-export type UserGroupModelMemberUsersArgs = {
+export type UserGroupModelUsersArgs = {
   filter?: InputMaybe<UserFilterArgType>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserOrderArgType>;
   search?: InputMaybe<UserSearchArgType>;
-};
-
-
-export type UserGroupModelRolesArgs = {
-  filter?: InputMaybe<RoleFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<RoleOrderArgType>;
-  search?: InputMaybe<RoleSearchArgType>;
 };
 
 export type UserGroupNameFilterArgType = {
@@ -2425,10 +2209,6 @@ export type UserGroupPageModel = {
   totalCount: Scalars['Int'];
 };
 
-export type UserGroupRoleRelationDto = {
-  roleIds: Array<Scalars['ID']>;
-};
-
 export type UserGroupSearchArgType = {
   key: UserGroupSearchKeyEnum;
   value: Scalars['String'];
@@ -2439,6 +2219,14 @@ export enum UserGroupSearchKeyEnum {
   Reference = 'reference',
   Type = 'type'
 }
+
+export type UserGroupTypeModel = {
+  __typename?: 'UserGroupTypeModel';
+  createdAt: Scalars['Date'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  updatedAt: Scalars['Date'];
+};
 
 export type UserGroupUpdateDto = {
   name?: InputMaybe<Scalars['String']>;
@@ -2483,7 +2271,6 @@ export type UserInviteModel = {
   status: UserInviteStatusEnum;
   statusUpdatedAt?: Maybe<Scalars['Date']>;
   updatedAt?: Maybe<Scalars['Date']>;
-  userToken: UserTokenModel;
   userTokenId: Scalars['ID'];
 };
 
@@ -2503,15 +2290,6 @@ export type UserInviteModelCreatedByArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserOrderArgType>;
   search?: InputMaybe<UserSearchArgType>;
-};
-
-
-export type UserInviteModelUserTokenArgs = {
-  filter?: InputMaybe<UserTokenFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserTokenOrderArgType>;
-  search?: InputMaybe<UserTokenSearchArgType>;
 };
 
 export type UserInviteOrderArgType = {
@@ -2568,10 +2346,8 @@ export type UserInvitesCreateDto = {
 
 export type UserModel = {
   __typename?: 'UserModel';
-  acceptedUserInvite?: Maybe<UserInviteModel>;
   active?: Maybe<Scalars['Boolean']>;
   createdAt: Scalars['Date'];
-  createdUserInvites?: Maybe<UserInvitePageModel>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -2581,31 +2357,13 @@ export type UserModel = {
   phone?: Maybe<Scalars['String']>;
   reference: Scalars['String'];
   roles?: Maybe<RolePageModel>;
+  synced?: Maybe<Scalars['Boolean']>;
+  tenant?: Maybe<TenantModel>;
+  tenantId?: Maybe<Scalars['ID']>;
   timezone?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
   userGroups?: Maybe<UserGroupPageModel>;
-  userInviteId?: Maybe<Scalars['ID']>;
   userProviders: UserProviderPageModel;
-  userTokens: UserTokenPageModel;
-};
-
-
-export type UserModelAcceptedUserInviteArgs = {
-  filter?: InputMaybe<UserInviteFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserInviteOrderArgType>;
-  search?: InputMaybe<UserInviteSearchArgType>;
-};
-
-
-export type UserModelCreatedUserInvitesArgs = {
-  filter?: InputMaybe<UserInviteFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserInviteOrderArgType>;
-  search?: InputMaybe<UserInviteSearchArgType>;
 };
 
 
@@ -2632,16 +2390,6 @@ export type UserModelUserProvidersArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserProviderOrderArgType>;
-  search?: InputMaybe<UserProviderSearchArgType>;
-};
-
-
-export type UserModelUserTokensArgs = {
-  filter?: InputMaybe<UserTokenFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserTokenOrderArgType>;
-  search?: InputMaybe<UserTokenSearchArgType>;
 };
 
 export type UserOrderArgType = {
@@ -2674,7 +2422,7 @@ export type UserPermissionModel = {
   resolvers: Array<Scalars['String']>;
   scope: PermissionScopeEnum;
   service: Scalars['String'];
-  userGroupType?: Maybe<Scalars['String']>;
+  userGroupType: Scalars['String'];
 };
 
 export type UserProviderBulkFilterArgType = {
@@ -2694,10 +2442,7 @@ export type UserProviderCreateDto = {
 
 export type UserProviderFilterArgType = {
   id?: InputMaybe<IdFilterArgType>;
-  optedIn?: InputMaybe<BooleanFilterArgType>;
   providerIdentifier?: InputMaybe<StringFilterArgType>;
-  providerUserIdentifier?: InputMaybe<StringFilterArgType>;
-  userId?: InputMaybe<IdFilterArgType>;
 };
 
 export type UserProviderModel = {
@@ -2731,16 +2476,6 @@ export type UserProviderPageModel = {
   totalCount: Scalars['Int'];
 };
 
-export type UserProviderSearchArgType = {
-  key: UserProviderSearchKeyEnum;
-  value: Scalars['String'];
-};
-
-export enum UserProviderSearchKeyEnum {
-  ProviderIdentifier = 'providerIdentifier',
-  ProviderUserIdentifier = 'providerUserIdentifier'
-}
-
 export type UserProviderUpdateDto = {
   optedIn?: InputMaybe<Scalars['Boolean']>;
   providerIdentifier?: InputMaybe<Scalars['String']>;
@@ -2759,10 +2494,6 @@ export type UserRefreshTokenVerifyDto = {
 
 export type UserResetPasswordTokenCreateDto = {
   userId: Scalars['String'];
-};
-
-export type UserRoleRelationDto = {
-  roleIds: Array<Scalars['ID']>;
 };
 
 export type UserSearchArgType = {
@@ -2804,17 +2535,7 @@ export type UserTokenModel = {
   updatedAt: Scalars['Date'];
   user?: Maybe<UserModel>;
   userId: Scalars['ID'];
-  userInvite?: Maybe<UserInviteModel>;
   validTill: Scalars['Date'];
-};
-
-
-export type UserTokenModelUserInviteArgs = {
-  filter?: InputMaybe<UserInviteFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserInviteOrderArgType>;
-  search?: InputMaybe<UserInviteSearchArgType>;
 };
 
 export type UserTokenOrderArgType = {
@@ -2866,15 +2587,25 @@ export type UserUpdateDto = {
   lastName?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
   phone?: InputMaybe<Scalars['String']>;
+  tenantId?: InputMaybe<Scalars['ID']>;
   timezone?: InputMaybe<Scalars['String']>;
 };
 
-export type UserUserGroupRelationDto = {
-  userGroupIds: Array<Scalars['ID']>;
+export type UserUpdateProfileDto = {
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  locale?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  timezone?: InputMaybe<Scalars['String']>;
 };
 
 export type UserValidateEmailTokenCreateDto = {
   userId: Scalars['String'];
+};
+
+export type UsersCountModel = {
+  __typename?: 'UsersCountModel';
+  totalCount: Scalars['Int'];
 };
 
 export type NotifyMutationVariables = Exact<{
@@ -2884,14 +2615,41 @@ export type NotifyMutationVariables = Exact<{
 
 export type NotifyMutation = { __typename?: 'Mutation', notify: { __typename?: 'NotificationCreateModel', usersNotified: { __typename?: 'NotificationCreateUserModel', count: number } } };
 
+export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string };
+
 export type CreateUserMutationVariables = Exact<{
   user: UserCreateDto;
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserModel', id: string, reference: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string } };
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['ID'];
+  user: UserUpdateDto;
+}>;
 
 
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string } };
+
+export const UserFragmentDoc = gql`
+    fragment User on UserModel {
+  id
+  reference
+  firstName
+  lastName
+  active
+  email
+  phone
+  locale
+  isOptedIn
+  synced
+  tenantId
+  timezone
+  createdAt
+  updatedAt
+}
+    `;
 export const NotifyDocument = gql`
     mutation notify($notification: NotificationCreateDto!) {
   notify(notification: $notification) {
@@ -2904,8 +2662,27 @@ export const NotifyDocument = gql`
 export const CreateUserDocument = gql`
     mutation createUser($user: UserCreateDto!) {
   createUser(user: $user) {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+export const UpdateUserDocument = gql`
+    mutation updateUser($id: ID!, $user: UserUpdateDto!) {
+  updateUser(id: $id, user: $user) {
     id
     reference
+    firstName
+    lastName
+    active
+    email
+    phone
+    locale
+    isOptedIn
+    synced
+    tenantId
+    timezone
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -2922,6 +2699,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     createUser(variables: CreateUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateUserMutation>(CreateUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createUser', 'mutation');
+    },
+    updateUser(variables: UpdateUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserMutation>(UpdateUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUser', 'mutation');
     }
   };
 }
