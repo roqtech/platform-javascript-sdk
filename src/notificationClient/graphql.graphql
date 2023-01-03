@@ -1,7 +1,69 @@
-mutation notify($notification: NotificationCreateDto!){
+fragment NotificationPreference on NotificationPreferenceModel {
+  id
+  enabled
+  name
+}
+
+fragment Notification on NotificationModel {
+  id
+  content
+  channel
+  createdAt
+  email
+  icon
+  lastSeenDate
+  providerId
+  read
+  seen
+  status
+  templateIdentifier
+  title
+}
+
+query notificationPreference($withChannelPreference: Boolean = true) {
+  notificationPreference {
+    ...NotificationPreference
+    channelPreferences @include(if: $withChannelPreference) {
+      data {
+        channel
+        enabled
+      }
+      totalCount
+    }
+  }
+}
+
+query notifications {
+  notifications {
+    data {
+      ...Notification
+    }
+    totalCount
+  }
+}
+
+mutation markNotifications(
+  $mark: MarkNotificationsDto!
+  $messageIds: [String!]!
+) {
+  markNotifications(mark: $mark, messageIds: $messageIds) {
+    ...Notification
+  }
+}
+
+mutation notify($notification: NotificationCreateDto!) {
   notify(notification: $notification) {
-    usersNotified{
+    usersNotified {
       count
     }
+  }
+}
+
+mutation updateNotificationPreference(
+  $id: String!
+  $preference: UpdateNotificationPreferenceDto!
+) {
+  updateNotificationPreference(id: $id, preference: $preference) {
+    ...NotificationPreference
   }
 }

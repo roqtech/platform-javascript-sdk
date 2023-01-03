@@ -2731,12 +2731,44 @@ export type UpdateFileStatusMutationVariables = Exact<{
 
 export type UpdateFileStatusMutation = { __typename?: 'Mutation', updateFileStatus: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
 
+export type NotificationPreferenceFragment = { __typename?: 'NotificationPreferenceModel', id: string, enabled: boolean, name: string };
+
+export type NotificationFragment = { __typename?: 'NotificationModel', id: string, content: string, channel: NotificationChannelEnum, createdAt: string, email?: string | null, icon?: string | null, lastSeenDate?: string | null, providerId?: string | null, read: boolean, seen: boolean, status: NotificationStatusEnum, templateIdentifier: string, title?: string | null };
+
+export type NotificationPreferenceQueryVariables = Exact<{
+  withChannelPreference?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type NotificationPreferenceQuery = { __typename?: 'Query', notificationPreference: Array<{ __typename?: 'NotificationPreferenceModel', id: string, enabled: boolean, name: string, channelPreferences?: { __typename?: 'ChannelPreferencePageModel', totalCount: number, data: Array<{ __typename?: 'ChannelPreferenceModel', channel: string, enabled: boolean }> } }> };
+
+export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationsQuery = { __typename?: 'Query', notifications: { __typename?: 'NotificationPageModel', totalCount: number, data: Array<{ __typename?: 'NotificationModel', id: string, content: string, channel: NotificationChannelEnum, createdAt: string, email?: string | null, icon?: string | null, lastSeenDate?: string | null, providerId?: string | null, read: boolean, seen: boolean, status: NotificationStatusEnum, templateIdentifier: string, title?: string | null }> } };
+
+export type MarkNotificationsMutationVariables = Exact<{
+  mark: MarkNotificationsDto;
+  messageIds: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type MarkNotificationsMutation = { __typename?: 'Mutation', markNotifications: Array<{ __typename?: 'NotificationModel', id: string, content: string, channel: NotificationChannelEnum, createdAt: string, email?: string | null, icon?: string | null, lastSeenDate?: string | null, providerId?: string | null, read: boolean, seen: boolean, status: NotificationStatusEnum, templateIdentifier: string, title?: string | null }> };
+
 export type NotifyMutationVariables = Exact<{
   notification: NotificationCreateDto;
 }>;
 
 
 export type NotifyMutation = { __typename?: 'Mutation', notify: { __typename?: 'NotificationCreateModel', usersNotified: { __typename?: 'NotificationCreateUserModel', count: number } } };
+
+export type UpdateNotificationPreferenceMutationVariables = Exact<{
+  id: Scalars['String'];
+  preference: UpdateNotificationPreferenceDto;
+}>;
+
+
+export type UpdateNotificationPreferenceMutation = { __typename?: 'Mutation', updateNotificationPreference: { __typename?: 'NotificationPreferenceModel', id: string, enabled: boolean, name: string } };
 
 export type CreateUserMutationVariables = Exact<{
   user: UserCreateDto;
@@ -2822,6 +2854,30 @@ export const FileAssociationFragmentDoc = gql`
   entityReference
   entityName
   fileId
+}
+    `;
+export const NotificationPreferenceFragmentDoc = gql`
+    fragment NotificationPreference on NotificationPreferenceModel {
+  id
+  enabled
+  name
+}
+    `;
+export const NotificationFragmentDoc = gql`
+    fragment Notification on NotificationModel {
+  id
+  content
+  channel
+  createdAt
+  email
+  icon
+  lastSeenDate
+  providerId
+  read
+  seen
+  status
+  templateIdentifier
+  title
 }
     `;
 export const FileCategoryContentTypesDocument = gql`
@@ -3029,6 +3085,37 @@ export const UpdateFileStatusDocument = gql`
   }
 }
     ${FileFragmentDoc}`;
+export const NotificationPreferenceDocument = gql`
+    query notificationPreference($withChannelPreference: Boolean = true) {
+  notificationPreference {
+    ...NotificationPreference
+    channelPreferences @include(if: $withChannelPreference) {
+      data {
+        channel
+        enabled
+      }
+      totalCount
+    }
+  }
+}
+    ${NotificationPreferenceFragmentDoc}`;
+export const NotificationsDocument = gql`
+    query notifications {
+  notifications {
+    data {
+      ...Notification
+    }
+    totalCount
+  }
+}
+    ${NotificationFragmentDoc}`;
+export const MarkNotificationsDocument = gql`
+    mutation markNotifications($mark: MarkNotificationsDto!, $messageIds: [String!]!) {
+  markNotifications(mark: $mark, messageIds: $messageIds) {
+    ...Notification
+  }
+}
+    ${NotificationFragmentDoc}`;
 export const NotifyDocument = gql`
     mutation notify($notification: NotificationCreateDto!) {
   notify(notification: $notification) {
@@ -3038,6 +3125,13 @@ export const NotifyDocument = gql`
   }
 }
     `;
+export const UpdateNotificationPreferenceDocument = gql`
+    mutation updateNotificationPreference($id: String!, $preference: UpdateNotificationPreferenceDto!) {
+  updateNotificationPreference(id: $id, preference: $preference) {
+    ...NotificationPreference
+  }
+}
+    ${NotificationPreferenceFragmentDoc}`;
 export const CreateUserDocument = gql`
     mutation createUser($user: UserCreateDto!) {
   createUser(user: $user) {
@@ -3118,8 +3212,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     updateFileStatus(variables: UpdateFileStatusMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateFileStatusMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateFileStatusMutation>(UpdateFileStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateFileStatus', 'mutation');
     },
+    notificationPreference(variables?: NotificationPreferenceQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotificationPreferenceQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NotificationPreferenceQuery>(NotificationPreferenceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'notificationPreference', 'query');
+    },
+    notifications(variables?: NotificationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotificationsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NotificationsQuery>(NotificationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'notifications', 'query');
+    },
+    markNotifications(variables: MarkNotificationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MarkNotificationsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MarkNotificationsMutation>(MarkNotificationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'markNotifications', 'mutation');
+    },
     notify(variables: NotifyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotifyMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<NotifyMutation>(NotifyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'notify', 'mutation');
+    },
+    updateNotificationPreference(variables: UpdateNotificationPreferenceMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNotificationPreferenceMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateNotificationPreferenceMutation>(UpdateNotificationPreferenceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateNotificationPreference', 'mutation');
     },
     createUser(variables: CreateUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateUserMutation>(CreateUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createUser', 'mutation');
