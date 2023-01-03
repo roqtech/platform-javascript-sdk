@@ -2770,6 +2770,13 @@ export type UpdateNotificationPreferenceMutationVariables = Exact<{
 
 export type UpdateNotificationPreferenceMutation = { __typename?: 'Mutation', updateNotificationPreference: { __typename?: 'NotificationPreferenceModel', id: string, enabled: boolean, name: string } };
 
+export type SendMailMutationVariables = Exact<{
+  mail: MailCreateDto;
+}>;
+
+
+export type SendMailMutation = { __typename?: 'Mutation', sendMail: { __typename?: 'MailCreateModel', mailsSent: { __typename?: 'MailCreateUserModel', count: number } } };
+
 export type TenantFragment = { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string };
 
 export type UserGroupFragment = { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string };
@@ -3327,6 +3334,15 @@ export const UpdateNotificationPreferenceDocument = gql`
   }
 }
     ${NotificationPreferenceFragmentDoc}`;
+export const SendMailDocument = gql`
+    mutation sendMail($mail: MailCreateDto!) {
+  sendMail(mail: $mail) {
+    mailsSent {
+      count
+    }
+  }
+}
+    `;
 export const UserDocument = gql`
     query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
   user(id: $id) {
@@ -3600,6 +3616,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     updateNotificationPreference(variables: UpdateNotificationPreferenceMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNotificationPreferenceMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateNotificationPreferenceMutation>(UpdateNotificationPreferenceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateNotificationPreference', 'mutation');
+    },
+    sendMail(variables: SendMailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendMailMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SendMailMutation>(SendMailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendMail', 'mutation');
     },
     user(variables: UserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<UserQuery>(UserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'user', 'query');

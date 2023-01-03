@@ -7,6 +7,7 @@ export class NotificationClientService {
   public markNotifications: Sdk['markNotifications'];
   public notify: Sdk['notify'];
   public updateNotificationPreference: Sdk['updateNotificationPreference'];
+  public sendMail: Sdk['sendMail'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -15,5 +16,6 @@ export class NotificationClientService {
     this.markNotifications = this.gqlSdk.markNotifications;
     this.notify = this.gqlSdk.notify;
     this.updateNotificationPreference = this.gqlSdk.updateNotificationPreference;
+    this.sendMail = this.gqlSdk.sendMail;
   }
 }

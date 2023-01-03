@@ -67,3 +67,11 @@ mutation updateNotificationPreference(
     ...NotificationPreference
   }
 }
+
+mutation sendMail($mail:MailCreateDto!){
+  sendMail(mail:$mail){
+    mailsSent{
+      count
+    }
+  }
+}
