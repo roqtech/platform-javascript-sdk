@@ -1,4 +1,4 @@
-fragment User on UserModel{
+fragment User on UserModel {
   id
   reference
   firstName
@@ -15,28 +15,250 @@ fragment User on UserModel{
   updatedAt
 }
 
+fragment Tenant on TenantModel {
+  id
+  reference
+  isDefault
+  name
+  createdAt
+  updatedAt
+}
 
-mutation createUser($user: UserCreateDto!){
+fragment UserGroup on UserGroupModel {
+  id
+  reference
+  name
+  type
+}
+
+fragment UserProfile on UserProfileModel {
+  id
+  reference
+  firstName
+  lastName
+  locale
+  timezone
+}
+
+fragment UserGroupType on UserGroupTypeModel {
+  id
+  name
+  createdAt
+  updatedAt
+}
+
+query user(
+  $id: ID!
+  $withTenant: Boolean = false
+  $withUserGroups: Boolean = false
+) {
+  user(id: $id) {
+    ...User
+    tenant @include(if: $withTenant) {
+      ...Tenant
+    }
+    userGroups @include(if: $withUserGroups) {
+      data {
+        ...UserGroup
+      }
+      totalCount
+    }
+  }
+}
+
+query users(
+  $filter: UserFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: UserOrderArgType
+  $search: UserSearchArgType
+  $withTenant: Boolean = false
+  $withUserGroups: Boolean = false
+) {
+  users(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...User
+      tenant @include(if: $withTenant) {
+        ...Tenant
+      }
+      userGroups @include(if: $withUserGroups) {
+        data {
+          ...UserGroup
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+query userGroup(
+  $id: ID!
+  $withUserGroupType: Boolean = false
+  $withUsers: Boolean = false
+) {
+  userGroup(id: $id) {
+    ...UserGroup
+    userGroupType @include(if: $withUserGroupType) {
+      ...UserGroupType
+    }
+    users @include(if: $withUsers) {
+      data {
+        ...User
+      }
+      totalCount
+    }
+  }
+}
+
+query userGroups(
+  $filter: UserGroupFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: UserGroupOrderArgType
+  $search: UserGroupSearchArgType
+  $withUserGroupType: Boolean = false
+  $withUsers: Boolean = false
+) {
+  userGroups(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...UserGroup
+      userGroupType @include(if: $withUserGroupType) {
+        ...UserGroupType
+      }
+      users @include(if: $withUsers) {
+        data {
+          ...User
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+query userProfile($id: ID!) {
+  userProfile(id: $id) {
+    ...UserProfile
+  }
+}
+
+query userProfiles(
+  $filter: UserFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: UserProfileOrderArgType
+  $search: UserProfileSearchArgType
+) {
+  userProfiles(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...UserProfile
+    }
+    totalCount
+  }
+}
+
+query tenant($id: ID!, $withUserCount: Boolean = false) {
+  tenant(id: $id) {
+    ...Tenant
+    users @include(if: $withUserCount) {
+      totalCount
+    }
+  }
+}
+
+query tenants(
+  $filter: TenantFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: TenantOrderArgType
+  $withUserCount: Boolean = false
+) {
+  tenants(filter: $filter, limit: $limit, offset: $offset, order: $order) {
+    data {
+      ...Tenant
+      users @include(if: $withUserCount) {
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+mutation addUsersToUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
+  addUsersToUserGroup(userGroupId: $userGroupId, userIds: $userIds)
+}
+
+mutation assignRolesToUser($roleIds: [ID!]!, $userId: ID!) {
+  assignRolesToUser(roleIds: $roleIds, userId: $userId)
+}
+
+mutation buildQueryPlan($entity: String!, $operation: ResourceOperationEnum!) {
+  buildQueryPlan(entity: $entity, operation: $operation){
+    kind
+    queryPlan
+  }
+}
+
+mutation createTenant($tenant: TenantCreateDto!) {
+  createTenant(tenant: $tenant){
+    ...Tenant
+  }
+}
+
+mutation createUser($user: UserCreateDto!) {
   createUser(user: $user){
     ...User
   }
 }
 
-mutation updateUser($id:ID!,$user: UserUpdateDto!){
+mutation createUserGroup($userGroup: UserGroupCreateDto!) {
+  createUserGroup(userGroup: $userGroup){
+    ...UserGroup
+  }
+}
+
+mutation removeUsersFromUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
+  removeUsersFromUserGroup(userGroupId: $userGroupId, userIds: $userIds)
+}
+
+mutation unassignRolesFromUser($roleIds: [ID!]!, $userId: ID!) {
+  unassignRolesFromUser(roleIds: $roleIds, userId: $userId)
+}
+
+mutation updateUser($id: ID! $user: UserUpdateDto!) {
   updateUser(id:$id, user: $user){
-    id
-    reference
-    firstName
-    lastName
-    active
-    email
-    phone
-    locale
-    isOptedIn
-    synced
-    tenantId
-    timezone
-    createdAt
-    updatedAt
+    ...User
+  }
+}
+
+
+mutation updateUserGroup($id: ID! $userGroup: UserGroupUpdateDto!) {
+  updateUserGroup(id:$id, userGroup: $userGroup){
+    ...UserGroup
+  }
+}
+
+mutation updateUserProfile($id: ID! $user: UserUpdateProfileDto!) {
+  updateUserProfile(id:$id, user: $user){
+    ...UserProfile
   }
 }

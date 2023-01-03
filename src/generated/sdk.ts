@@ -2770,12 +2770,155 @@ export type UpdateNotificationPreferenceMutationVariables = Exact<{
 
 export type UpdateNotificationPreferenceMutation = { __typename?: 'Mutation', updateNotificationPreference: { __typename?: 'NotificationPreferenceModel', id: string, enabled: boolean, name: string } };
 
+export type TenantFragment = { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string };
+
+export type UserGroupFragment = { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string };
+
+export type UserProfileFragment = { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null };
+
+export type UserGroupTypeFragment = { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string };
+
+export type UserQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withTenant?: InputMaybe<Scalars['Boolean']>;
+  withUserGroups?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null } };
+
+export type UsersQueryVariables = Exact<{
+  filter?: InputMaybe<UserFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<UserOrderArgType>;
+  search?: InputMaybe<UserSearchArgType>;
+  withTenant?: InputMaybe<Scalars['Boolean']>;
+  withUserGroups?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null }> } };
+
+export type UserGroupQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withUserGroupType?: InputMaybe<Scalars['Boolean']>;
+  withUsers?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UserGroupQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null } };
+
+export type UserGroupsQueryVariables = Exact<{
+  filter?: InputMaybe<UserGroupFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<UserGroupOrderArgType>;
+  search?: InputMaybe<UserGroupSearchArgType>;
+  withUserGroupType?: InputMaybe<Scalars['Boolean']>;
+  withUsers?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UserGroupsQuery = { __typename?: 'Query', userGroups: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null }> } };
+
+export type UserProfileQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UserProfileQuery = { __typename?: 'Query', userProfile: { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null } };
+
+export type UserProfilesQueryVariables = Exact<{
+  filter?: InputMaybe<UserFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<UserProfileOrderArgType>;
+  search?: InputMaybe<UserProfileSearchArgType>;
+}>;
+
+
+export type UserProfilesQuery = { __typename?: 'Query', userProfiles: { __typename?: 'UserProfilePageModel', totalCount: number, data: Array<{ __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null }> } };
+
+export type TenantQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withUserCount?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type TenantQuery = { __typename?: 'Query', tenant: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string, users?: { __typename?: 'UsersCountModel', totalCount: number } } };
+
+export type TenantsQueryVariables = Exact<{
+  filter?: InputMaybe<TenantFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<TenantOrderArgType>;
+  withUserCount?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type TenantsQuery = { __typename?: 'Query', tenants: { __typename?: 'TenantPageModel', totalCount: number, data: Array<{ __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string, users?: { __typename?: 'UsersCountModel', totalCount: number } }> } };
+
+export type AddUsersToUserGroupMutationVariables = Exact<{
+  userGroupId: Scalars['ID'];
+  userIds: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+
+export type AddUsersToUserGroupMutation = { __typename?: 'Mutation', addUsersToUserGroup: boolean };
+
+export type AssignRolesToUserMutationVariables = Exact<{
+  roleIds: Array<Scalars['ID']> | Scalars['ID'];
+  userId: Scalars['ID'];
+}>;
+
+
+export type AssignRolesToUserMutation = { __typename?: 'Mutation', assignRolesToUser: boolean };
+
+export type BuildQueryPlanMutationVariables = Exact<{
+  entity: Scalars['String'];
+  operation: ResourceOperationEnum;
+}>;
+
+
+export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null }> };
+
+export type CreateTenantMutationVariables = Exact<{
+  tenant: TenantCreateDto;
+}>;
+
+
+export type CreateTenantMutation = { __typename?: 'Mutation', createTenant: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } };
+
 export type CreateUserMutationVariables = Exact<{
   user: UserCreateDto;
 }>;
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string } };
+
+export type CreateUserGroupMutationVariables = Exact<{
+  userGroup: UserGroupCreateDto;
+}>;
+
+
+export type CreateUserGroupMutation = { __typename?: 'Mutation', createUserGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string } };
+
+export type RemoveUsersFromUserGroupMutationVariables = Exact<{
+  userGroupId: Scalars['ID'];
+  userIds: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+
+export type RemoveUsersFromUserGroupMutation = { __typename?: 'Mutation', removeUsersFromUserGroup: boolean };
+
+export type UnassignRolesFromUserMutationVariables = Exact<{
+  roleIds: Array<Scalars['ID']> | Scalars['ID'];
+  userId: Scalars['ID'];
+}>;
+
+
+export type UnassignRolesFromUserMutation = { __typename?: 'Mutation', unassignRolesFromUser: boolean };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2784,6 +2927,22 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string } };
+
+export type UpdateUserGroupMutationVariables = Exact<{
+  id: Scalars['ID'];
+  userGroup: UserGroupUpdateDto;
+}>;
+
+
+export type UpdateUserGroupMutation = { __typename?: 'Mutation', updateUserGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string } };
+
+export type UpdateUserProfileMutationVariables = Exact<{
+  id: Scalars['ID'];
+  user: UserUpdateProfileDto;
+}>;
+
+
+export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile: { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null } };
 
 export const UserFragmentDoc = gql`
     fragment User on UserModel {
@@ -2878,6 +3037,42 @@ export const NotificationFragmentDoc = gql`
   status
   templateIdentifier
   title
+}
+    `;
+export const TenantFragmentDoc = gql`
+    fragment Tenant on TenantModel {
+  id
+  reference
+  isDefault
+  name
+  createdAt
+  updatedAt
+}
+    `;
+export const UserGroupFragmentDoc = gql`
+    fragment UserGroup on UserGroupModel {
+  id
+  reference
+  name
+  type
+}
+    `;
+export const UserProfileFragmentDoc = gql`
+    fragment UserProfile on UserProfileModel {
+  id
+  reference
+  firstName
+  lastName
+  locale
+  timezone
+}
+    `;
+export const UserGroupTypeFragmentDoc = gql`
+    fragment UserGroupType on UserGroupTypeModel {
+  id
+  name
+  createdAt
+  updatedAt
 }
     `;
 export const FileCategoryContentTypesDocument = gql`
@@ -3132,6 +3327,167 @@ export const UpdateNotificationPreferenceDocument = gql`
   }
 }
     ${NotificationPreferenceFragmentDoc}`;
+export const UserDocument = gql`
+    query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
+  user(id: $id) {
+    ...User
+    tenant @include(if: $withTenant) {
+      ...Tenant
+    }
+    userGroups @include(if: $withUserGroups) {
+      data {
+        ...UserGroup
+      }
+      totalCount
+    }
+  }
+}
+    ${UserFragmentDoc}
+${TenantFragmentDoc}
+${UserGroupFragmentDoc}`;
+export const UsersDocument = gql`
+    query users($filter: UserFilterArgType, $limit: Int, $offset: Int, $order: UserOrderArgType, $search: UserSearchArgType, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
+  users(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...User
+      tenant @include(if: $withTenant) {
+        ...Tenant
+      }
+      userGroups @include(if: $withUserGroups) {
+        data {
+          ...UserGroup
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${UserFragmentDoc}
+${TenantFragmentDoc}
+${UserGroupFragmentDoc}`;
+export const UserGroupDocument = gql`
+    query userGroup($id: ID!, $withUserGroupType: Boolean = false, $withUsers: Boolean = false) {
+  userGroup(id: $id) {
+    ...UserGroup
+    userGroupType @include(if: $withUserGroupType) {
+      ...UserGroupType
+    }
+    users @include(if: $withUsers) {
+      data {
+        ...User
+      }
+      totalCount
+    }
+  }
+}
+    ${UserGroupFragmentDoc}
+${UserGroupTypeFragmentDoc}
+${UserFragmentDoc}`;
+export const UserGroupsDocument = gql`
+    query userGroups($filter: UserGroupFilterArgType, $limit: Int, $offset: Int, $order: UserGroupOrderArgType, $search: UserGroupSearchArgType, $withUserGroupType: Boolean = false, $withUsers: Boolean = false) {
+  userGroups(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...UserGroup
+      userGroupType @include(if: $withUserGroupType) {
+        ...UserGroupType
+      }
+      users @include(if: $withUsers) {
+        data {
+          ...User
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${UserGroupFragmentDoc}
+${UserGroupTypeFragmentDoc}
+${UserFragmentDoc}`;
+export const UserProfileDocument = gql`
+    query userProfile($id: ID!) {
+  userProfile(id: $id) {
+    ...UserProfile
+  }
+}
+    ${UserProfileFragmentDoc}`;
+export const UserProfilesDocument = gql`
+    query userProfiles($filter: UserFilterArgType, $limit: Int, $offset: Int, $order: UserProfileOrderArgType, $search: UserProfileSearchArgType) {
+  userProfiles(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...UserProfile
+    }
+    totalCount
+  }
+}
+    ${UserProfileFragmentDoc}`;
+export const TenantDocument = gql`
+    query tenant($id: ID!, $withUserCount: Boolean = false) {
+  tenant(id: $id) {
+    ...Tenant
+    users @include(if: $withUserCount) {
+      totalCount
+    }
+  }
+}
+    ${TenantFragmentDoc}`;
+export const TenantsDocument = gql`
+    query tenants($filter: TenantFilterArgType, $limit: Int, $offset: Int, $order: TenantOrderArgType, $withUserCount: Boolean = false) {
+  tenants(filter: $filter, limit: $limit, offset: $offset, order: $order) {
+    data {
+      ...Tenant
+      users @include(if: $withUserCount) {
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${TenantFragmentDoc}`;
+export const AddUsersToUserGroupDocument = gql`
+    mutation addUsersToUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
+  addUsersToUserGroup(userGroupId: $userGroupId, userIds: $userIds)
+}
+    `;
+export const AssignRolesToUserDocument = gql`
+    mutation assignRolesToUser($roleIds: [ID!]!, $userId: ID!) {
+  assignRolesToUser(roleIds: $roleIds, userId: $userId)
+}
+    `;
+export const BuildQueryPlanDocument = gql`
+    mutation buildQueryPlan($entity: String!, $operation: ResourceOperationEnum!) {
+  buildQueryPlan(entity: $entity, operation: $operation) {
+    kind
+    queryPlan
+  }
+}
+    `;
+export const CreateTenantDocument = gql`
+    mutation createTenant($tenant: TenantCreateDto!) {
+  createTenant(tenant: $tenant) {
+    ...Tenant
+  }
+}
+    ${TenantFragmentDoc}`;
 export const CreateUserDocument = gql`
     mutation createUser($user: UserCreateDto!) {
   createUser(user: $user) {
@@ -3139,26 +3495,44 @@ export const CreateUserDocument = gql`
   }
 }
     ${UserFragmentDoc}`;
+export const CreateUserGroupDocument = gql`
+    mutation createUserGroup($userGroup: UserGroupCreateDto!) {
+  createUserGroup(userGroup: $userGroup) {
+    ...UserGroup
+  }
+}
+    ${UserGroupFragmentDoc}`;
+export const RemoveUsersFromUserGroupDocument = gql`
+    mutation removeUsersFromUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
+  removeUsersFromUserGroup(userGroupId: $userGroupId, userIds: $userIds)
+}
+    `;
+export const UnassignRolesFromUserDocument = gql`
+    mutation unassignRolesFromUser($roleIds: [ID!]!, $userId: ID!) {
+  unassignRolesFromUser(roleIds: $roleIds, userId: $userId)
+}
+    `;
 export const UpdateUserDocument = gql`
     mutation updateUser($id: ID!, $user: UserUpdateDto!) {
   updateUser(id: $id, user: $user) {
-    id
-    reference
-    firstName
-    lastName
-    active
-    email
-    phone
-    locale
-    isOptedIn
-    synced
-    tenantId
-    timezone
-    createdAt
-    updatedAt
+    ...User
   }
 }
-    `;
+    ${UserFragmentDoc}`;
+export const UpdateUserGroupDocument = gql`
+    mutation updateUserGroup($id: ID!, $userGroup: UserGroupUpdateDto!) {
+  updateUserGroup(id: $id, userGroup: $userGroup) {
+    ...UserGroup
+  }
+}
+    ${UserGroupFragmentDoc}`;
+export const UpdateUserProfileDocument = gql`
+    mutation updateUserProfile($id: ID!, $user: UserUpdateProfileDto!) {
+  updateUserProfile(id: $id, user: $user) {
+    ...UserProfile
+  }
+}
+    ${UserProfileFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -3227,11 +3601,62 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     updateNotificationPreference(variables: UpdateNotificationPreferenceMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNotificationPreferenceMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateNotificationPreferenceMutation>(UpdateNotificationPreferenceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateNotificationPreference', 'mutation');
     },
+    user(variables: UserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UserQuery>(UserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'user', 'query');
+    },
+    users(variables?: UsersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UsersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UsersQuery>(UsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'users', 'query');
+    },
+    userGroup(variables: UserGroupQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserGroupQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UserGroupQuery>(UserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'userGroup', 'query');
+    },
+    userGroups(variables?: UserGroupsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserGroupsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UserGroupsQuery>(UserGroupsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'userGroups', 'query');
+    },
+    userProfile(variables: UserProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UserProfileQuery>(UserProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'userProfile', 'query');
+    },
+    userProfiles(variables?: UserProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserProfilesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UserProfilesQuery>(UserProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'userProfiles', 'query');
+    },
+    tenant(variables: TenantQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TenantQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<TenantQuery>(TenantDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'tenant', 'query');
+    },
+    tenants(variables?: TenantsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TenantsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<TenantsQuery>(TenantsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'tenants', 'query');
+    },
+    addUsersToUserGroup(variables: AddUsersToUserGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddUsersToUserGroupMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddUsersToUserGroupMutation>(AddUsersToUserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addUsersToUserGroup', 'mutation');
+    },
+    assignRolesToUser(variables: AssignRolesToUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssignRolesToUserMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssignRolesToUserMutation>(AssignRolesToUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'assignRolesToUser', 'mutation');
+    },
+    buildQueryPlan(variables: BuildQueryPlanMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<BuildQueryPlanMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<BuildQueryPlanMutation>(BuildQueryPlanDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'buildQueryPlan', 'mutation');
+    },
+    createTenant(variables: CreateTenantMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateTenantMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateTenantMutation>(CreateTenantDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTenant', 'mutation');
+    },
     createUser(variables: CreateUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateUserMutation>(CreateUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createUser', 'mutation');
     },
+    createUserGroup(variables: CreateUserGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateUserGroupMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateUserGroupMutation>(CreateUserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createUserGroup', 'mutation');
+    },
+    removeUsersFromUserGroup(variables: RemoveUsersFromUserGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RemoveUsersFromUserGroupMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RemoveUsersFromUserGroupMutation>(RemoveUsersFromUserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'removeUsersFromUserGroup', 'mutation');
+    },
+    unassignRolesFromUser(variables: UnassignRolesFromUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UnassignRolesFromUserMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UnassignRolesFromUserMutation>(UnassignRolesFromUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'unassignRolesFromUser', 'mutation');
+    },
     updateUser(variables: UpdateUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserMutation>(UpdateUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUser', 'mutation');
+    },
+    updateUserGroup(variables: UpdateUserGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserGroupMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserGroupMutation>(UpdateUserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUserGroup', 'mutation');
+    },
+    updateUserProfile(variables: UpdateUserProfileMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserProfileMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserProfileMutation>(UpdateUserProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUserProfile', 'mutation');
     }
   };
 }
