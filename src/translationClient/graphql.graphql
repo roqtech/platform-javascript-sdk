@@ -1,0 +1,72 @@
+fragment Translation on TranslationModel {
+  id
+  locale
+  value
+  createdAt
+  updatedAt
+}
+
+fragment TranslationKey on TranslationKeyModel {
+  id
+  key
+  createdAt
+  updatedAt
+}
+
+query translation($id: ID!) {
+  translation(id: $id) {
+    ...Translation
+  }
+}
+
+query translations(
+  $filter: TranslationFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: TranslationOrderArgType
+) {
+  translations(filter: $filter, limit: $limit, offset: $offset, order: $order) {
+    data {
+      ...Translation
+    }
+    totalCount
+  }
+}
+
+query translationKey($id: ID!, $withTranslations: Boolean = false) {
+  translationKey(id: $id) {
+    ...TranslationKey
+    translations @include(if: $withTranslations) {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
+  }
+}
+
+query translationKeys(
+  $filter: TranslationKeyFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: TranslationKeyOrderArgType
+  $withTranslations: Boolean = false
+) {
+  translationKeys(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+  ) {
+    data {
+      ...TranslationKey
+      translations @include(if: $withTranslations) {
+        data {
+          ...Translation
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}

@@ -2777,6 +2777,46 @@ export type SendMailMutationVariables = Exact<{
 
 export type SendMailMutation = { __typename?: 'Mutation', sendMail: { __typename?: 'MailCreateModel', mailsSent: { __typename?: 'MailCreateUserModel', count: number } } };
 
+export type TranslationFragment = { __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string };
+
+export type TranslationKeyFragment = { __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string };
+
+export type TranslationQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type TranslationQuery = { __typename?: 'Query', translation: { __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string } };
+
+export type TranslationsQueryVariables = Exact<{
+  filter?: InputMaybe<TranslationFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<TranslationOrderArgType>;
+}>;
+
+
+export type TranslationsQuery = { __typename?: 'Query', translations: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } };
+
+export type TranslationKeyQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withTranslations?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type TranslationKeyQuery = { __typename?: 'Query', translationKey: { __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations?: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } } };
+
+export type TranslationKeysQueryVariables = Exact<{
+  filter?: InputMaybe<TranslationKeyFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<TranslationKeyOrderArgType>;
+  withTranslations?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type TranslationKeysQuery = { __typename?: 'Query', translationKeys: { __typename?: 'TranslationKeyPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations?: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } }> } };
+
 export type TenantFragment = { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string };
 
 export type UserGroupFragment = { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string };
@@ -3044,6 +3084,23 @@ export const NotificationFragmentDoc = gql`
   status
   templateIdentifier
   title
+}
+    `;
+export const TranslationFragmentDoc = gql`
+    fragment Translation on TranslationModel {
+  id
+  locale
+  value
+  createdAt
+  updatedAt
+}
+    `;
+export const TranslationKeyFragmentDoc = gql`
+    fragment TranslationKey on TranslationKeyModel {
+  id
+  key
+  createdAt
+  updatedAt
 }
     `;
 export const TenantFragmentDoc = gql`
@@ -3343,6 +3400,54 @@ export const SendMailDocument = gql`
   }
 }
     `;
+export const TranslationDocument = gql`
+    query translation($id: ID!) {
+  translation(id: $id) {
+    ...Translation
+  }
+}
+    ${TranslationFragmentDoc}`;
+export const TranslationsDocument = gql`
+    query translations($filter: TranslationFilterArgType, $limit: Int, $offset: Int, $order: TranslationOrderArgType) {
+  translations(filter: $filter, limit: $limit, offset: $offset, order: $order) {
+    data {
+      ...Translation
+    }
+    totalCount
+  }
+}
+    ${TranslationFragmentDoc}`;
+export const TranslationKeyDocument = gql`
+    query translationKey($id: ID!, $withTranslations: Boolean = false) {
+  translationKey(id: $id) {
+    ...TranslationKey
+    translations @include(if: $withTranslations) {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
+  }
+}
+    ${TranslationKeyFragmentDoc}
+${TranslationFragmentDoc}`;
+export const TranslationKeysDocument = gql`
+    query translationKeys($filter: TranslationKeyFilterArgType, $limit: Int, $offset: Int, $order: TranslationKeyOrderArgType, $withTranslations: Boolean = false) {
+  translationKeys(filter: $filter, limit: $limit, offset: $offset, order: $order) {
+    data {
+      ...TranslationKey
+      translations @include(if: $withTranslations) {
+        data {
+          ...Translation
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${TranslationKeyFragmentDoc}
+${TranslationFragmentDoc}`;
 export const UserDocument = gql`
     query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
   user(id: $id) {
@@ -3619,6 +3724,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     sendMail(variables: SendMailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendMailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SendMailMutation>(SendMailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendMail', 'mutation');
+    },
+    translation(variables: TranslationQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TranslationQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<TranslationQuery>(TranslationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'translation', 'query');
+    },
+    translations(variables?: TranslationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TranslationsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<TranslationsQuery>(TranslationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'translations', 'query');
+    },
+    translationKey(variables: TranslationKeyQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TranslationKeyQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<TranslationKeyQuery>(TranslationKeyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'translationKey', 'query');
+    },
+    translationKeys(variables?: TranslationKeysQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TranslationKeysQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<TranslationKeysQuery>(TranslationKeysDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'translationKeys', 'query');
     },
     user(variables: UserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<UserQuery>(UserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'user', 'query');

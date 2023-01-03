@@ -8,6 +8,7 @@ import { UserClientService } from '../../userClient';
 import { Response, Variables } from 'graphql-request/src/types';
 import * as Dom from 'graphql-request/dist/types.dom';
 import {FileClientService} from "../../fileClient";
+import {TranslationClientService} from "../../translationClient/services/translation-client.service";
 
 export class PlatformClientService {
   private readonly graphqlUrl: string;
@@ -21,6 +22,7 @@ export class PlatformClientService {
   public readonly notifications: NotificationClientService;
   public readonly file: FileClientService;
   public readonly user: UserClientService;
+  public readonly translation: TranslationClientService;
   public graphqlRequest: <T = any, V = Variables>(
     query: string,
     variables?: V,
@@ -47,6 +49,7 @@ export class PlatformClientService {
     this.notifications = initialised.notifications;
     this.user = initialised.user;
     this.file = initialised.file;
+    this.translation = initialised.translation;
     this.graphqlRequest = initialised.graphqlRequest;
   }
 
@@ -89,6 +92,7 @@ export class PlatformClientService {
       notifications: new NotificationClientService(sdk),
       user: new UserClientService(sdk),
       file: new FileClientService(sdk),
+      translation: new TranslationClientService(sdk),
       graphqlRequest,
     };
   }
