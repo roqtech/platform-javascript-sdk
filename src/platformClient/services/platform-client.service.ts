@@ -7,6 +7,7 @@ import { GraphQLClient } from 'graphql-request';
 import { UserClientService } from '../../userClient';
 import { Response, Variables } from 'graphql-request/src/types';
 import * as Dom from 'graphql-request/dist/types.dom';
+import {FileClientService} from "../../fileClient";
 
 export class PlatformClientService {
   private readonly graphqlUrl: string;
@@ -18,6 +19,7 @@ export class PlatformClientService {
 
   public readonly authorisation: AuthorisationClientService;
   public readonly notifications: NotificationClientService;
+  public readonly file: FileClientService;
   public readonly user: UserClientService;
   public graphqlRequest: <T = any, V = Variables>(
     query: string,
@@ -44,6 +46,7 @@ export class PlatformClientService {
 
     this.notifications = initialised.notifications;
     this.user = initialised.user;
+    this.file = initialised.file;
     this.graphqlRequest = initialised.graphqlRequest;
   }
 
@@ -85,6 +88,7 @@ export class PlatformClientService {
     return {
       notifications: new NotificationClientService(sdk),
       user: new UserClientService(sdk),
+      file: new FileClientService(sdk),
       graphqlRequest,
     };
   }

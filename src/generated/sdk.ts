@@ -49,7 +49,7 @@ export type ConversationFilterArgType = {
   conversationUserId?: InputMaybe<IdFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
   isGroup?: InputMaybe<BooleanFilterArgType>;
-  memberId?: InputMaybe<IdFilterArgType>;
+  memberId?: InputMaybe<MemberIdFilterArgType>;
   messageId?: InputMaybe<IdFilterArgType>;
   ownerId?: InputMaybe<IdFilterArgType>;
 };
@@ -89,11 +89,6 @@ export type ConversationPageModel = {
 export type ConversationSearchArgType = {
   key: Scalars['String'];
   value: Scalars['String'];
-};
-
-export type ConversationUserCreateDto = {
-  conversationId: Scalars['String'];
-  userId: Scalars['String'];
 };
 
 export type ConversationUserModel = {
@@ -167,19 +162,21 @@ export type EntityNameFilterArgType = {
   equalTo?: InputMaybe<Scalars['String']>;
 };
 
-export type EnvironmentInitialiseDto = {
+export type EnvironmentConfigModel = {
+  __typename?: 'EnvironmentConfigModel';
+  applicationUrl?: Maybe<Scalars['String']>;
   id: Scalars['String'];
 };
 
-export type EnvironmentModel = {
-  __typename?: 'EnvironmentModel';
-  id: Scalars['String'];
-};
-
-export type EnvironmentUpdateDto = {
+export type EnvironmentConfigUpdateDto = {
+  applicationUrl?: InputMaybe<Scalars['String']>;
   fromEmail?: InputMaybe<Scalars['String']>;
   roqOneFrontendUrl?: InputMaybe<Scalars['String']>;
   sendGridApiKey?: InputMaybe<Scalars['String']>;
+};
+
+export type EnvironmentInitialiseDto = {
+  id: Scalars['String'];
 };
 
 export type EventExampleDataCreateDto = {
@@ -561,6 +558,7 @@ export type FileCategoryModel = {
   createdAt: Scalars['Date'];
   fileCategoryContentGroups?: Maybe<FileCategoryContentGroupPageModel>;
   id: Scalars['ID'];
+  isPublicByDefault: Scalars['Boolean'];
   key: Scalars['String'];
   maxSize?: Maybe<Scalars['Float']>;
   name: Scalars['String'];
@@ -607,7 +605,7 @@ export enum FileCategorySearchKeyEnum {
 
 export type FileCategoryUpdateDto = {
   fileCategoryContentGroupIds?: InputMaybe<Array<Scalars['ID']>>;
-  isPublicByDefault: Scalars['Boolean'];
+  isPublicByDefault?: InputMaybe<Scalars['Boolean']>;
   maxSize?: InputMaybe<Scalars['Float']>;
   name?: InputMaybe<Scalars['String']>;
 };
@@ -632,7 +630,6 @@ export type FileCreateUploadModel = {
   status: FileStatusEnum;
   updatedAt: Scalars['Date'];
   uploadUrl: Scalars['String'];
-  userId?: Maybe<Scalars['String']>;
 };
 
 export type FileFilterArgType = {
@@ -646,7 +643,6 @@ export type FileFilterArgType = {
   isPublic?: InputMaybe<BooleanFilterArgType>;
   name?: InputMaybe<StringFilterArgType>;
   status?: InputMaybe<StatusFilterArgType>;
-  userId?: InputMaybe<IdFilterArgType>;
 };
 
 export type FileModel = {
@@ -664,7 +660,6 @@ export type FileModel = {
   status: FileStatusEnum;
   updatedAt: Scalars['Date'];
   url?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
 };
 
 
@@ -695,6 +690,16 @@ export type FilePageModel = {
   data: Array<FileModel>;
   totalCount: Scalars['Int'];
 };
+
+export type FileSearchArgType = {
+  key: FileSearchKeyEnum;
+  value: Scalars['String'];
+};
+
+export enum FileSearchKeyEnum {
+  ContentType = 'contentType',
+  Name = 'name'
+}
 
 export enum FileStatusEnum {
   Cancelled = 'cancelled',
@@ -907,6 +912,10 @@ export type MarkNotificationsDto = {
   seen: Scalars['Boolean'];
 };
 
+export type MemberIdFilterArgType = {
+  equalTo?: InputMaybe<Scalars['ID']>;
+};
+
 export type MessageModel = {
   __typename?: 'MessageModel';
   body: Scalars['String'];
@@ -938,7 +947,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addUsersToUserGroup: Scalars['Boolean'];
   assignRolesToUser: Scalars['Boolean'];
-  createConversationUser: ConversationModel;
+  buildQueryPlan: Array<QueryPlanModel>;
   createFileAssociation: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
   createTenant: TenantModel;
@@ -946,22 +955,19 @@ export type Mutation = {
   createUserGroup: UserGroupModel;
   deleteFileAssociations: Array<Scalars['String']>;
   deleteFiles: Array<Scalars['ID']>;
-  deleteTest: Array<Scalars['ID']>;
   makeFilePrivate: FileModel;
   makeFilePublic: FileModel;
   markNotifications: Array<NotificationModel>;
   notify: NotificationCreateModel;
-  relateUsersToRole: Scalars['Boolean'];
   removeUsersFromUserGroup: Scalars['Boolean'];
   sendMail: MailCreateModel;
   unassignRolesFromUser: Scalars['Boolean'];
-  unrelateUsersFromRole: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
   updateUser: UserModel;
   updateUserGroup: UserGroupModel;
-  updateUserProfile: UserModel;
+  updateUserProfile: UserProfileModel;
 };
 
 
@@ -977,8 +983,9 @@ export type MutationAssignRolesToUserArgs = {
 };
 
 
-export type MutationCreateConversationUserArgs = {
-  conversationUser: ConversationUserCreateDto;
+export type MutationBuildQueryPlanArgs = {
+  entity: Scalars['String'];
+  operation: ResourceOperationEnum;
 };
 
 
@@ -1017,11 +1024,6 @@ export type MutationDeleteFilesArgs = {
 };
 
 
-export type MutationDeleteTestArgs = {
-  filter?: InputMaybe<DeleteFilterArgType>;
-};
-
-
 export type MutationMakeFilePrivateArgs = {
   id: Scalars['ID'];
 };
@@ -1043,12 +1045,6 @@ export type MutationNotifyArgs = {
 };
 
 
-export type MutationRelateUsersToRoleArgs = {
-  id: Scalars['ID'];
-  relation: RoleUserRelationDto;
-};
-
-
 export type MutationRemoveUsersFromUserGroupArgs = {
   userGroupId: Scalars['ID'];
   userIds: Array<Scalars['ID']>;
@@ -1063,12 +1059,6 @@ export type MutationSendMailArgs = {
 export type MutationUnassignRolesFromUserArgs = {
   roleIds: Array<Scalars['ID']>;
   userId: Scalars['ID'];
-};
-
-
-export type MutationUnrelateUsersFromRoleArgs = {
-  id: Scalars['ID'];
-  relation: RoleUserRelationDto;
 };
 
 
@@ -1586,7 +1576,6 @@ export type PermissionModel = {
   operation: Scalars['String'];
   platformEntity?: Maybe<Scalars['String']>;
   projectEntityId?: Maybe<Scalars['ID']>;
-  role: RoleModel;
   roleId: Scalars['ID'];
   scope: PermissionScopeEnum;
   updatedAt: Scalars['Date'];
@@ -1634,7 +1623,6 @@ export type PermissionUpdateDto = {
 
 export type Query = {
   __typename?: 'Query';
-  buildQueryPlan: Array<QueryPlanModel>;
   file: FileModel;
   fileCategories: FileCategoryPageModel;
   fileCategory: FileCategoryModel;
@@ -1644,8 +1632,6 @@ export type Query = {
   files: FilePageModel;
   notificationPreference: Array<NotificationPreferenceModel>;
   notifications: NotificationPageModel;
-  role: RoleModel;
-  roles: RolePageModel;
   tenant: TenantModel;
   tenants: TenantPageModel;
   translation: TranslationModel;
@@ -1655,15 +1641,9 @@ export type Query = {
   user: UserModel;
   userGroup: UserGroupModel;
   userGroups: UserGroupPageModel;
-  userProvider: UserProviderModel;
-  userProviders: UserProviderPageModel;
+  userProfile: UserProfileModel;
+  userProfiles: UserProfilePageModel;
   users: UserPageModel;
-};
-
-
-export type QueryBuildQueryPlanArgs = {
-  entity: Scalars['String'];
-  operation: ResourceOperationEnum;
 };
 
 
@@ -1714,26 +1694,13 @@ export type QueryFilesArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<FileOrderArgType>;
+  search?: InputMaybe<FileSearchArgType>;
 };
 
 
 export type QueryNotificationsArgs = {
   page?: InputMaybe<Scalars['Float']>;
   seen?: InputMaybe<Scalars['Boolean']>;
-};
-
-
-export type QueryRoleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryRolesArgs = {
-  filter?: InputMaybe<RoleFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<RoleOrderArgType>;
-  search?: InputMaybe<RoleSearchArgType>;
 };
 
 
@@ -1746,6 +1713,7 @@ export type QueryTenantsArgs = {
   filter?: InputMaybe<TenantFilterArgType>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<TenantOrderArgType>;
 };
 
 
@@ -1795,16 +1763,17 @@ export type QueryUserGroupsArgs = {
 };
 
 
-export type QueryUserProviderArgs = {
+export type QueryUserProfileArgs = {
   id: Scalars['ID'];
 };
 
 
-export type QueryUserProvidersArgs = {
-  filter?: InputMaybe<UserProviderFilterArgType>;
+export type QueryUserProfilesArgs = {
+  filter?: InputMaybe<UserFilterArgType>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserProviderOrderArgType>;
+  order?: InputMaybe<UserProfileOrderArgType>;
+  search?: InputMaybe<UserProfileSearchArgType>;
 };
 
 
@@ -1869,19 +1838,9 @@ export type RoleModel = {
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
-  permissionAssignments: PermissionPageModel;
   reference?: Maybe<Scalars['String']>;
   userGroups: UserGroupPageModel;
   users: UsersCountModel;
-};
-
-
-export type RoleModelPermissionAssignmentsArgs = {
-  filter?: InputMaybe<PermissionFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<PermissionOrderArgType>;
-  search?: InputMaybe<PermissionSearchArgType>;
 };
 
 export type RoleOrderArgType = {
@@ -1930,10 +1889,6 @@ export type RoleUpdateDto = {
   name?: InputMaybe<Scalars['String']>;
   permissionAssignments: Array<RolePermissionAssignDto>;
   reference?: InputMaybe<Scalars['String']>;
-};
-
-export type RoleUserRelationDto = {
-  userIds: Array<Scalars['ID']>;
 };
 
 export type StatusFilterArgType = {
@@ -1989,7 +1944,17 @@ export type TenantModel = {
   name: Scalars['String'];
   reference?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
+  users: UsersCountModel;
 };
+
+export type TenantOrderArgType = {
+  order: OrderEnum;
+  sort: TenantOrderSortEnum;
+};
+
+export enum TenantOrderSortEnum {
+  CreatedAt = 'createdAt'
+}
 
 export type TenantPageModel = {
   __typename?: 'TenantPageModel';
@@ -2165,7 +2130,6 @@ export type UserGroupModel = {
   id: Scalars['ID'];
   name: Scalars['String'];
   reference: Scalars['String'];
-  roles: RolePageModel;
   type: Scalars['String'];
   userGroupType?: Maybe<UserGroupTypeModel>;
   users?: Maybe<UserPageModel>;
@@ -2356,23 +2320,12 @@ export type UserModel = {
   locale?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   reference: Scalars['String'];
-  roles?: Maybe<RolePageModel>;
   synced?: Maybe<Scalars['Boolean']>;
   tenant?: Maybe<TenantModel>;
   tenantId?: Maybe<Scalars['ID']>;
   timezone?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
   userGroups?: Maybe<UserGroupPageModel>;
-  userProviders: UserProviderPageModel;
-};
-
-
-export type UserModelRolesArgs = {
-  filter?: InputMaybe<RoleFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<RoleOrderArgType>;
-  search?: InputMaybe<RoleSearchArgType>;
 };
 
 
@@ -2382,14 +2335,6 @@ export type UserModelUserGroupsArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserGroupOrderArgType>;
   search?: InputMaybe<UserGroupSearchArgType>;
-};
-
-
-export type UserModelUserProvidersArgs = {
-  filter?: InputMaybe<UserProviderFilterArgType>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<UserProviderOrderArgType>;
 };
 
 export type UserOrderArgType = {
@@ -2423,6 +2368,39 @@ export type UserPermissionModel = {
   scope: PermissionScopeEnum;
   service: Scalars['String'];
   userGroupType: Scalars['String'];
+};
+
+export type UserProfileModel = {
+  __typename?: 'UserProfileModel';
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastName?: Maybe<Scalars['String']>;
+  locale?: Maybe<Scalars['String']>;
+  reference: Scalars['String'];
+  timezone?: Maybe<Scalars['String']>;
+};
+
+export type UserProfileOrderArgType = {
+  order: OrderEnum;
+  sort: UserProfileOrderSortEnum;
+};
+
+export enum UserProfileOrderSortEnum {
+  FirstName = 'firstName',
+  LastName = 'lastName',
+  Locale = 'locale',
+  Timezone = 'timezone'
+}
+
+export type UserProfilePageModel = {
+  __typename?: 'UserProfilePageModel';
+  data: Array<UserProfileModel>;
+  totalCount: Scalars['Int'];
+};
+
+export type UserProfileSearchArgType = {
+  key: UserSearchKeyEnum;
+  value: Scalars['String'];
 };
 
 export type UserProviderBulkFilterArgType = {
@@ -2608,14 +2586,157 @@ export type UsersCountModel = {
   totalCount: Scalars['Int'];
 };
 
+export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string };
+
+export type FileCategoryContentGroupFragment = { __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string };
+
+export type FileCategoryFragment = { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean };
+
+export type FileCategoryContentTypeFragment = { __typename?: 'FileCategoryContentTypeModel', id: string, createdAt: string, updatedAt: string, key: string, name: string };
+
+export type FileFragment = { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null };
+
+export type FileAssociationFragment = { __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string };
+
+export type FileCategoryContentTypesQueryVariables = Exact<{
+  filter?: InputMaybe<FileCategoryContentTypeFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<FileCategoryContentTypeOrderArgType>;
+  search?: InputMaybe<FileCategoryContentTypeSearchArgType>;
+}>;
+
+
+export type FileCategoryContentTypesQuery = { __typename?: 'Query', fileCategoryContentTypes: { __typename?: 'FileCategoryContentTypePageModel', totalCount: number, data: Array<{ __typename?: 'FileCategoryContentTypeModel', id: string, createdAt: string, updatedAt: string, key: string, name: string }> } };
+
+export type FileCategoryContentGroupQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withFileCategoryContentTypes?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type FileCategoryContentGroupQuery = { __typename?: 'Query', fileCategoryContentGroup: { __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, fileCategoryContentTypes?: { __typename?: 'FileCategoryContentTypePageModel', totalCount: number, data: Array<{ __typename?: 'FileCategoryContentTypeModel', id: string, createdAt: string, updatedAt: string, key: string, name: string }> } } };
+
+export type FileCategoryContentGroupsQueryVariables = Exact<{
+  filter?: InputMaybe<FileCategoryContentGroupFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<FileCategoryContentGroupOrderArgType>;
+  search?: InputMaybe<FileCategoryContentGroupSearchArgType>;
+  withFileCategoryContentTypes?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type FileCategoryContentGroupsQuery = { __typename?: 'Query', fileCategoryContentGroups: { __typename?: 'FileCategoryContentGroupPageModel', totalCount: number, data: Array<{ __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, fileCategoryContentTypes?: { __typename?: 'FileCategoryContentTypePageModel', totalCount: number, data: Array<{ __typename?: 'FileCategoryContentTypeModel', id: string, createdAt: string, updatedAt: string, key: string, name: string }> } }> } };
+
+export type FileCategoriesQueryVariables = Exact<{
+  filter?: InputMaybe<FileCategoryFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<FileCategoryOrderArgType>;
+  search?: InputMaybe<FileCategorySearchArgType>;
+  withFileCategoryContentGroups?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type FileCategoriesQuery = { __typename?: 'Query', fileCategories: { __typename?: 'FileCategoryPageModel', totalCount: number, data: Array<{ __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean, fileCategoryContentGroups?: { __typename?: 'FileCategoryContentGroupPageModel', totalCount: number, data: Array<{ __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string }> } | null }> } };
+
+export type FileCategoryQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withFileCategoryContentGroups?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type FileCategoryQuery = { __typename?: 'Query', fileCategory: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean, fileCategoryContentGroups?: { __typename?: 'FileCategoryContentGroupPageModel', totalCount: number, data: Array<{ __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string }> } | null } };
+
+export type FilesQueryVariables = Exact<{
+  filter?: InputMaybe<FileFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<FileOrderArgType>;
+  search?: InputMaybe<FileSearchArgType>;
+  withFileCategory?: InputMaybe<Scalars['Boolean']>;
+  withCreatedByUser?: InputMaybe<Scalars['Boolean']>;
+  withFileAssociations?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type FilesQuery = { __typename?: 'Query', files: { __typename?: 'FilePageModel', totalCount: number, data: Array<{ __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } }> } };
+
+export type FileQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withFileCategory?: InputMaybe<Scalars['Boolean']>;
+  withCreatedByUser?: InputMaybe<Scalars['Boolean']>;
+  withFileAssociations?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type FileQuery = { __typename?: 'Query', file: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } } };
+
+export type CreateFileAssociationMutationVariables = Exact<{
+  createFileAssociationDto: FileAssociationCreateDto;
+}>;
+
+
+export type CreateFileAssociationMutation = { __typename?: 'Mutation', createFileAssociation: { __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string } };
+
+export type CreateFileUploadMutationVariables = Exact<{
+  createFileDto: FileCreateDto;
+}>;
+
+
+export type CreateFileUploadMutation = { __typename?: 'Mutation', createFileUpload: { __typename?: 'FileCreateUploadModel', contentType: string, createdAt: string, createdByUserId: string, fileCategoryId: string, formFields: Record<string, unknown>, id: string, isPublic: boolean, name: string, status: FileStatusEnum, updatedAt: string, uploadUrl: string } };
+
+export type DeleteFileAssociationsMutationVariables = Exact<{
+  filter: FileAssociationBulkFilterArgType;
+}>;
+
+
+export type DeleteFileAssociationsMutation = { __typename?: 'Mutation', deleteFileAssociations: Array<string> };
+
+export type DeleteFilesMutationVariables = Exact<{
+  filter: DeleteFilterArgType;
+}>;
+
+
+export type DeleteFilesMutation = { __typename?: 'Mutation', deleteFiles: Array<string> };
+
+export type MakeFilePrivateMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type MakeFilePrivateMutation = { __typename?: 'Mutation', makeFilePrivate: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
+
+export type MakeFilePublicMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type MakeFilePublicMutation = { __typename?: 'Mutation', makeFilePublic: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
+
+export type UpdateFileMutationVariables = Exact<{
+  id: Scalars['ID'];
+  updateFileDto: FileUpdateDto;
+}>;
+
+
+export type UpdateFileMutation = { __typename?: 'Mutation', updateFile: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
+
+export type UpdateFileStatusMutationVariables = Exact<{
+  id: Scalars['ID'];
+  status: FileStatusEnum;
+}>;
+
+
+export type UpdateFileStatusMutation = { __typename?: 'Mutation', updateFileStatus: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
+
 export type NotifyMutationVariables = Exact<{
   notification: NotificationCreateDto;
 }>;
 
 
 export type NotifyMutation = { __typename?: 'Mutation', notify: { __typename?: 'NotificationCreateModel', usersNotified: { __typename?: 'NotificationCreateUserModel', count: number } } };
-
-export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
 export type CreateUserMutationVariables = Exact<{
   user: UserCreateDto;
@@ -2650,6 +2771,264 @@ export const UserFragmentDoc = gql`
   updatedAt
 }
     `;
+export const FileCategoryContentGroupFragmentDoc = gql`
+    fragment FileCategoryContentGroup on FileCategoryContentGroupModel {
+  id
+  createdAt
+  updatedAt
+  key
+  name
+}
+    `;
+export const FileCategoryFragmentDoc = gql`
+    fragment FileCategory on FileCategoryModel {
+  id
+  createdAt
+  updatedAt
+  key
+  name
+  maxSize
+  isPublicByDefault
+}
+    `;
+export const FileCategoryContentTypeFragmentDoc = gql`
+    fragment FileCategoryContentType on FileCategoryContentTypeModel {
+  id
+  createdAt
+  updatedAt
+  key
+  name
+}
+    `;
+export const FileFragmentDoc = gql`
+    fragment File on FileModel {
+  id
+  createdAt
+  updatedAt
+  contentType
+  createdByUserId
+  fileCategoryId
+  isPublic
+  name
+  status
+  url
+}
+    `;
+export const FileAssociationFragmentDoc = gql`
+    fragment FileAssociation on FileAssociationModel {
+  id
+  createdAt
+  updatedAt
+  entityReference
+  entityName
+  fileId
+}
+    `;
+export const FileCategoryContentTypesDocument = gql`
+    query fileCategoryContentTypes($filter: FileCategoryContentTypeFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentTypeOrderArgType, $search: FileCategoryContentTypeSearchArgType) {
+  fileCategoryContentTypes(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...FileCategoryContentType
+    }
+    totalCount
+  }
+}
+    ${FileCategoryContentTypeFragmentDoc}`;
+export const FileCategoryContentGroupDocument = gql`
+    query fileCategoryContentGroup($id: ID!, $withFileCategoryContentTypes: Boolean = false) {
+  fileCategoryContentGroup(id: $id) {
+    ...FileCategoryContentGroup
+    fileCategoryContentTypes @include(if: $withFileCategoryContentTypes) {
+      data {
+        ...FileCategoryContentType
+      }
+      totalCount
+    }
+  }
+}
+    ${FileCategoryContentGroupFragmentDoc}
+${FileCategoryContentTypeFragmentDoc}`;
+export const FileCategoryContentGroupsDocument = gql`
+    query fileCategoryContentGroups($filter: FileCategoryContentGroupFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentGroupOrderArgType, $search: FileCategoryContentGroupSearchArgType, $withFileCategoryContentTypes: Boolean = false) {
+  fileCategoryContentGroups(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...FileCategoryContentGroup
+      fileCategoryContentTypes @include(if: $withFileCategoryContentTypes) {
+        data {
+          ...FileCategoryContentType
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${FileCategoryContentGroupFragmentDoc}
+${FileCategoryContentTypeFragmentDoc}`;
+export const FileCategoriesDocument = gql`
+    query fileCategories($filter: FileCategoryFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryOrderArgType, $search: FileCategorySearchArgType, $withFileCategoryContentGroups: Boolean = false) {
+  fileCategories(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...FileCategory
+      fileCategoryContentGroups @include(if: $withFileCategoryContentGroups) {
+        data {
+          ...FileCategoryContentGroup
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${FileCategoryFragmentDoc}
+${FileCategoryContentGroupFragmentDoc}`;
+export const FileCategoryDocument = gql`
+    query fileCategory($id: ID!, $withFileCategoryContentGroups: Boolean = false) {
+  fileCategory(id: $id) {
+    ...FileCategory
+    fileCategoryContentGroups @include(if: $withFileCategoryContentGroups) {
+      data {
+        ...FileCategoryContentGroup
+      }
+      totalCount
+    }
+  }
+}
+    ${FileCategoryFragmentDoc}
+${FileCategoryContentGroupFragmentDoc}`;
+export const FilesDocument = gql`
+    query files($filter: FileFilterArgType, $limit: Int, $offset: Int, $order: FileOrderArgType, $search: FileSearchArgType, $withFileCategory: Boolean = false, $withCreatedByUser: Boolean = false, $withFileAssociations: Boolean = false) {
+  files(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...File
+      fileCategory @include(if: $withFileCategory) {
+        ...FileCategory
+      }
+      createdByUser @include(if: $withCreatedByUser) {
+        ...User
+      }
+      fileAssociations @include(if: $withFileAssociations) {
+        data {
+          ...FileAssociation
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${FileFragmentDoc}
+${FileCategoryFragmentDoc}
+${UserFragmentDoc}
+${FileAssociationFragmentDoc}`;
+export const FileDocument = gql`
+    query file($id: ID!, $withFileCategory: Boolean = false, $withCreatedByUser: Boolean = false, $withFileAssociations: Boolean = false) {
+  file(id: $id) {
+    ...File
+    fileCategory @include(if: $withFileCategory) {
+      ...FileCategory
+    }
+    createdByUser @include(if: $withCreatedByUser) {
+      ...User
+    }
+    fileAssociations @include(if: $withFileAssociations) {
+      data {
+        ...FileAssociation
+      }
+      totalCount
+    }
+  }
+}
+    ${FileFragmentDoc}
+${FileCategoryFragmentDoc}
+${UserFragmentDoc}
+${FileAssociationFragmentDoc}`;
+export const CreateFileAssociationDocument = gql`
+    mutation createFileAssociation($createFileAssociationDto: FileAssociationCreateDto!) {
+  createFileAssociation(createFileAssociationDto: $createFileAssociationDto) {
+    ...FileAssociation
+  }
+}
+    ${FileAssociationFragmentDoc}`;
+export const CreateFileUploadDocument = gql`
+    mutation createFileUpload($createFileDto: FileCreateDto!) {
+  createFileUpload(createFileDto: $createFileDto) {
+    contentType
+    createdAt
+    createdByUserId
+    fileCategoryId
+    formFields
+    id
+    isPublic
+    name
+    status
+    updatedAt
+    uploadUrl
+  }
+}
+    `;
+export const DeleteFileAssociationsDocument = gql`
+    mutation deleteFileAssociations($filter: FileAssociationBulkFilterArgType!) {
+  deleteFileAssociations(filter: $filter)
+}
+    `;
+export const DeleteFilesDocument = gql`
+    mutation deleteFiles($filter: DeleteFilterArgType!) {
+  deleteFiles(filter: $filter)
+}
+    `;
+export const MakeFilePrivateDocument = gql`
+    mutation makeFilePrivate($id: ID!) {
+  makeFilePrivate(id: $id) {
+    ...File
+  }
+}
+    ${FileFragmentDoc}`;
+export const MakeFilePublicDocument = gql`
+    mutation makeFilePublic($id: ID!) {
+  makeFilePublic(id: $id) {
+    ...File
+  }
+}
+    ${FileFragmentDoc}`;
+export const UpdateFileDocument = gql`
+    mutation updateFile($id: ID!, $updateFileDto: FileUpdateDto!) {
+  updateFile(id: $id, updateFileDto: $updateFileDto) {
+    ...File
+  }
+}
+    ${FileFragmentDoc}`;
+export const UpdateFileStatusDocument = gql`
+    mutation updateFileStatus($id: ID!, $status: FileStatusEnum!) {
+  updateFileStatus(id: $id, status: $status) {
+    ...File
+  }
+}
+    ${FileFragmentDoc}`;
 export const NotifyDocument = gql`
     mutation notify($notification: NotificationCreateDto!) {
   notify(notification: $notification) {
@@ -2694,6 +3073,51 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    fileCategoryContentTypes(variables?: FileCategoryContentTypesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentTypesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentTypesQuery>(FileCategoryContentTypesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentTypes', 'query');
+    },
+    fileCategoryContentGroup(variables: FileCategoryContentGroupQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentGroupQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentGroupQuery>(FileCategoryContentGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentGroup', 'query');
+    },
+    fileCategoryContentGroups(variables?: FileCategoryContentGroupsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentGroupsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentGroupsQuery>(FileCategoryContentGroupsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentGroups', 'query');
+    },
+    fileCategories(variables?: FileCategoriesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoriesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FileCategoriesQuery>(FileCategoriesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategories', 'query');
+    },
+    fileCategory(variables: FileCategoryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryQuery>(FileCategoryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategory', 'query');
+    },
+    files(variables?: FilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FilesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FilesQuery>(FilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'files', 'query');
+    },
+    file(variables: FileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FileQuery>(FileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'file', 'query');
+    },
+    createFileAssociation(variables: CreateFileAssociationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateFileAssociationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateFileAssociationMutation>(CreateFileAssociationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createFileAssociation', 'mutation');
+    },
+    createFileUpload(variables: CreateFileUploadMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateFileUploadMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateFileUploadMutation>(CreateFileUploadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createFileUpload', 'mutation');
+    },
+    deleteFileAssociations(variables: DeleteFileAssociationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteFileAssociationsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteFileAssociationsMutation>(DeleteFileAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteFileAssociations', 'mutation');
+    },
+    deleteFiles(variables: DeleteFilesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteFilesMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteFilesMutation>(DeleteFilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteFiles', 'mutation');
+    },
+    makeFilePrivate(variables: MakeFilePrivateMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MakeFilePrivateMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MakeFilePrivateMutation>(MakeFilePrivateDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'makeFilePrivate', 'mutation');
+    },
+    makeFilePublic(variables: MakeFilePublicMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MakeFilePublicMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MakeFilePublicMutation>(MakeFilePublicDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'makeFilePublic', 'mutation');
+    },
+    updateFile(variables: UpdateFileMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateFileMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateFileMutation>(UpdateFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateFile', 'mutation');
+    },
+    updateFileStatus(variables: UpdateFileStatusMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateFileStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateFileStatusMutation>(UpdateFileStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateFileStatus', 'mutation');
+    },
     notify(variables: NotifyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotifyMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<NotifyMutation>(NotifyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'notify', 'mutation');
     },

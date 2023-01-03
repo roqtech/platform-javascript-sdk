@@ -1,0 +1,283 @@
+fragment User on UserModel {
+  id
+  reference
+  firstName
+  lastName
+  active
+  email
+  phone
+  locale
+  isOptedIn
+  synced
+  tenantId
+  timezone
+  createdAt
+  updatedAt
+}
+
+fragment FileCategoryContentGroup on FileCategoryContentGroupModel {
+  id
+  createdAt
+  updatedAt
+  key
+  name
+}
+
+fragment FileCategory on FileCategoryModel {
+  id
+  createdAt
+  updatedAt
+  key
+  name
+  maxSize
+  isPublicByDefault
+}
+
+fragment FileCategoryContentType on FileCategoryContentTypeModel {
+  id
+  createdAt
+  updatedAt
+  key
+  name
+}
+
+fragment File on FileModel {
+  id
+  createdAt
+  updatedAt
+  contentType
+  createdByUserId
+  fileCategoryId
+  isPublic
+  name
+  status
+  url
+}
+
+fragment FileAssociation on FileAssociationModel {
+  id
+  createdAt
+  updatedAt
+  entityReference
+  entityName
+  fileId
+}
+
+query fileCategoryContentTypes(
+  $filter: FileCategoryContentTypeFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: FileCategoryContentTypeOrderArgType
+  $search: FileCategoryContentTypeSearchArgType
+) {
+  fileCategoryContentTypes(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...FileCategoryContentType
+    }
+    totalCount
+  }
+}
+
+query fileCategoryContentGroup(
+  $id: ID!
+  $withFileCategoryContentTypes: Boolean = false
+) {
+  fileCategoryContentGroup(id: $id) {
+    ...FileCategoryContentGroup
+    fileCategoryContentTypes @include(if: $withFileCategoryContentTypes) {
+      data {
+        ...FileCategoryContentType
+      }
+      totalCount
+    }
+  }
+}
+
+query fileCategoryContentGroups(
+  $filter: FileCategoryContentGroupFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: FileCategoryContentGroupOrderArgType
+  $search: FileCategoryContentGroupSearchArgType
+  $withFileCategoryContentTypes: Boolean = false
+) {
+  fileCategoryContentGroups(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...FileCategoryContentGroup
+      fileCategoryContentTypes @include(if: $withFileCategoryContentTypes) {
+        data {
+          ...FileCategoryContentType
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+query fileCategories(
+  $filter: FileCategoryFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: FileCategoryOrderArgType
+  $search: FileCategorySearchArgType
+  $withFileCategoryContentGroups: Boolean = false
+) {
+  fileCategories(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...FileCategory
+      fileCategoryContentGroups @include(if: $withFileCategoryContentGroups) {
+        data {
+          ...FileCategoryContentGroup
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+query fileCategory($id: ID!, $withFileCategoryContentGroups: Boolean = false) {
+  fileCategory(id: $id) {
+    ...FileCategory
+    fileCategoryContentGroups @include(if: $withFileCategoryContentGroups) {
+      data {
+        ...FileCategoryContentGroup
+      }
+      totalCount
+    }
+  }
+}
+
+query files(
+  $filter: FileFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: FileOrderArgType
+  $search: FileSearchArgType
+  $withFileCategory: Boolean = false
+  $withCreatedByUser: Boolean = false
+  $withFileAssociations: Boolean = false
+) {
+  files(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...File
+      fileCategory @include(if: $withFileCategory) {
+        ...FileCategory
+      }
+      createdByUser @include(if: $withCreatedByUser) {
+        ...User
+      }
+      fileAssociations @include(if: $withFileAssociations) {
+        data {
+          ...FileAssociation
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+query file(
+  $id: ID!
+  $withFileCategory: Boolean = false
+  $withCreatedByUser: Boolean = false
+  $withFileAssociations: Boolean = false
+) {
+  file(id: $id) {
+    ...File
+    fileCategory @include(if: $withFileCategory) {
+      ...FileCategory
+    }
+    createdByUser @include(if: $withCreatedByUser) {
+      ...User
+    }
+    fileAssociations @include(if: $withFileAssociations) {
+      data {
+        ...FileAssociation
+      }
+      totalCount
+    }
+  }
+}
+
+mutation createFileAssociation(
+  $createFileAssociationDto: FileAssociationCreateDto!
+) {
+  createFileAssociation(createFileAssociationDto: $createFileAssociationDto) {
+    ...FileAssociation
+  }
+}
+
+mutation createFileUpload($createFileDto: FileCreateDto!) {
+  createFileUpload(createFileDto: $createFileDto) {
+    contentType
+    createdAt
+    createdByUserId
+    fileCategoryId
+    formFields
+    id
+    isPublic
+    name
+    status
+    updatedAt
+    uploadUrl
+  }
+}
+
+mutation deleteFileAssociations($filter: FileAssociationBulkFilterArgType!) {
+  deleteFileAssociations(filter: $filter)
+}
+
+mutation deleteFiles($filter: DeleteFilterArgType!) {
+  deleteFiles(filter: $filter)
+}
+
+mutation makeFilePrivate($id: ID!) {
+  makeFilePrivate(id: $id) {
+    ...File
+  }
+}
+
+mutation makeFilePublic($id: ID!) {
+  makeFilePublic(id: $id) {
+    ...File
+  }
+}
+
+mutation updateFile($id: ID!, $updateFileDto: FileUpdateDto!) {
+  updateFile(id: $id, updateFileDto: $updateFileDto) {
+    ...File
+  }
+}
+
+mutation updateFileStatus($id: ID!, $status: FileStatusEnum!) {
+  updateFileStatus(id: $id, status: $status) {
+    ...File
+  }
+}
