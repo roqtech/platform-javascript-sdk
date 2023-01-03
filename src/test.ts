@@ -6,14 +6,10 @@ const client = new PlatformClientService({
   host: 'https://mars-pp.roq-platform.com',
 });
 
-client.file
-  .fileCategoryContentGroups({})
+client.user
+  .createUser({ user: { email: 'sav', reference: '17' } })
   .then((response) => {
-    response.fileCategoryContentGroups.data.map((value) => {
-      value.fileCategoryContentTypes.data.map((v) => {
-        console.log(v);
-      });
-    });
+    console.log(response.createUser);
   })
   .catch((err) => {
     console.log(err);
