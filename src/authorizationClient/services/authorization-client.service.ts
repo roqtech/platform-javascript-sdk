@@ -10,7 +10,7 @@ import {
 import { PlatformClientOptionsType } from '../../platformClient/types/platform-client-options.type';
 import { RequestParamsType } from '../types';
 
-export class AuthorisationClientService {
+export class AuthorizationClientService {
   private readonly host: string;
   private readonly jwtSecret: string;
   private readonly apiKey: string;

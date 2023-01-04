@@ -1,7 +1,7 @@
 import { defaultGraphqlEndpoint, defaultHost } from '../../constants';
 import { PlatformClientOptionsType } from '../types/platform-client-options.type';
 import { NotificationClientService } from '../../notificationClient/services/notification-client.service';
-import { AuthorisationClientService } from '../../authorisationClient';
+import { AuthorizationClientService } from '../../authorizationClient';
 import { getSdk } from '../../generated/sdk';
 import { ClientError, GraphQLClient } from 'graphql-request';
 import { UserClientService } from '../../userClient';
@@ -19,7 +19,7 @@ export class PlatformClientService {
   private readonly environmentId: string;
   private readonly graphqlClient: GraphQLClient;
 
-  public readonly authorisation: AuthorisationClientService;
+  public readonly authorization: AuthorizationClientService;
 
   constructor(options: PlatformClientOptionsType) {
     this.jwtSecret = options.jwtSecret;
@@ -34,15 +34,15 @@ export class PlatformClientService {
     }
     this.graphqlClient = new GraphQLClient(this.graphqlUrl);
 
-    this.authorisation = new AuthorisationClientService(options);
+    this.authorization = new AuthorizationClientService(options);
   }
 
   public asUser(userId: string, expiresIn?: string) {
-    return this.initialise(() => this.authorisation.createUserToken(userId, expiresIn));
+    return this.initialise(() => this.authorization.createUserToken(userId, expiresIn));
   }
 
   public asServiceAccount() {
-    return this.initialise(() => this.authorisation.createServiceAccountToken());
+    return this.initialise(() => this.authorization.createServiceAccountToken());
   }
 
   private initialise(getToken: () => Promise<string>) {
