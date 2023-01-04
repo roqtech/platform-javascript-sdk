@@ -20,15 +20,6 @@ export class PlatformClientService {
   private readonly graphqlClient: GraphQLClient;
 
   public readonly authorisation: AuthorisationClientService;
-  public readonly notifications: NotificationClientService;
-  public readonly file: FileClientService;
-  public readonly user: UserClientService;
-  public readonly translation: TranslationClientService;
-  public graphqlRequest: <T = any, V = Variables>(
-    query: string,
-    variables?: V,
-    requestHeaders?: Dom.RequestInit['headers'],
-  ) => Promise<Response<T>>;
 
   constructor(options: PlatformClientOptionsType) {
     this.jwtSecret = options.jwtSecret;
@@ -44,20 +35,14 @@ export class PlatformClientService {
     this.graphqlClient = new GraphQLClient(this.graphqlUrl);
 
     this.authorisation = new AuthorisationClientService(options);
-
-    const initialised = this.initialise(this.authorisation.getToken.bind(this.authorisation));
-
-    this.notifications = initialised.notifications;
-    this.user = initialised.user;
-    this.file = initialised.file;
-    this.translation = initialised.translation;
-    this.graphqlRequest = initialised.graphqlRequest;
   }
 
-  public async withToken(token: string) {
-    return this.initialise(() => {
-      return Promise.resolve(token);
-    });
+  public asUser(userId: string, expiresIn?: string) {
+    return this.initialise(() => this.authorisation.createUserToken(userId, expiresIn));
+  }
+
+  public asServiceAccount() {
+    return this.initialise(() => this.authorisation.createServiceAccountToken());
   }
 
   private initialise(getToken: () => Promise<string>) {

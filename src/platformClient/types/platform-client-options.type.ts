@@ -3,4 +3,5 @@ export type PlatformClientOptionsType = {
   environmentId: string;
   jwtSecret: string;
   host?: string;
+  cacheTtlInSeconds?: number;
 };
