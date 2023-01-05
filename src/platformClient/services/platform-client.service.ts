@@ -41,7 +41,7 @@ export class PlatformClientService {
     return this.initialise(() => this.authorization.createUserToken(userId, expiresIn));
   }
 
-  public asServiceAccount() {
+  public asSuperAdmin() {
     return this.initialise(() => this.authorization.createServiceAccountToken());
   }
 
@@ -97,10 +97,10 @@ export class PlatformClientService {
     };
 
     return {
-      notifications: new NotificationClientService(sdk),
-      user: new UserClientService(sdk),
-      file: new FileClientService(sdk),
-      translation: new TranslationClientService(sdk),
+      ...new NotificationClientService(sdk),
+      ...new UserClientService(sdk),
+      ...new FileClientService(sdk),
+      ...new TranslationClientService(sdk),
       graphqlRequest,
     };
   }

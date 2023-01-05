@@ -7,11 +7,11 @@ const client = new PlatformClientService({
 });
 
 client
-  .asServiceAccount()
-  .user.users()
+  .asSuperAdmin()
+  .users()
   .then((res) => console.log(res.users.data));
 
 client
   .asUser('a5b9d126-b239-4961-85f5-e5e11283bef8')
-  .user.userProfile({ id: 'a5b9d126-b239-4961-85f5-e5e11283bef8' })
+  .userProfile({ id: 'a5b9d126-b239-4961-85f5-e5e11283bef8' })
   .then((res) => console.log(res.userProfile));
