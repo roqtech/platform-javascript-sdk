@@ -49,6 +49,9 @@ export class PlatformClientService {
     const getAuthorizedHeaders = (token: string): Record<string, string> => {
       const headers = {
         'roq-platform-authorization': `Bearer ${token}`,
+        'roq-platform-server-authorization': `Basic ${Buffer.from(`${this.environmentId}:${this.apiKey}`).toString(
+          'base64',
+        )}`,
       };
       return headers;
     };
