@@ -2,7 +2,6 @@ import { PlatformClientService } from './platformClient/services/platform-client
 const client = new PlatformClientService({
   environmentId: 'CHANGE_ME_2',
   apiKey: 'CHANGE_ME_2',
-  jwtSecret: 'CHANGE_ME_2',
   host: 'http://localhost:3002',
 });
 

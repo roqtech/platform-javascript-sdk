@@ -14,7 +14,6 @@ import { HttpException } from '../../exception/exceptions/http.exception';
 export class PlatformClientService {
   private readonly graphqlUrl: string;
   private readonly host: string;
-  private readonly jwtSecret: string;
   private readonly apiKey: string;
   private readonly environmentId: string;
   private readonly graphqlClient: GraphQLClient;
@@ -22,7 +21,6 @@ export class PlatformClientService {
   public readonly authorization: AuthorizationClientService;
 
   constructor(options: PlatformClientOptionsType) {
-    this.jwtSecret = options.jwtSecret;
     this.environmentId = options.environmentId;
     this.apiKey = options.apiKey;
     if (options.host) {

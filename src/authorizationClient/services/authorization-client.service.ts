@@ -12,7 +12,6 @@ import { RequestParamsType } from '../types';
 
 export class AuthorizationClientService {
   private readonly host: string;
-  private readonly jwtSecret: string;
   private readonly apiKey: string;
   private readonly environmentId: string;
   private readonly serviceAccountEmail = defaultServiceAccountEmail;
@@ -21,7 +20,6 @@ export class AuthorizationClientService {
   constructor(options: PlatformClientOptionsType) {
     const stdTTL = options.cacheTtlInSeconds ? options.cacheTtlInSeconds : 60 * 60;
     this.cache = new NodeCache({ stdTTL });
-    this.jwtSecret = options.jwtSecret;
     this.environmentId = options.environmentId;
     this.apiKey = options.apiKey;
     if (options.host) {
