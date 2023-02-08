@@ -21,6 +21,89 @@ export type AcceptUserInviteDto = {
   token: Scalars['String'];
 };
 
+export type AppUriUpdateDto = {
+  allowedCallbackUrls?: InputMaybe<Scalars['String']>;
+  allowedLogoutUrls?: InputMaybe<Scalars['String']>;
+  applicationUrl?: InputMaybe<Scalars['String']>;
+  authenticationDomain?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  signInUrl?: InputMaybe<Scalars['String']>;
+};
+
+export type AuthFormConfigDto = {
+  privacyPolicyLink?: InputMaybe<Scalars['String']>;
+  requireEmailConfirmation?: InputMaybe<Scalars['Boolean']>;
+  showCompany?: InputMaybe<Scalars['Boolean']>;
+  showFirstName?: InputMaybe<Scalars['Boolean']>;
+  showLastName?: InputMaybe<Scalars['Boolean']>;
+  termsConditionsLink?: InputMaybe<Scalars['String']>;
+  translations: Array<FormConfigTranslationDto>;
+};
+
+export type AuthFormThemeCreateDto = {
+  theme: Scalars['JsonObject'];
+};
+
+export type AuthUiThemeModel = {
+  __typename?: 'AuthUiThemeModel';
+  createdAt?: Maybe<Scalars['Date']>;
+  id?: Maybe<Scalars['ID']>;
+  theme?: Maybe<Scalars['JsonObject']>;
+  updatedAt?: Maybe<Scalars['Date']>;
+};
+
+export type AuthenticationAppUriModel = {
+  __typename?: 'AuthenticationAppUriModel';
+  allowedCallbackUrls?: Maybe<Scalars['String']>;
+  allowedLogoutUrls?: Maybe<Scalars['String']>;
+  applicationUrl?: Maybe<Scalars['String']>;
+  authenticationDomain?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
+  isDomainVerified?: Maybe<Scalars['Boolean']>;
+  signInUrl?: Maybe<Scalars['String']>;
+};
+
+export type AuthenticationProviderConfigUpdateDto = {
+  enableFacebook: Scalars['Boolean'];
+  enableGoogle: Scalars['Boolean'];
+  enabled: Scalars['Boolean'];
+  facebook: AuthenticationProviderDto;
+  google: AuthenticationProviderDto;
+};
+
+export type AuthenticationProviderDto = {
+  authCallbackUri?: InputMaybe<Scalars['String']>;
+  authOriginUri?: InputMaybe<Scalars['String']>;
+  authorizationScopes?: InputMaybe<Array<Scalars['String']>>;
+  clientId?: InputMaybe<Scalars['String']>;
+  clientSecret?: InputMaybe<Scalars['String']>;
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type AuthenticationProviderModel = {
+  __typename?: 'AuthenticationProviderModel';
+  authCallbackUri?: Maybe<Scalars['String']>;
+  authOriginUri?: Maybe<Scalars['String']>;
+  authorizationScopes?: Maybe<Array<Scalars['String']>>;
+  clientId?: Maybe<Scalars['String']>;
+  clientSecret?: Maybe<Scalars['String']>;
+  enabled?: Maybe<Scalars['Boolean']>;
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type AuthenticationProviderSsoConfigModel = {
+  __typename?: 'AuthenticationProviderSsoConfigModel';
+  authOriginUri: Scalars['String'];
+  dnsRecordUri: Scalars['String'];
+  enableFacebook: Scalars['Boolean'];
+  enableGoogle: Scalars['Boolean'];
+  enabled: Scalars['Boolean'];
+  facebook?: Maybe<AuthenticationProviderModel>;
+  google?: Maybe<AuthenticationProviderModel>;
+};
+
 export type BooleanFilterArgType = {
   equalTo?: InputMaybe<Scalars['Boolean']>;
   notEqualTo?: InputMaybe<Scalars['Boolean']>;
@@ -713,6 +796,12 @@ export type FileUpdateDto = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type FormConfigTranslationDto = {
+  key: Scalars['String'];
+  locale: Scalars['String'];
+  value: Scalars['String'];
+};
+
 export type IdBulkFilterArgType = {
   equalTo?: InputMaybe<Scalars['ID']>;
   valueIn?: InputMaybe<Array<Scalars['ID']>>;
@@ -812,6 +901,7 @@ export type MailCreateUserModel = {
 
 export type MailLocalizedTemplateCreateDto = {
   content: Scalars['String'];
+  defaultVariables?: InputMaybe<Array<NotificationTemplateDefaultVariableDto>>;
   key: Scalars['String'];
   locale: Scalars['String'];
   subject: Scalars['String'];
@@ -831,6 +921,7 @@ export type MailLocalizedTemplateModel = {
   __typename?: 'MailLocalizedTemplateModel';
   content?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
+  defaultVariables?: Maybe<Array<NotificationTemplateVariableModel>>;
   id?: Maybe<Scalars['ID']>;
   key?: Maybe<Scalars['String']>;
   locale?: Maybe<Scalars['String']>;
@@ -869,6 +960,7 @@ export enum MailLocalizedTemplateSearchKeyEnum {
 
 export type MailLocalizedTemplateUpdateDto = {
   content?: InputMaybe<Scalars['String']>;
+  defaultVariables?: InputMaybe<Array<NotificationTemplateDefaultVariableDto>>;
   key?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
   subject?: InputMaybe<Scalars['String']>;
@@ -878,6 +970,7 @@ export type MailLocalizedTemplateUpdateDto = {
 export type MailTemplateCreateDto = {
   active: Scalars['Boolean'];
   content: Scalars['String'];
+  defaultVariables?: InputMaybe<Array<NotificationTemplateDefaultVariableDto>>;
   description?: InputMaybe<Scalars['String']>;
   locale: Scalars['String'];
   name: Scalars['String'];
@@ -890,6 +983,7 @@ export type MailTemplateModel = {
   createdAt: Scalars['Date'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  isSystem: Scalars['Boolean'];
   key?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
@@ -945,9 +1039,11 @@ export type MessageStatusModel = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptUserInvite: UserInviteModel;
   addUsersToUserGroup: Scalars['Boolean'];
   assignRolesToUser: Scalars['Boolean'];
   buildQueryPlan: Array<QueryPlanModel>;
+  cancelUserInvite: UserInviteModel;
   createFileAssociation: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
   createTenant: TenantModel;
@@ -960,14 +1056,26 @@ export type Mutation = {
   markNotifications: Array<NotificationModel>;
   notify: NotificationCreateModel;
   removeUsersFromUserGroup: Scalars['Boolean'];
+  resendUserInvite: UserInviteModel;
   sendMail: MailCreateModel;
+  sendUserConfirmationMail: Scalars['Boolean'];
+  /** Create UserInvite and send email */
+  sendUserInvites: CreateUserInvitesModel;
+  sendUserResetPasswordMail: Scalars['Boolean'];
   unassignRolesFromUser: Scalars['Boolean'];
+  updateAuthFormConfig: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
   updateUser: UserModel;
   updateUserGroup: UserGroupModel;
-  updateUserProfile: UserProfileModel;
+  updateUserInvite: UserInviteModel;
+  upsertAuthFormTheme: AuthUiThemeModel;
+};
+
+
+export type MutationAcceptUserInviteArgs = {
+  acceptUserInvite: AcceptUserInviteDto;
 };
 
 
@@ -978,7 +1086,7 @@ export type MutationAddUsersToUserGroupArgs = {
 
 
 export type MutationAssignRolesToUserArgs = {
-  roleIds: Array<Scalars['ID']>;
+  roleKeys: Array<Scalars['String']>;
   userId: Scalars['ID'];
 };
 
@@ -986,6 +1094,11 @@ export type MutationAssignRolesToUserArgs = {
 export type MutationBuildQueryPlanArgs = {
   entity: Scalars['String'];
   operation: ResourceOperationEnum;
+};
+
+
+export type MutationCancelUserInviteArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1051,14 +1164,39 @@ export type MutationRemoveUsersFromUserGroupArgs = {
 };
 
 
+export type MutationResendUserInviteArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationSendMailArgs = {
   mail: MailCreateDto;
 };
 
 
-export type MutationUnassignRolesFromUserArgs = {
-  roleIds: Array<Scalars['ID']>;
+export type MutationSendUserConfirmationMailArgs = {
   userId: Scalars['ID'];
+};
+
+
+export type MutationSendUserInvitesArgs = {
+  userInvites: UserInvitesCreateDto;
+};
+
+
+export type MutationSendUserResetPasswordMailArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type MutationUnassignRolesFromUserArgs = {
+  roleKeys: Array<Scalars['String']>;
+  userId: Scalars['ID'];
+};
+
+
+export type MutationUpdateAuthFormConfigArgs = {
+  config: AuthFormConfigDto;
 };
 
 
@@ -1092,9 +1230,14 @@ export type MutationUpdateUserGroupArgs = {
 };
 
 
-export type MutationUpdateUserProfileArgs = {
+export type MutationUpdateUserInviteArgs = {
   id: Scalars['ID'];
-  user: UserUpdateProfileDto;
+  userInvite: UserInviteUpdateDto;
+};
+
+
+export type MutationUpsertAuthFormThemeArgs = {
+  data: AuthFormThemeCreateDto;
 };
 
 export enum NotificationActionTypeEnum {
@@ -1355,6 +1498,7 @@ export type NotificationPreferenceModel = {
   channelPreferences: ChannelPreferencePageModel;
   enabled: Scalars['Boolean'];
   id: Scalars['String'];
+  key: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -1374,7 +1518,8 @@ export enum NotificationStatusEnum {
 
 export type NotificationTemplateCreateDto = {
   active: Scalars['Boolean'];
-  description?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
+  locale: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -1576,8 +1721,10 @@ export type PermissionModel = {
   operation: Scalars['String'];
   platformEntity?: Maybe<Scalars['String']>;
   projectEntityId?: Maybe<Scalars['ID']>;
+  role: RoleModel;
   roleId: Scalars['ID'];
   scope: PermissionScopeEnum;
+  type: PermissionTypeEnum;
   updatedAt: Scalars['Date'];
 };
 
@@ -1614,6 +1761,11 @@ export enum PermissionSearchKeyEnum {
   Key = 'key'
 }
 
+export enum PermissionTypeEnum {
+  Platform = 'platform',
+  Project = 'project'
+}
+
 export type PermissionUpdateDto = {
   operation: ResourceOperationEnum;
   platformEntity: Scalars['String'];
@@ -1623,6 +1775,8 @@ export type PermissionUpdateDto = {
 
 export type Query = {
   __typename?: 'Query';
+  authUITheme?: Maybe<AuthUiThemeModel>;
+  checkUserInviteToken: CheckUserInviteTokenModel;
   file: FileModel;
   fileCategories: FileCategoryPageModel;
   fileCategory: FileCategoryModel;
@@ -1630,8 +1784,11 @@ export type Query = {
   fileCategoryContentGroups: FileCategoryContentGroupPageModel;
   fileCategoryContentTypes: FileCategoryContentTypePageModel;
   files: FilePageModel;
+  messageFileUrl: Scalars['String'];
   notificationPreference: Array<NotificationPreferenceModel>;
   notifications: NotificationPageModel;
+  role: RoleModel;
+  roles: RolePageModel;
   tenant: TenantModel;
   tenants: TenantPageModel;
   translation: TranslationModel;
@@ -1641,9 +1798,16 @@ export type Query = {
   user: UserModel;
   userGroup: UserGroupModel;
   userGroups: UserGroupPageModel;
+  userInvite: UserInviteModel;
+  userInvites: UserInvitePageModel;
   userProfile: UserProfileModel;
   userProfiles: UserProfilePageModel;
   users: UserPageModel;
+};
+
+
+export type QueryCheckUserInviteTokenArgs = {
+  token: Scalars['String'];
 };
 
 
@@ -1698,9 +1862,29 @@ export type QueryFilesArgs = {
 };
 
 
+export type QueryMessageFileUrlArgs = {
+  fileId: Scalars['ID'];
+  id: Scalars['ID'];
+};
+
+
 export type QueryNotificationsArgs = {
   page?: InputMaybe<Scalars['Float']>;
   seen?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type QueryRoleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryRolesArgs = {
+  filter?: InputMaybe<RoleFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<RoleOrderArgType>;
+  search?: InputMaybe<RoleSearchArgType>;
 };
 
 
@@ -1760,6 +1944,20 @@ export type QueryUserGroupsArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserGroupOrderArgType>;
   search?: InputMaybe<UserGroupSearchArgType>;
+};
+
+
+export type QueryUserInviteArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryUserInvitesArgs = {
+  filter?: InputMaybe<UserInviteFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<UserInviteOrderArgType>;
+  search?: InputMaybe<UserInviteSearchArgType>;
 };
 
 
@@ -2028,6 +2226,7 @@ export type TranslationModel = {
   __typename?: 'TranslationModel';
   createdAt: Scalars['Date'];
   id: Scalars['ID'];
+  key: Scalars['String'];
   locale: Scalars['String'];
   updatedAt: Scalars['Date'];
   value: Scalars['String'];
@@ -2130,6 +2329,7 @@ export type UserGroupModel = {
   id: Scalars['ID'];
   name: Scalars['String'];
   reference: Scalars['String'];
+  roles: RolePageModel;
   type: Scalars['String'];
   userGroupType?: Maybe<UserGroupTypeModel>;
   users?: Maybe<UserPageModel>;
@@ -2204,7 +2404,9 @@ export type UserInviteCreateDto = {
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
+  roles?: InputMaybe<Array<Scalars['String']>>;
   status?: InputMaybe<UserInviteStatusEnum>;
+  tenantId?: InputMaybe<Scalars['ID']>;
 };
 
 export type UserInviteFilterArgType = {
@@ -2232,8 +2434,11 @@ export type UserInviteModel = {
   id: Scalars['ID'];
   lastName?: Maybe<Scalars['String']>;
   locale?: Maybe<Scalars['String']>;
+  roleKeys?: Maybe<Array<Scalars['String']>>;
+  roles?: Maybe<RolePageModel>;
   status: UserInviteStatusEnum;
   statusUpdatedAt?: Maybe<Scalars['Date']>;
+  tenantId?: Maybe<Scalars['ID']>;
   updatedAt?: Maybe<Scalars['Date']>;
   userTokenId: Scalars['ID'];
 };
@@ -2254,6 +2459,15 @@ export type UserInviteModelCreatedByArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserOrderArgType>;
   search?: InputMaybe<UserSearchArgType>;
+};
+
+
+export type UserInviteModelRolesArgs = {
+  filter?: InputMaybe<RoleFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<RoleOrderArgType>;
+  search?: InputMaybe<RoleSearchArgType>;
 };
 
 export type UserInviteOrderArgType = {
@@ -2305,6 +2519,7 @@ export type UserInviteUpdateDto = {
 };
 
 export type UserInvitesCreateDto = {
+  tenantId?: InputMaybe<Scalars['ID']>;
   userInvites: Array<UserInviteCreateDto>;
 };
 
@@ -2320,12 +2535,22 @@ export type UserModel = {
   locale?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   reference: Scalars['String'];
+  roles?: Maybe<RolePageModel>;
   synced?: Maybe<Scalars['Boolean']>;
   tenant?: Maybe<TenantModel>;
   tenantId?: Maybe<Scalars['ID']>;
   timezone?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
   userGroups?: Maybe<UserGroupPageModel>;
+};
+
+
+export type UserModelRolesArgs = {
+  filter?: InputMaybe<RoleFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<RoleOrderArgType>;
+  search?: InputMaybe<RoleSearchArgType>;
 };
 
 
@@ -2425,10 +2650,10 @@ export type UserProviderFilterArgType = {
 
 export type UserProviderModel = {
   __typename?: 'UserProviderModel';
+  authenticationProviderId: Scalars['String'];
   createdAt: Scalars['Date'];
   id: Scalars['ID'];
   optedIn: Scalars['Boolean'];
-  providerIdentifier: Scalars['String'];
   providerUserIdentifier: Scalars['String'];
   updatedAt: Scalars['Date'];
   user: UserModel;
@@ -2513,7 +2738,17 @@ export type UserTokenModel = {
   updatedAt: Scalars['Date'];
   user?: Maybe<UserModel>;
   userId: Scalars['ID'];
+  userInvite?: Maybe<UserInviteModel>;
   validTill: Scalars['Date'];
+};
+
+
+export type UserTokenModelUserInviteArgs = {
+  filter?: InputMaybe<UserInviteFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<UserInviteOrderArgType>;
+  search?: InputMaybe<UserInviteSearchArgType>;
 };
 
 export type UserTokenOrderArgType = {
@@ -2915,7 +3150,7 @@ export type AddUsersToUserGroupMutationVariables = Exact<{
 export type AddUsersToUserGroupMutation = { __typename?: 'Mutation', addUsersToUserGroup: boolean };
 
 export type AssignRolesToUserMutationVariables = Exact<{
-  roleIds: Array<Scalars['ID']> | Scalars['ID'];
+  roleKeys: Array<Scalars['String']> | Scalars['String'];
   userId: Scalars['ID'];
 }>;
 
@@ -2960,7 +3195,7 @@ export type RemoveUsersFromUserGroupMutationVariables = Exact<{
 export type RemoveUsersFromUserGroupMutation = { __typename?: 'Mutation', removeUsersFromUserGroup: boolean };
 
 export type UnassignRolesFromUserMutationVariables = Exact<{
-  roleIds: Array<Scalars['ID']> | Scalars['ID'];
+  roleKeys: Array<Scalars['String']> | Scalars['String'];
   userId: Scalars['ID'];
 }>;
 
@@ -2982,14 +3217,6 @@ export type UpdateUserGroupMutationVariables = Exact<{
 
 
 export type UpdateUserGroupMutation = { __typename?: 'Mutation', updateUserGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string } };
-
-export type UpdateUserProfileMutationVariables = Exact<{
-  id: Scalars['ID'];
-  user: UserUpdateProfileDto;
-}>;
-
-
-export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile: { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null } };
 
 export const UserFragmentDoc = gql`
     fragment User on UserModel {
@@ -3590,8 +3817,8 @@ export const AddUsersToUserGroupDocument = gql`
 }
     `;
 export const AssignRolesToUserDocument = gql`
-    mutation assignRolesToUser($roleIds: [ID!]!, $userId: ID!) {
-  assignRolesToUser(roleIds: $roleIds, userId: $userId)
+    mutation assignRolesToUser($roleKeys: [String!]!, $userId: ID!) {
+  assignRolesToUser(roleKeys: $roleKeys, userId: $userId)
 }
     `;
 export const BuildQueryPlanDocument = gql`
@@ -3629,8 +3856,8 @@ export const RemoveUsersFromUserGroupDocument = gql`
 }
     `;
 export const UnassignRolesFromUserDocument = gql`
-    mutation unassignRolesFromUser($roleIds: [ID!]!, $userId: ID!) {
-  unassignRolesFromUser(roleIds: $roleIds, userId: $userId)
+    mutation unassignRolesFromUser($roleKeys: [String!]!, $userId: ID!) {
+  unassignRolesFromUser(roleKeys: $roleKeys, userId: $userId)
 }
     `;
 export const UpdateUserDocument = gql`
@@ -3647,13 +3874,6 @@ export const UpdateUserGroupDocument = gql`
   }
 }
     ${UserGroupFragmentDoc}`;
-export const UpdateUserProfileDocument = gql`
-    mutation updateUserProfile($id: ID!, $user: UserUpdateProfileDto!) {
-  updateUserProfile(id: $id, user: $user) {
-    ...UserProfile
-  }
-}
-    ${UserProfileFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -3790,9 +4010,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     updateUserGroup(variables: UpdateUserGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserGroupMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserGroupMutation>(UpdateUserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUserGroup', 'mutation');
-    },
-    updateUserProfile(variables: UpdateUserProfileMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserProfileMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserProfileMutation>(UpdateUserProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUserProfile', 'mutation');
     }
   };
 }
