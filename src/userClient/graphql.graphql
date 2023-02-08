@@ -47,11 +47,7 @@ fragment UserGroupType on UserGroupTypeModel {
   updatedAt
 }
 
-query user(
-  $id: ID!
-  $withTenant: Boolean = false
-  $withUserGroups: Boolean = false
-) {
+query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
   user(id: $id) {
     ...User
     tenant @include(if: $withTenant) {
@@ -75,13 +71,7 @@ query users(
   $withTenant: Boolean = false
   $withUserGroups: Boolean = false
 ) {
-  users(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  users(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...User
       tenant @include(if: $withTenant) {
@@ -98,11 +88,7 @@ query users(
   }
 }
 
-query userGroup(
-  $id: ID!
-  $withUserGroupType: Boolean = false
-  $withUsers: Boolean = false
-) {
+query userGroup($id: ID!, $withUserGroupType: Boolean = false, $withUsers: Boolean = false) {
   userGroup(id: $id) {
     ...UserGroup
     userGroupType @include(if: $withUserGroupType) {
@@ -126,13 +112,7 @@ query userGroups(
   $withUserGroupType: Boolean = false
   $withUsers: Boolean = false
 ) {
-  userGroups(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  userGroups(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...UserGroup
       userGroupType @include(if: $withUserGroupType) {
@@ -162,13 +142,7 @@ query userProfiles(
   $order: UserProfileOrderArgType
   $search: UserProfileSearchArgType
 ) {
-  userProfiles(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  userProfiles(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...UserProfile
     }
@@ -207,31 +181,31 @@ mutation addUsersToUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
   addUsersToUserGroup(userGroupId: $userGroupId, userIds: $userIds)
 }
 
-mutation assignRolesToUser($roleIds: [ID!]!, $userId: ID!) {
-  assignRolesToUser(roleIds: $roleIds, userId: $userId)
+mutation assignRolesToUser($roleKeys: [String!]!, $userId: ID!) {
+  assignRolesToUser(roleKeys: $roleKeys, userId: $userId)
 }
 
 mutation buildQueryPlan($entity: String!, $operation: ResourceOperationEnum!) {
-  buildQueryPlan(entity: $entity, operation: $operation){
+  buildQueryPlan(entity: $entity, operation: $operation) {
     kind
     queryPlan
   }
 }
 
 mutation createTenant($tenant: TenantCreateDto!) {
-  createTenant(tenant: $tenant){
+  createTenant(tenant: $tenant) {
     ...Tenant
   }
 }
 
 mutation createUser($user: UserCreateDto!) {
-  createUser(user: $user){
+  createUser(user: $user) {
     ...User
   }
 }
 
 mutation createUserGroup($userGroup: UserGroupCreateDto!) {
-  createUserGroup(userGroup: $userGroup){
+  createUserGroup(userGroup: $userGroup) {
     ...UserGroup
   }
 }
@@ -240,25 +214,18 @@ mutation removeUsersFromUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
   removeUsersFromUserGroup(userGroupId: $userGroupId, userIds: $userIds)
 }
 
-mutation unassignRolesFromUser($roleIds: [ID!]!, $userId: ID!) {
-  unassignRolesFromUser(roleIds: $roleIds, userId: $userId)
+mutation unassignRolesFromUser($roleKeys: [String!]!, $userId: ID!) {
+  unassignRolesFromUser(roleKeys: $roleKeys, userId: $userId)
 }
 
-mutation updateUser($id: ID! $user: UserUpdateDto!) {
-  updateUser(id:$id, user: $user){
+mutation updateUser($id: ID!, $user: UserUpdateDto!) {
+  updateUser(id: $id, user: $user) {
     ...User
   }
 }
 
-
-mutation updateUserGroup($id: ID! $userGroup: UserGroupUpdateDto!) {
-  updateUserGroup(id:$id, userGroup: $userGroup){
+mutation updateUserGroup($id: ID!, $userGroup: UserGroupUpdateDto!) {
+  updateUserGroup(id: $id, userGroup: $userGroup) {
     ...UserGroup
-  }
-}
-
-mutation updateUserProfile($id: ID! $user: UserUpdateProfileDto!) {
-  updateUserProfile(id:$id, user: $user){
-    ...UserProfile
   }
 }
