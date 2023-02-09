@@ -3060,14 +3060,17 @@ export type UserProfileFragment = { __typename?: 'UserProfileModel', id: string,
 
 export type UserGroupTypeFragment = { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string };
 
+export type RoleFragment = { __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string };
+
 export type UserQueryVariables = Exact<{
   id: Scalars['ID'];
   withTenant?: InputMaybe<Scalars['Boolean']>;
   withUserGroups?: InputMaybe<Scalars['Boolean']>;
+  withRoles?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null } };
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } | null } };
 
 export type UsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilterArgType>;
@@ -3077,19 +3080,21 @@ export type UsersQueryVariables = Exact<{
   search?: InputMaybe<UserSearchArgType>;
   withTenant?: InputMaybe<Scalars['Boolean']>;
   withUserGroups?: InputMaybe<Scalars['Boolean']>;
+  withRoles?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null }> } };
+export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } | null }> } };
 
 export type UserGroupQueryVariables = Exact<{
   id: Scalars['ID'];
   withUserGroupType?: InputMaybe<Scalars['Boolean']>;
   withUsers?: InputMaybe<Scalars['Boolean']>;
+  withRoles?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UserGroupQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null } };
+export type UserGroupQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } } };
 
 export type UserGroupsQueryVariables = Exact<{
   filter?: InputMaybe<UserGroupFilterArgType>;
@@ -3099,10 +3104,11 @@ export type UserGroupsQueryVariables = Exact<{
   search?: InputMaybe<UserGroupSearchArgType>;
   withUserGroupType?: InputMaybe<Scalars['Boolean']>;
   withUsers?: InputMaybe<Scalars['Boolean']>;
+  withRoles?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UserGroupsQuery = { __typename?: 'Query', userGroups: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null }> } };
+export type UserGroupsQuery = { __typename?: 'Query', userGroups: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } }> } };
 
 export type UserProfileQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3140,6 +3146,27 @@ export type TenantsQueryVariables = Exact<{
 
 
 export type TenantsQuery = { __typename?: 'Query', tenants: { __typename?: 'TenantPageModel', totalCount: number, data: Array<{ __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string, users?: { __typename?: 'UsersCountModel', totalCount: number } }> } };
+
+export type RoleQueryVariables = Exact<{
+  id: Scalars['ID'];
+  withUserCount?: InputMaybe<Scalars['Boolean']>;
+  withUserGroups?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type RoleQuery = { __typename?: 'Query', role: { __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> }, users?: { __typename?: 'UsersCountModel', totalCount: number } } };
+
+export type RolesQueryVariables = Exact<{
+  filter?: InputMaybe<RoleFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<RoleOrderArgType>;
+  withUserCount?: InputMaybe<Scalars['Boolean']>;
+  withUserGroups?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type RolesQuery = { __typename?: 'Query', roles: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> }, users?: { __typename?: 'UsersCountModel', totalCount: number } }> } };
 
 export type AddUsersToUserGroupMutationVariables = Exact<{
   userGroupId: Scalars['ID'];
@@ -3364,6 +3391,17 @@ export const UserGroupTypeFragmentDoc = gql`
   name
   createdAt
   updatedAt
+}
+    `;
+export const RoleFragmentDoc = gql`
+    fragment Role on RoleModel {
+  id
+  reference
+  description
+  isSystemManaged
+  key
+  name
+  reference
 }
     `;
 export const FileCategoryContentTypesDocument = gql`
@@ -3676,7 +3714,7 @@ export const TranslationKeysDocument = gql`
     ${TranslationKeyFragmentDoc}
 ${TranslationFragmentDoc}`;
 export const UserDocument = gql`
-    query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
+    query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
   user(id: $id) {
     ...User
     tenant @include(if: $withTenant) {
@@ -3688,13 +3726,20 @@ export const UserDocument = gql`
       }
       totalCount
     }
+    roles @include(if: $withRoles) {
+      data {
+        ...Role
+      }
+      totalCount
+    }
   }
 }
     ${UserFragmentDoc}
 ${TenantFragmentDoc}
-${UserGroupFragmentDoc}`;
+${UserGroupFragmentDoc}
+${RoleFragmentDoc}`;
 export const UsersDocument = gql`
-    query users($filter: UserFilterArgType, $limit: Int, $offset: Int, $order: UserOrderArgType, $search: UserSearchArgType, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
+    query users($filter: UserFilterArgType, $limit: Int, $offset: Int, $order: UserOrderArgType, $search: UserSearchArgType, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
   users(
     filter: $filter
     limit: $limit
@@ -3713,15 +3758,22 @@ export const UsersDocument = gql`
         }
         totalCount
       }
+      roles @include(if: $withRoles) {
+        data {
+          ...Role
+        }
+        totalCount
+      }
     }
     totalCount
   }
 }
     ${UserFragmentDoc}
 ${TenantFragmentDoc}
-${UserGroupFragmentDoc}`;
+${UserGroupFragmentDoc}
+${RoleFragmentDoc}`;
 export const UserGroupDocument = gql`
-    query userGroup($id: ID!, $withUserGroupType: Boolean = false, $withUsers: Boolean = false) {
+    query userGroup($id: ID!, $withUserGroupType: Boolean = false, $withUsers: Boolean = false, $withRoles: Boolean = false) {
   userGroup(id: $id) {
     ...UserGroup
     userGroupType @include(if: $withUserGroupType) {
@@ -3733,13 +3785,20 @@ export const UserGroupDocument = gql`
       }
       totalCount
     }
+    roles @include(if: $withRoles) {
+      data {
+        ...Role
+      }
+      totalCount
+    }
   }
 }
     ${UserGroupFragmentDoc}
 ${UserGroupTypeFragmentDoc}
-${UserFragmentDoc}`;
+${UserFragmentDoc}
+${RoleFragmentDoc}`;
 export const UserGroupsDocument = gql`
-    query userGroups($filter: UserGroupFilterArgType, $limit: Int, $offset: Int, $order: UserGroupOrderArgType, $search: UserGroupSearchArgType, $withUserGroupType: Boolean = false, $withUsers: Boolean = false) {
+    query userGroups($filter: UserGroupFilterArgType, $limit: Int, $offset: Int, $order: UserGroupOrderArgType, $search: UserGroupSearchArgType, $withUserGroupType: Boolean = false, $withUsers: Boolean = false, $withRoles: Boolean = false) {
   userGroups(
     filter: $filter
     limit: $limit
@@ -3758,13 +3817,20 @@ export const UserGroupsDocument = gql`
         }
         totalCount
       }
+      roles @include(if: $withRoles) {
+        data {
+          ...Role
+        }
+        totalCount
+      }
     }
     totalCount
   }
 }
     ${UserGroupFragmentDoc}
 ${UserGroupTypeFragmentDoc}
-${UserFragmentDoc}`;
+${UserFragmentDoc}
+${RoleFragmentDoc}`;
 export const UserProfileDocument = gql`
     query userProfile($id: ID!) {
   userProfile(id: $id) {
@@ -3811,6 +3877,43 @@ export const TenantsDocument = gql`
   }
 }
     ${TenantFragmentDoc}`;
+export const RoleDocument = gql`
+    query role($id: ID!, $withUserCount: Boolean = false, $withUserGroups: Boolean = false) {
+  role(id: $id) {
+    ...Role
+    userGroups @include(if: $withUserGroups) {
+      data {
+        ...UserGroup
+      }
+      totalCount
+    }
+    users @include(if: $withUserCount) {
+      totalCount
+    }
+  }
+}
+    ${RoleFragmentDoc}
+${UserGroupFragmentDoc}`;
+export const RolesDocument = gql`
+    query roles($filter: RoleFilterArgType, $limit: Int, $offset: Int, $order: RoleOrderArgType, $withUserCount: Boolean = false, $withUserGroups: Boolean = false) {
+  roles(filter: $filter, limit: $limit, offset: $offset, order: $order) {
+    data {
+      ...Role
+      userGroups @include(if: $withUserGroups) {
+        data {
+          ...UserGroup
+        }
+        totalCount
+      }
+      users @include(if: $withUserCount) {
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${RoleFragmentDoc}
+${UserGroupFragmentDoc}`;
 export const AddUsersToUserGroupDocument = gql`
     mutation addUsersToUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
   addUsersToUserGroup(userGroupId: $userGroupId, userIds: $userIds)
@@ -3980,6 +4083,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     tenants(variables?: TenantsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TenantsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<TenantsQuery>(TenantsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'tenants', 'query');
+    },
+    role(variables: RoleQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RoleQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RoleQuery>(RoleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'role', 'query');
+    },
+    roles(variables?: RolesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RolesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RolesQuery>(RolesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'roles', 'query');
     },
     addUsersToUserGroup(variables: AddUsersToUserGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddUsersToUserGroupMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<AddUsersToUserGroupMutation>(AddUsersToUserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addUsersToUserGroup', 'mutation');

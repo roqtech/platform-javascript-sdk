@@ -47,7 +47,22 @@ fragment UserGroupType on UserGroupTypeModel {
   updatedAt
 }
 
-query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false) {
+fragment Role on RoleModel {
+  id
+  reference
+  description
+  isSystemManaged
+  key
+  name
+  reference
+}
+
+query user(
+  $id: ID!
+  $withTenant: Boolean = false
+  $withUserGroups: Boolean = false
+  $withRoles: Boolean = false
+) {
   user(id: $id) {
     ...User
     tenant @include(if: $withTenant) {
@@ -56,6 +71,12 @@ query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = fa
     userGroups @include(if: $withUserGroups) {
       data {
         ...UserGroup
+      }
+      totalCount
+    }
+    roles @include(if: $withRoles) {
+      data {
+        ...Role
       }
       totalCount
     }
@@ -70,8 +91,15 @@ query users(
   $search: UserSearchArgType
   $withTenant: Boolean = false
   $withUserGroups: Boolean = false
+  $withRoles: Boolean = false
 ) {
-  users(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
+  users(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
     data {
       ...User
       tenant @include(if: $withTenant) {
@@ -83,12 +111,23 @@ query users(
         }
         totalCount
       }
+      roles @include(if: $withRoles) {
+        data {
+          ...Role
+        }
+        totalCount
+      }
     }
     totalCount
   }
 }
 
-query userGroup($id: ID!, $withUserGroupType: Boolean = false, $withUsers: Boolean = false) {
+query userGroup(
+  $id: ID!
+  $withUserGroupType: Boolean = false
+  $withUsers: Boolean = false
+  $withRoles: Boolean = false
+) {
   userGroup(id: $id) {
     ...UserGroup
     userGroupType @include(if: $withUserGroupType) {
@@ -97,6 +136,12 @@ query userGroup($id: ID!, $withUserGroupType: Boolean = false, $withUsers: Boole
     users @include(if: $withUsers) {
       data {
         ...User
+      }
+      totalCount
+    }
+    roles @include(if: $withRoles) {
+      data {
+        ...Role
       }
       totalCount
     }
@@ -111,8 +156,15 @@ query userGroups(
   $search: UserGroupSearchArgType
   $withUserGroupType: Boolean = false
   $withUsers: Boolean = false
+  $withRoles: Boolean = false
 ) {
-  userGroups(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
+  userGroups(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
     data {
       ...UserGroup
       userGroupType @include(if: $withUserGroupType) {
@@ -121,6 +173,12 @@ query userGroups(
       users @include(if: $withUsers) {
         data {
           ...User
+        }
+        totalCount
+      }
+      roles @include(if: $withRoles) {
+        data {
+          ...Role
         }
         totalCount
       }
@@ -142,7 +200,13 @@ query userProfiles(
   $order: UserProfileOrderArgType
   $search: UserProfileSearchArgType
 ) {
-  userProfiles(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
+  userProfiles(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
     data {
       ...UserProfile
     }
@@ -169,6 +233,50 @@ query tenants(
   tenants(filter: $filter, limit: $limit, offset: $offset, order: $order) {
     data {
       ...Tenant
+      users @include(if: $withUserCount) {
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+query role(
+  $id: ID!
+  $withUserCount: Boolean = false
+  $withUserGroups: Boolean = false
+) {
+  role(id: $id) {
+    ...Role
+    userGroups @include(if: $withUserGroups) {
+      data {
+        ...UserGroup
+      }
+      totalCount
+    }
+    users @include(if: $withUserCount) {
+      totalCount
+    }
+  }
+}
+
+query roles(
+  $filter: RoleFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: RoleOrderArgType
+  $withUserCount: Boolean = false
+  $withUserGroups: Boolean = false
+) {
+  roles(filter: $filter, limit: $limit, offset: $offset, order: $order) {
+    data {
+      ...Role
+      userGroups @include(if: $withUserGroups) {
+        data {
+          ...UserGroup
+        }
+        totalCount
+      }
       users @include(if: $withUserCount) {
         totalCount
       }

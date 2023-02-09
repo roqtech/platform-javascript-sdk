@@ -10,6 +10,8 @@ export class UserClientService {
   public userProfiles: Sdk['userProfiles'];
   public tenant: Sdk['tenant'];
   public tenants: Sdk['tenants'];
+  public role: Sdk['role'];
+  public roles: Sdk['roles'];
   public addUsersToUserGroup: Sdk['addUsersToUserGroup'];
   public assignRolesToUser: Sdk['assignRolesToUser'];
   public buildQueryPlan: Sdk['buildQueryPlan'];
@@ -20,7 +22,6 @@ export class UserClientService {
   public unassignRolesFromUser: Sdk['unassignRolesFromUser'];
   public updateUser: Sdk['updateUser'];
   public updateUserGroup: Sdk['updateUserGroup'];
-  public updateUserProfile: Sdk['updateUserProfile'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -42,6 +43,7 @@ export class UserClientService {
     this.unassignRolesFromUser = this.gqlSdk.unassignRolesFromUser;
     this.updateUser = this.gqlSdk.updateUser;
     this.updateUserGroup = this.gqlSdk.updateUserGroup;
-    this.updateUserProfile = this.gqlSdk.updateUserProfile;
+    this.role = this.gqlSdk.role;
+    this.roles = this.gqlSdk.roles;
   }
 }

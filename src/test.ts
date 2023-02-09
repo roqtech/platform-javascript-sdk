@@ -5,7 +5,3 @@ const client = new PlatformClientService({
   host: 'http://localhost:3002',
 });
 
-client
-  .asSuperAdmin()
-  .translations()
-  .then((res) => console.log(res.translations.data));
