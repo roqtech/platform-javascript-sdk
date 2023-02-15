@@ -128,6 +128,13 @@ export type CheckUserInviteTokenModel = {
   isValid: Scalars['Boolean'];
 };
 
+export type ConversationCreateDto = {
+  archived?: InputMaybe<Scalars['Boolean']>;
+  memberIds: Array<Scalars['String']>;
+  ownerId: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type ConversationFilterArgType = {
   conversationUserId?: InputMaybe<IdFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
@@ -204,6 +211,10 @@ export type CustomTranslationKeyModel = {
   key: Scalars['String'];
   translations: TranslationPageModel;
   updatedAt: Scalars['Date'];
+};
+
+export type DataFlushDto = {
+  flush?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type DataImportDto = {
@@ -1044,11 +1055,13 @@ export type Mutation = {
   assignRolesToUser: Scalars['Boolean'];
   buildQueryPlan: Array<QueryPlanModel>;
   cancelUserInvite: UserInviteModel;
+  createConversation: ConversationModel;
   createFileAssociation: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
   createTenant: TenantModel;
   createUser: UserModel;
   createUserGroup: UserGroupModel;
+  deleteConversation: Scalars['ID'];
   deleteFileAssociations: Array<Scalars['String']>;
   deleteFiles: Array<Scalars['ID']>;
   makeFilePrivate: FileModel;
@@ -1102,6 +1115,11 @@ export type MutationCancelUserInviteArgs = {
 };
 
 
+export type MutationCreateConversationArgs = {
+  conversation: ConversationCreateDto;
+};
+
+
 export type MutationCreateFileAssociationArgs = {
   createFileAssociationDto: FileAssociationCreateDto;
 };
@@ -1124,6 +1142,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationCreateUserGroupArgs = {
   userGroup: UserGroupCreateDto;
+};
+
+
+export type MutationDeleteConversationArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1274,7 +1297,7 @@ export type NotificationActivityModel = {
   id: Scalars['String'];
   jobs: Array<NotificationActivityJobModel>;
   payload?: Maybe<Scalars['JsonObject']>;
-  template: NotificationActivityTemplateModel;
+  template?: Maybe<NotificationActivityTemplateModel>;
   to?: Maybe<NotificationActivityToModel>;
   transactionId?: Maybe<Scalars['String']>;
   user?: Maybe<NotificationActivityUserModel>;
@@ -2821,6 +2844,22 @@ export type UsersCountModel = {
   totalCount: Scalars['Int'];
 };
 
+export type ConversationFragment = { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string };
+
+export type CreateConversationMutationVariables = Exact<{
+  conversation: ConversationCreateDto;
+}>;
+
+
+export type CreateConversationMutation = { __typename?: 'Mutation', createConversation: { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string } };
+
+export type DeleteConversationMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConversation: string };
+
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
 export type FileCategoryContentGroupFragment = { __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string };
@@ -3245,6 +3284,18 @@ export type UpdateUserGroupMutationVariables = Exact<{
 
 export type UpdateUserGroupMutation = { __typename?: 'Mutation', updateUserGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string } };
 
+export const ConversationFragmentDoc = gql`
+    fragment Conversation on ConversationModel {
+  id
+  title
+  active
+  archived
+  isGroup
+  ownerId
+  createdAt
+  updatedAt
+}
+    `;
 export const UserFragmentDoc = gql`
     fragment User on UserModel {
   id
@@ -3402,6 +3453,18 @@ export const RoleFragmentDoc = gql`
   key
   name
   reference
+}
+    `;
+export const CreateConversationDocument = gql`
+    mutation createConversation($conversation: ConversationCreateDto!) {
+  createConversation(conversation: $conversation) {
+    ...Conversation
+  }
+}
+    ${ConversationFragmentDoc}`;
+export const DeleteConversationDocument = gql`
+    mutation deleteConversation($id: ID!) {
+  deleteConversation(id: $id)
 }
     `;
 export const FileCategoryContentTypesDocument = gql`
@@ -3985,6 +4048,12 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    createConversation(variables: CreateConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateConversationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateConversationMutation>(CreateConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createConversation', 'mutation');
+    },
+    deleteConversation(variables: DeleteConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteConversationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteConversationMutation>(DeleteConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteConversation', 'mutation');
+    },
     fileCategoryContentTypes(variables?: FileCategoryContentTypesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentTypesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentTypesQuery>(FileCategoryContentTypesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentTypes', 'query');
     },

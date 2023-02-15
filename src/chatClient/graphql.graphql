@@ -1,0 +1,20 @@
+fragment Conversation on ConversationModel {
+  id
+  title
+  active
+  archived
+  isGroup
+  ownerId
+  createdAt
+  updatedAt
+}
+
+mutation createConversation($conversation: ConversationCreateDto!) {
+  createConversation(conversation: $conversation) {
+    ...Conversation
+  }
+}
+
+mutation deleteConversation($id: ID!){
+  deleteConversation(id: $id)
+}
