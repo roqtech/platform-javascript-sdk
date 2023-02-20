@@ -22,6 +22,7 @@ export class UserClientService {
   public unassignRolesFromUser: Sdk['unassignRolesFromUser'];
   public updateUser: Sdk['updateUser'];
   public updateUserGroup: Sdk['updateUserGroup'];
+  public changeUserPassword: Sdk['changeUserPassword'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -45,5 +46,6 @@ export class UserClientService {
     this.updateUserGroup = this.gqlSdk.updateUserGroup;
     this.role = this.gqlSdk.role;
     this.roles = this.gqlSdk.roles;
+    this.changeUserPassword = this.gqlSdk.changeUserPassword;
   }
 }

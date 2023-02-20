@@ -337,3 +337,7 @@ mutation updateUserGroup($id: ID!, $userGroup: UserGroupUpdateDto!) {
     ...UserGroup
   }
 }
+
+mutation changeUserPassword($id: ID!, $input: UserPasswordUpdateDto!) {
+  changeUserPassword(id: $id, input: $input)
+}

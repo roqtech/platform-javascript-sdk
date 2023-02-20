@@ -130,6 +130,7 @@ export type CheckUserInviteTokenModel = {
 
 export type ConversationCreateDto = {
   archived?: InputMaybe<Scalars['Boolean']>;
+  isGroup?: InputMaybe<Scalars['Boolean']>;
   memberIds: Array<Scalars['String']>;
   ownerId: Scalars['String'];
   title: Scalars['String'];
@@ -1055,6 +1056,7 @@ export type Mutation = {
   assignRolesToUser: Scalars['Boolean'];
   buildQueryPlan: Array<QueryPlanModel>;
   cancelUserInvite: UserInviteModel;
+  changeUserPassword: Scalars['Boolean'];
   createConversation: ConversationModel;
   createFileAssociation: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
@@ -1076,14 +1078,13 @@ export type Mutation = {
   sendUserInvites: CreateUserInvitesModel;
   sendUserResetPasswordMail: Scalars['Boolean'];
   unassignRolesFromUser: Scalars['Boolean'];
-  updateAuthFormConfig: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
+  updateProfile: UserProfileModel;
   updateUser: UserModel;
   updateUserGroup: UserGroupModel;
   updateUserInvite: UserInviteModel;
-  upsertAuthFormTheme: AuthUiThemeModel;
 };
 
 
@@ -1112,6 +1113,12 @@ export type MutationBuildQueryPlanArgs = {
 
 export type MutationCancelUserInviteArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationChangeUserPasswordArgs = {
+  id: Scalars['ID'];
+  input: UserPasswordUpdateDto;
 };
 
 
@@ -1218,11 +1225,6 @@ export type MutationUnassignRolesFromUserArgs = {
 };
 
 
-export type MutationUpdateAuthFormConfigArgs = {
-  config: AuthFormConfigDto;
-};
-
-
 export type MutationUpdateFileArgs = {
   id: Scalars['ID'];
   updateFileDto: FileUpdateDto;
@@ -1241,6 +1243,12 @@ export type MutationUpdateNotificationPreferenceArgs = {
 };
 
 
+export type MutationUpdateProfileArgs = {
+  id: Scalars['ID'];
+  user: UserUpdateProfileDto;
+};
+
+
 export type MutationUpdateUserArgs = {
   id: Scalars['ID'];
   user: UserUpdateDto;
@@ -1256,11 +1264,6 @@ export type MutationUpdateUserGroupArgs = {
 export type MutationUpdateUserInviteArgs = {
   id: Scalars['ID'];
   userInvite: UserInviteUpdateDto;
-};
-
-
-export type MutationUpsertAuthFormThemeArgs = {
-  data: AuthFormThemeCreateDto;
 };
 
 export enum NotificationActionTypeEnum {
@@ -1798,7 +1801,6 @@ export type PermissionUpdateDto = {
 
 export type Query = {
   __typename?: 'Query';
-  authUITheme?: Maybe<AuthUiThemeModel>;
   checkUserInviteToken: CheckUserInviteTokenModel;
   file: FileModel;
   fileCategories: FileCategoryPageModel;
@@ -2293,8 +2295,17 @@ export type UpdateNotificationPreferenceDto = {
   enable: Scalars['Boolean'];
 };
 
+export type UserConnectedProviderModel = {
+  __typename?: 'UserConnectedProviderModel';
+  authenticationProviderId: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type UserCreateDto = {
   active?: InputMaybe<Scalars['Boolean']>;
+  avatarUrl?: InputMaybe<Scalars['String']>;
+  customData?: InputMaybe<Scalars['JsonObject']>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
   isOptedIn?: InputMaybe<Scalars['Boolean']>;
@@ -2549,7 +2560,9 @@ export type UserInvitesCreateDto = {
 export type UserModel = {
   __typename?: 'UserModel';
   active?: Maybe<Scalars['Boolean']>;
+  avatarUrl?: Maybe<Scalars['String']>;
   createdAt: Scalars['Date'];
+  customData?: Maybe<Scalars['JsonObject']>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -2608,6 +2621,11 @@ export type UserPageModel = {
   totalCount: Scalars['Int'];
 };
 
+export type UserPasswordUpdateDto = {
+  newPassword: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type UserPermissionModel = {
   __typename?: 'UserPermissionModel';
   object: Scalars['String'];
@@ -2620,10 +2638,14 @@ export type UserPermissionModel = {
 
 export type UserProfileModel = {
   __typename?: 'UserProfileModel';
+  avatarUrl?: Maybe<Scalars['String']>;
+  connectedProviders: Array<UserConnectedProviderModel>;
+  email?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   lastName?: Maybe<Scalars['String']>;
   locale?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   reference: Scalars['String'];
   timezone?: Maybe<Scalars['String']>;
 };
@@ -2817,6 +2839,8 @@ export type UserUnreadMessagesModel = {
 };
 
 export type UserUpdateDto = {
+  avatarUrl?: InputMaybe<Scalars['String']>;
+  customData?: InputMaybe<Scalars['JsonObject']>;
   email?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   isOptedIn?: InputMaybe<Scalars['Boolean']>;
@@ -2828,6 +2852,7 @@ export type UserUpdateDto = {
 };
 
 export type UserUpdateProfileDto = {
+  avatarUrl?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -3283,6 +3308,14 @@ export type UpdateUserGroupMutationVariables = Exact<{
 
 
 export type UpdateUserGroupMutation = { __typename?: 'Mutation', updateUserGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string } };
+
+export type ChangeUserPasswordMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: UserPasswordUpdateDto;
+}>;
+
+
+export type ChangeUserPasswordMutation = { __typename?: 'Mutation', changeUserPassword: boolean };
 
 export const ConversationFragmentDoc = gql`
     fragment Conversation on ConversationModel {
@@ -4040,6 +4073,11 @@ export const UpdateUserGroupDocument = gql`
   }
 }
     ${UserGroupFragmentDoc}`;
+export const ChangeUserPasswordDocument = gql`
+    mutation changeUserPassword($id: ID!, $input: UserPasswordUpdateDto!) {
+  changeUserPassword(id: $id, input: $input)
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -4188,6 +4226,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     updateUserGroup(variables: UpdateUserGroupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserGroupMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserGroupMutation>(UpdateUserGroupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUserGroup', 'mutation');
+    },
+    changeUserPassword(variables: ChangeUserPasswordMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ChangeUserPasswordMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ChangeUserPasswordMutation>(ChangeUserPasswordDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'changeUserPassword', 'mutation');
     }
   };
 }
