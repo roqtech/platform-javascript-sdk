@@ -133,6 +133,7 @@ export type ConversationCreateDto = {
   isGroup?: InputMaybe<Scalars['Boolean']>;
   memberIds: Array<Scalars['String']>;
   ownerId: Scalars['String'];
+  tags?: InputMaybe<Array<Scalars['String']>>;
   title: Scalars['String'];
 };
 
