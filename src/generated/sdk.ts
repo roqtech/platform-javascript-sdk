@@ -1055,6 +1055,7 @@ export type Mutation = {
   acceptUserInvite: UserInviteModel;
   addUsersToUserGroup: Scalars['Boolean'];
   assignRolesToUser: Scalars['Boolean'];
+  assignTagsToConversation: Scalars['Boolean'];
   buildQueryPlan: Array<QueryPlanModel>;
   cancelUserInvite: UserInviteModel;
   changeUserPassword: Scalars['Boolean'];
@@ -1079,6 +1080,7 @@ export type Mutation = {
   sendUserInvites: CreateUserInvitesModel;
   sendUserResetPasswordMail: Scalars['Boolean'];
   unassignRolesFromUser: Scalars['Boolean'];
+  unassignTagsFromConversation: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
@@ -1103,6 +1105,12 @@ export type MutationAddUsersToUserGroupArgs = {
 export type MutationAssignRolesToUserArgs = {
   roleKeys: Array<Scalars['String']>;
   userId: Scalars['ID'];
+};
+
+
+export type MutationAssignTagsToConversationArgs = {
+  conversationId: Scalars['ID'];
+  tags: Array<Scalars['String']>;
 };
 
 
@@ -1223,6 +1231,12 @@ export type MutationSendUserResetPasswordMailArgs = {
 export type MutationUnassignRolesFromUserArgs = {
   roleKeys: Array<Scalars['String']>;
   userId: Scalars['ID'];
+};
+
+
+export type MutationUnassignTagsFromConversationArgs = {
+  conversationId: Scalars['ID'];
+  tags: Array<Scalars['String']>;
 };
 
 
@@ -2886,6 +2900,22 @@ export type DeleteConversationMutationVariables = Exact<{
 
 export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConversation: string };
 
+export type AssignTagsToConversationMutationVariables = Exact<{
+  tags: Array<Scalars['String']> | Scalars['String'];
+  conversationId: Scalars['ID'];
+}>;
+
+
+export type AssignTagsToConversationMutation = { __typename?: 'Mutation', assignTagsToConversation: boolean };
+
+export type UnassignTagsFromConversationMutationVariables = Exact<{
+  tags: Array<Scalars['String']> | Scalars['String'];
+  conversationId: Scalars['ID'];
+}>;
+
+
+export type UnassignTagsFromConversationMutation = { __typename?: 'Mutation', unassignTagsFromConversation: boolean };
+
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
 export type FileCategoryContentGroupFragment = { __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string };
@@ -3501,6 +3531,16 @@ export const DeleteConversationDocument = gql`
   deleteConversation(id: $id)
 }
     `;
+export const AssignTagsToConversationDocument = gql`
+    mutation assignTagsToConversation($tags: [String!]!, $conversationId: ID!) {
+  assignTagsToConversation(conversationId: $conversationId, tags: $tags)
+}
+    `;
+export const UnassignTagsFromConversationDocument = gql`
+    mutation unassignTagsFromConversation($tags: [String!]!, $conversationId: ID!) {
+  unassignTagsFromConversation(conversationId: $conversationId, tags: $tags)
+}
+    `;
 export const FileCategoryContentTypesDocument = gql`
     query fileCategoryContentTypes($filter: FileCategoryContentTypeFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentTypeOrderArgType, $search: FileCategoryContentTypeSearchArgType) {
   fileCategoryContentTypes(
@@ -4092,6 +4132,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     deleteConversation(variables: DeleteConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteConversationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteConversationMutation>(DeleteConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteConversation', 'mutation');
+    },
+    assignTagsToConversation(variables: AssignTagsToConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssignTagsToConversationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssignTagsToConversationMutation>(AssignTagsToConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'assignTagsToConversation', 'mutation');
+    },
+    unassignTagsFromConversation(variables: UnassignTagsFromConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UnassignTagsFromConversationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UnassignTagsFromConversationMutation>(UnassignTagsFromConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'unassignTagsFromConversation', 'mutation');
     },
     fileCategoryContentTypes(variables?: FileCategoryContentTypesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentTypesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentTypesQuery>(FileCategoryContentTypesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentTypes', 'query');

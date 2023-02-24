@@ -15,6 +15,14 @@ mutation createConversation($conversation: ConversationCreateDto!) {
   }
 }
 
-mutation deleteConversation($id: ID!){
+mutation deleteConversation($id: ID!) {
   deleteConversation(id: $id)
+}
+
+mutation assignTagsToConversation($tags: [String!]!, $conversationId: ID!) {
+  assignTagsToConversation(conversationId: $conversationId, tags: $tags)
+}
+
+mutation unassignTagsFromConversation($tags: [String!]!, $conversationId: ID!) {
+  unassignTagsFromConversation(conversationId: $conversationId, tags: $tags)
 }
