@@ -24,13 +24,8 @@ export class PlatformClientService {
   constructor(options: PlatformClientOptionsType) {
     this.environmentId = options.environmentId;
     this.apiKey = options.apiKey;
-    if (options.host) {
-      this.graphqlUrl = options.host + defaultGraphqlEndpoint;
-      this.host = options.host;
-    } else {
-      this.graphqlUrl = defaultHost + '/v01/server/graphql';
-      this.host = defaultHost;
-    }
+    this.graphqlUrl = options.host + defaultGraphqlEndpoint;
+    this.host = options.host;
     this.graphqlClient = new GraphQLClient(this.graphqlUrl);
 
     this.authorization = new AuthorizationClientService(options);
