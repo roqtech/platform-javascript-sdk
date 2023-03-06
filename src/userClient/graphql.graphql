@@ -57,12 +57,7 @@ fragment Role on RoleModel {
   reference
 }
 
-query user(
-  $id: ID!
-  $withTenant: Boolean = false
-  $withUserGroups: Boolean = false
-  $withRoles: Boolean = false
-) {
+query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
   user(id: $id) {
     ...User
     tenant @include(if: $withTenant) {
@@ -93,13 +88,7 @@ query users(
   $withUserGroups: Boolean = false
   $withRoles: Boolean = false
 ) {
-  users(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  users(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...User
       tenant @include(if: $withTenant) {
@@ -158,13 +147,7 @@ query userGroups(
   $withUsers: Boolean = false
   $withRoles: Boolean = false
 ) {
-  userGroups(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  userGroups(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...UserGroup
       userGroupType @include(if: $withUserGroupType) {
@@ -200,13 +183,7 @@ query userProfiles(
   $order: UserProfileOrderArgType
   $search: UserProfileSearchArgType
 ) {
-  userProfiles(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  userProfiles(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...UserProfile
     }
@@ -241,11 +218,7 @@ query tenants(
   }
 }
 
-query role(
-  $id: ID!
-  $withUserCount: Boolean = false
-  $withUserGroups: Boolean = false
-) {
+query role($id: ID!, $withUserCount: Boolean = false, $withUserGroups: Boolean = false) {
   role(id: $id) {
     ...Role
     userGroups @include(if: $withUserGroups) {
@@ -340,4 +313,8 @@ mutation updateUserGroup($id: ID!, $userGroup: UserGroupUpdateDto!) {
 
 mutation changeUserPassword($id: ID!, $input: UserPasswordUpdateDto!) {
   changeUserPassword(id: $id, input: $input)
+}
+
+mutation verifyPassword($password: String!, $userId: ID!) {
+  verifyPassword(password: $password, userId: $userId)
 }
