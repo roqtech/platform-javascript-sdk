@@ -23,6 +23,7 @@ export class UserClientService {
   public updateUser: Sdk['updateUser'];
   public updateUserGroup: Sdk['updateUserGroup'];
   public changeUserPassword: Sdk['changeUserPassword'];
+  public verifyPassword: Sdk['verifyPassword'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -47,5 +48,6 @@ export class UserClientService {
     this.role = this.gqlSdk.role;
     this.roles = this.gqlSdk.roles;
     this.changeUserPassword = this.gqlSdk.changeUserPassword;
+    this.verifyPassword = this.gqlSdk.verifyPassword;
   }
 }

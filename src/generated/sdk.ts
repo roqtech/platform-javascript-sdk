@@ -3356,6 +3356,14 @@ export type ChangeUserPasswordMutationVariables = Exact<{
 
 export type ChangeUserPasswordMutation = { __typename?: 'Mutation', changeUserPassword: boolean };
 
+export type VerifyPasswordMutationVariables = Exact<{
+  password: Scalars['String'];
+  userId: Scalars['ID'];
+}>;
+
+
+export type VerifyPasswordMutation = { __typename?: 'Mutation', verifyPassword: boolean };
+
 export const ConversationFragmentDoc = gql`
     fragment Conversation on ConversationModel {
   id
@@ -4127,6 +4135,11 @@ export const ChangeUserPasswordDocument = gql`
   changeUserPassword(id: $id, input: $input)
 }
     `;
+export const VerifyPasswordDocument = gql`
+    mutation verifyPassword($password: String!, $userId: ID!) {
+  verifyPassword(password: $password, userId: $userId)
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -4284,6 +4297,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     changeUserPassword(variables: ChangeUserPasswordMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ChangeUserPasswordMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ChangeUserPasswordMutation>(ChangeUserPasswordDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'changeUserPassword', 'mutation');
+    },
+    verifyPassword(variables: VerifyPasswordMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<VerifyPasswordMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<VerifyPasswordMutation>(VerifyPasswordDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'verifyPassword', 'mutation');
     }
   };
 }
