@@ -745,7 +745,7 @@ export type FileModel = {
   __typename?: 'FileModel';
   contentType: Scalars['String'];
   createdAt: Scalars['Date'];
-  createdByUser: UserModel;
+  createdByUser?: Maybe<UserModel>;
   createdByUserId: Scalars['ID'];
   fileAssociations: FileAssociationPageModel;
   fileCategory: FileCategoryModel;
@@ -1088,6 +1088,7 @@ export type Mutation = {
   updateUser: UserModel;
   updateUserGroup: UserGroupModel;
   updateUserInvite: UserInviteModel;
+  verifyPassword: Scalars['Boolean'];
 };
 
 
@@ -1279,6 +1280,12 @@ export type MutationUpdateUserGroupArgs = {
 export type MutationUpdateUserInviteArgs = {
   id: Scalars['ID'];
   userInvite: UserInviteUpdateDto;
+};
+
+
+export type MutationVerifyPasswordArgs = {
+  password: Scalars['String'];
+  userId: Scalars['ID'];
 };
 
 export enum NotificationActionTypeEnum {
@@ -2326,6 +2333,7 @@ export type UserCreateDto = {
   isOptedIn?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
   locale?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
   phone?: InputMaybe<Scalars['String']>;
   reference: Scalars['String'];
   tenantId?: InputMaybe<Scalars['ID']>;
@@ -2991,7 +2999,7 @@ export type FilesQueryVariables = Exact<{
 }>;
 
 
-export type FilesQuery = { __typename?: 'Query', files: { __typename?: 'FilePageModel', totalCount: number, data: Array<{ __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } }> } };
+export type FilesQuery = { __typename?: 'Query', files: { __typename?: 'FilePageModel', totalCount: number, data: Array<{ __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string } | null, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } }> } };
 
 export type FileQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3001,7 +3009,7 @@ export type FileQueryVariables = Exact<{
 }>;
 
 
-export type FileQuery = { __typename?: 'Query', file: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string }, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } } };
+export type FileQuery = { __typename?: 'Query', file: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string } | null, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } } };
 
 export type CreateFileAssociationMutationVariables = Exact<{
   createFileAssociationDto: FileAssociationCreateDto;
