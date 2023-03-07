@@ -26,3 +26,11 @@ mutation assignTagsToConversation($tags: [String!]!, $conversationId: ID!) {
 mutation unassignTagsFromConversation($tags: [String!]!, $conversationId: ID!) {
   unassignTagsFromConversation(conversationId: $conversationId, tags: $tags)
 }
+
+mutation deleteConversation($id: ID!) {
+  deleteConversation(id: $id)
+}
+
+mutation createMessage($message: MessageCreateDto!) {
+  createMessage(message: $message)
+}

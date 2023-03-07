@@ -1023,6 +1023,14 @@ export type MemberIdFilterArgType = {
   equalTo?: InputMaybe<Scalars['ID']>;
 };
 
+export type MessageCreateDto = {
+  authorId: Scalars['String'];
+  body: Scalars['String'];
+  conversationId: Scalars['String'];
+  fileId?: InputMaybe<Scalars['String']>;
+  isSystem: Scalars['Boolean'];
+};
+
 export type MessageModel = {
   __typename?: 'MessageModel';
   body: Scalars['String'];
@@ -1062,6 +1070,7 @@ export type Mutation = {
   createConversation: ConversationModel;
   createFileAssociation: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
+  createMessage: Scalars['Boolean'];
   createTenant: TenantModel;
   createUser: UserModel;
   createUserGroup: UserGroupModel;
@@ -1144,6 +1153,11 @@ export type MutationCreateFileAssociationArgs = {
 
 export type MutationCreateFileUploadArgs = {
   createFileDto: FileCreateDto;
+};
+
+
+export type MutationCreateMessageArgs = {
+  message: MessageCreateDto;
 };
 
 
@@ -2357,6 +2371,7 @@ export type UserFilterArgType = {
   userGroupId?: InputMaybe<UserGroupIdFilterArgType>;
   userGroupName?: InputMaybe<UserGroupNameFilterArgType>;
   userProviderId?: InputMaybe<IdFilterArgType>;
+  withDeactivated?: InputMaybe<BooleanFilterArgType>;
 };
 
 export type UserGroupCreateDto = {
@@ -2862,6 +2877,7 @@ export type UserUnreadMessagesModel = {
 };
 
 export type UserUpdateDto = {
+  active?: InputMaybe<Scalars['Boolean']>;
   avatarUrl?: InputMaybe<Scalars['String']>;
   customData?: InputMaybe<Scalars['JsonObject']>;
   email?: InputMaybe<Scalars['String']>;
@@ -2923,6 +2939,13 @@ export type UnassignTagsFromConversationMutationVariables = Exact<{
 
 
 export type UnassignTagsFromConversationMutation = { __typename?: 'Mutation', unassignTagsFromConversation: boolean };
+
+export type CreateMessageMutationVariables = Exact<{
+  message: MessageCreateDto;
+}>;
+
+
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
 
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
@@ -3557,6 +3580,11 @@ export const UnassignTagsFromConversationDocument = gql`
   unassignTagsFromConversation(conversationId: $conversationId, tags: $tags)
 }
     `;
+export const CreateMessageDocument = gql`
+    mutation createMessage($message: MessageCreateDto!) {
+  createMessage(message: $message)
+}
+    `;
 export const FileCategoryContentTypesDocument = gql`
     query fileCategoryContentTypes($filter: FileCategoryContentTypeFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentTypeOrderArgType, $search: FileCategoryContentTypeSearchArgType) {
   fileCategoryContentTypes(
@@ -4159,6 +4187,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     unassignTagsFromConversation(variables: UnassignTagsFromConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UnassignTagsFromConversationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UnassignTagsFromConversationMutation>(UnassignTagsFromConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'unassignTagsFromConversation', 'mutation');
+    },
+    createMessage(variables: CreateMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateMessageMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateMessageMutation>(CreateMessageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createMessage', 'mutation');
     },
     fileCategoryContentTypes(variables?: FileCategoryContentTypesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentTypesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentTypesQuery>(FileCategoryContentTypesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentTypes', 'query');
