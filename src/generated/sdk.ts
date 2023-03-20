@@ -31,6 +31,7 @@ export type AppUriUpdateDto = {
 };
 
 export type AuthFormConfigDto = {
+  defaultRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   privacyPolicyLink?: InputMaybe<Scalars['String']>;
   requireEmailConfirmation?: InputMaybe<Scalars['Boolean']>;
   showCompany?: InputMaybe<Scalars['Boolean']>;
@@ -41,12 +42,14 @@ export type AuthFormConfigDto = {
 };
 
 export type AuthFormThemeCreateDto = {
+  defaultRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   theme: Scalars['JsonObject'];
 };
 
 export type AuthUiThemeModel = {
   __typename?: 'AuthUiThemeModel';
   createdAt?: Maybe<Scalars['Date']>;
+  defaultRoleKeys?: Maybe<Array<Scalars['String']>>;
   id?: Maybe<Scalars['ID']>;
   theme?: Maybe<Scalars['JsonObject']>;
   updatedAt?: Maybe<Scalars['Date']>;
@@ -65,10 +68,16 @@ export type AuthenticationAppUriModel = {
 
 export type AuthenticationProviderConfigUpdateDto = {
   enableFacebook: Scalars['Boolean'];
+  enableGithub: Scalars['Boolean'];
   enableGoogle: Scalars['Boolean'];
+  enableLinkedin: Scalars['Boolean'];
+  enableTwitter: Scalars['Boolean'];
   enabled: Scalars['Boolean'];
   facebook: AuthenticationProviderDto;
+  github: AuthenticationProviderDto;
   google: AuthenticationProviderDto;
+  linkedin: AuthenticationProviderDto;
+  twitter: AuthenticationProviderDto;
 };
 
 export type AuthenticationProviderDto = {
@@ -98,10 +107,16 @@ export type AuthenticationProviderSsoConfigModel = {
   authOriginUri: Scalars['String'];
   dnsRecordUri: Scalars['String'];
   enableFacebook: Scalars['Boolean'];
+  enableGithub: Scalars['Boolean'];
   enableGoogle: Scalars['Boolean'];
+  enableLinkedin: Scalars['Boolean'];
+  enableTwitter: Scalars['Boolean'];
   enabled: Scalars['Boolean'];
   facebook?: Maybe<AuthenticationProviderModel>;
+  github?: Maybe<AuthenticationProviderModel>;
   google?: Maybe<AuthenticationProviderModel>;
+  linkedin?: Maybe<AuthenticationProviderModel>;
+  twitter?: Maybe<AuthenticationProviderModel>;
 };
 
 export type BooleanFilterArgType = {
@@ -155,6 +170,7 @@ export type ConversationModel = {
   isGroup: Scalars['Boolean'];
   ownerId: Scalars['String'];
   participants: ParticipantPageModel;
+  tags: ConversationTagPageModel;
   title: Scalars['String'];
   updatedAt: Scalars['Date'];
 };
@@ -181,6 +197,19 @@ export type ConversationPageModel = {
 export type ConversationSearchArgType = {
   key: Scalars['String'];
   value: Scalars['String'];
+};
+
+export type ConversationTagModel = {
+  __typename?: 'ConversationTagModel';
+  conversationId: Scalars['ID'];
+  id: Scalars['ID'];
+  tag: Scalars['String'];
+};
+
+export type ConversationTagPageModel = {
+  __typename?: 'ConversationTagPageModel';
+  data: Array<ConversationTagModel>;
+  totalCount: Scalars['Float'];
 };
 
 export type ConversationUserModel = {
@@ -1031,6 +1060,15 @@ export type MessageCreateDto = {
   isSystem: Scalars['Boolean'];
 };
 
+export type MessageFilterArgType = {
+  body?: InputMaybe<StringFilterArgType>;
+  conversationId?: InputMaybe<IdFilterArgType>;
+  conversationUserId?: InputMaybe<IdFilterArgType>;
+  fileId?: InputMaybe<IdFilterArgType>;
+  id?: InputMaybe<IdFilterArgType>;
+  messageStatusId?: InputMaybe<IdFilterArgType>;
+};
+
 export type MessageModel = {
   __typename?: 'MessageModel';
   body: Scalars['String'];
@@ -1041,10 +1079,28 @@ export type MessageModel = {
   conversationUserId: Scalars['String'];
   createdAt: Scalars['Date'];
   deletedAt: Scalars['Date'];
+  file?: Maybe<FileModel>;
+  fileId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   messageStatus?: Maybe<MessageStatusModel>;
   messageStatusId?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
+};
+
+export type MessageOrderArgType = {
+  order: Scalars['String'];
+  sort: Scalars['String'];
+};
+
+export type MessagePageModel = {
+  __typename?: 'MessagePageModel';
+  data: Array<MessageModel>;
+  totalCount: Scalars['Float'];
+};
+
+export type MessageSearchArgType = {
+  key: Scalars['String'];
+  value: Scalars['String'];
 };
 
 export type MessageStatusModel = {
@@ -1058,19 +1114,26 @@ export type MessageStatusModel = {
   updatedAt: Scalars['Date'];
 };
 
+export type MultiTenancyStatusModel = {
+  __typename?: 'MultiTenancyStatusModel';
+  active: Scalars['Boolean'];
+  count: Scalars['Int'];
+  registrationEnabled: Scalars['Boolean'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   acceptUserInvite: UserInviteModel;
   addUsersToUserGroup: Scalars['Boolean'];
   assignRolesToUser: Scalars['Boolean'];
-  assignTagsToConversation: Scalars['Boolean'];
+  assignTagsToConversation: ConversationModel;
   buildQueryPlan: Array<QueryPlanModel>;
   cancelUserInvite: UserInviteModel;
   changeUserPassword: Scalars['Boolean'];
   createConversation: ConversationModel;
   createFileAssociation: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
-  createMessage: Scalars['Boolean'];
+  createMessage: MessagePageModel;
   createTenant: TenantModel;
   createUser: UserModel;
   createUserGroup: UserGroupModel;
@@ -1089,7 +1152,7 @@ export type Mutation = {
   sendUserInvites: CreateUserInvitesModel;
   sendUserResetPasswordMail: Scalars['Boolean'];
   unassignRolesFromUser: Scalars['Boolean'];
-  unassignTagsFromConversation: Scalars['Boolean'];
+  unassignTagsFromConversation: ConversationModel;
   updateFile: FileModel;
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
@@ -1846,6 +1909,7 @@ export type Query = {
   fileCategoryContentTypes: FileCategoryContentTypePageModel;
   files: FilePageModel;
   messageFileUrl: Scalars['String'];
+  messages: MessagePageModel;
   notificationPreference: Array<NotificationPreferenceModel>;
   notifications: NotificationPageModel;
   role: RoleModel;
@@ -1926,6 +1990,15 @@ export type QueryFilesArgs = {
 export type QueryMessageFileUrlArgs = {
   fileId: Scalars['ID'];
   id: Scalars['ID'];
+};
+
+
+export type QueryMessagesArgs = {
+  filter?: InputMaybe<MessageFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<MessageOrderArgType>;
+  search?: InputMaybe<MessageSearchArgType>;
 };
 
 
@@ -2072,6 +2145,7 @@ export enum ResourceOperationEnum {
 
 export type RoleCreateDto = {
   description?: InputMaybe<Scalars['String']>;
+  inviteRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
@@ -2082,6 +2156,7 @@ export type RoleCreateDto = {
 export type RoleFilterArgType = {
   description?: InputMaybe<StringFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
+  invite?: InputMaybe<BooleanFilterArgType>;
   isSystemManaged?: InputMaybe<BooleanFilterArgType>;
   key?: InputMaybe<StringFilterArgType>;
   name?: InputMaybe<StringFilterArgType>;
@@ -2094,6 +2169,7 @@ export type RoleModel = {
   __typename?: 'RoleModel';
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  inviteRoleKeys?: Maybe<Array<Scalars['String']>>;
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
@@ -2144,6 +2220,7 @@ export enum RoleSearchKeyEnum {
 
 export type RoleUpdateDto = {
   description?: InputMaybe<Scalars['String']>;
+  inviteRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   isSystemManaged?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   permissionAssignments: Array<RolePermissionAssignDto>;
@@ -2910,6 +2987,8 @@ export type UsersCountModel = {
 
 export type ConversationFragment = { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string };
 
+export type MessageFragment = { __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, createdAt: string, updatedAt: string };
+
 export type CreateConversationMutationVariables = Exact<{
   conversation: ConversationCreateDto;
 }>;
@@ -2930,7 +3009,7 @@ export type AssignTagsToConversationMutationVariables = Exact<{
 }>;
 
 
-export type AssignTagsToConversationMutation = { __typename?: 'Mutation', assignTagsToConversation: boolean };
+export type AssignTagsToConversationMutation = { __typename?: 'Mutation', assignTagsToConversation: { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string } };
 
 export type UnassignTagsFromConversationMutationVariables = Exact<{
   tags: Array<Scalars['String']> | Scalars['String'];
@@ -2938,14 +3017,14 @@ export type UnassignTagsFromConversationMutationVariables = Exact<{
 }>;
 
 
-export type UnassignTagsFromConversationMutation = { __typename?: 'Mutation', unassignTagsFromConversation: boolean };
+export type UnassignTagsFromConversationMutation = { __typename?: 'Mutation', unassignTagsFromConversation: { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string } };
 
 export type CreateMessageMutationVariables = Exact<{
   message: MessageCreateDto;
 }>;
 
 
-export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'MessagePageModel', totalCount: number, data: Array<{ __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, createdAt: string, updatedAt: string }> } };
 
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
@@ -3399,6 +3478,16 @@ export const ConversationFragmentDoc = gql`
   updatedAt
 }
     `;
+export const MessageFragmentDoc = gql`
+    fragment Message on MessageModel {
+  id
+  body
+  conversationId
+  fileId
+  createdAt
+  updatedAt
+}
+    `;
 export const UserFragmentDoc = gql`
     fragment User on UserModel {
   id
@@ -3572,19 +3661,28 @@ export const DeleteConversationDocument = gql`
     `;
 export const AssignTagsToConversationDocument = gql`
     mutation assignTagsToConversation($tags: [String!]!, $conversationId: ID!) {
-  assignTagsToConversation(conversationId: $conversationId, tags: $tags)
+  assignTagsToConversation(conversationId: $conversationId, tags: $tags) {
+    ...Conversation
+  }
 }
-    `;
+    ${ConversationFragmentDoc}`;
 export const UnassignTagsFromConversationDocument = gql`
     mutation unassignTagsFromConversation($tags: [String!]!, $conversationId: ID!) {
-  unassignTagsFromConversation(conversationId: $conversationId, tags: $tags)
+  unassignTagsFromConversation(conversationId: $conversationId, tags: $tags) {
+    ...Conversation
+  }
 }
-    `;
+    ${ConversationFragmentDoc}`;
 export const CreateMessageDocument = gql`
     mutation createMessage($message: MessageCreateDto!) {
-  createMessage(message: $message)
+  createMessage(message: $message) {
+    data {
+      ...Message
+    }
+    totalCount
+  }
 }
-    `;
+    ${MessageFragmentDoc}`;
 export const FileCategoryContentTypesDocument = gql`
     query fileCategoryContentTypes($filter: FileCategoryContentTypeFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentTypeOrderArgType, $search: FileCategoryContentTypeSearchArgType) {
   fileCategoryContentTypes(
