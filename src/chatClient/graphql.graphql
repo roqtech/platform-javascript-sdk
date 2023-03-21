@@ -9,15 +9,6 @@ fragment Conversation on ConversationModel {
   updatedAt
 }
 
-fragment Message on MessageModel {
-  id
-  body
-  conversationId
-  fileId
-  createdAt
-  updatedAt
-}
-
 mutation createConversation($conversation: ConversationCreateDto!) {
   createConversation(conversation: $conversation) {
     ...Conversation
@@ -29,15 +20,11 @@ mutation deleteConversation($id: ID!) {
 }
 
 mutation assignTagsToConversation($tags: [String!]!, $conversationId: ID!) {
-  assignTagsToConversation(conversationId: $conversationId, tags: $tags) {
-    ...Conversation
-  }
+  assignTagsToConversation(conversationId: $conversationId, tags: $tags)
 }
 
 mutation unassignTagsFromConversation($tags: [String!]!, $conversationId: ID!) {
-  unassignTagsFromConversation(conversationId: $conversationId, tags: $tags) {
-    ...Conversation
-  }
+  unassignTagsFromConversation(conversationId: $conversationId, tags: $tags)
 }
 
 mutation deleteConversation($id: ID!) {
@@ -45,10 +32,5 @@ mutation deleteConversation($id: ID!) {
 }
 
 mutation createMessage($message: MessageCreateDto!) {
-  createMessage(message: $message) {
-    data {
-      ...Message
-    }
-    totalCount
-  }
+  createMessage(message: $message)
 }
