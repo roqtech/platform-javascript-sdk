@@ -10,6 +10,7 @@ fragment User on UserModel {
   isOptedIn
   synced
   tenantId
+  customData
   timezone
   createdAt
   updatedAt
@@ -70,13 +71,7 @@ query fileCategoryContentTypes(
   $order: FileCategoryContentTypeOrderArgType
   $search: FileCategoryContentTypeSearchArgType
 ) {
-  fileCategoryContentTypes(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  fileCategoryContentTypes(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...FileCategoryContentType
     }
@@ -84,10 +79,7 @@ query fileCategoryContentTypes(
   }
 }
 
-query fileCategoryContentGroup(
-  $id: ID!
-  $withFileCategoryContentTypes: Boolean = false
-) {
+query fileCategoryContentGroup($id: ID!, $withFileCategoryContentTypes: Boolean = false) {
   fileCategoryContentGroup(id: $id) {
     ...FileCategoryContentGroup
     fileCategoryContentTypes @include(if: $withFileCategoryContentTypes) {
@@ -107,13 +99,7 @@ query fileCategoryContentGroups(
   $search: FileCategoryContentGroupSearchArgType
   $withFileCategoryContentTypes: Boolean = false
 ) {
-  fileCategoryContentGroups(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  fileCategoryContentGroups(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...FileCategoryContentGroup
       fileCategoryContentTypes @include(if: $withFileCategoryContentTypes) {
@@ -135,13 +121,7 @@ query fileCategories(
   $search: FileCategorySearchArgType
   $withFileCategoryContentGroups: Boolean = false
 ) {
-  fileCategories(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  fileCategories(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...FileCategory
       fileCategoryContentGroups @include(if: $withFileCategoryContentGroups) {
@@ -177,13 +157,7 @@ query files(
   $withCreatedByUser: Boolean = false
   $withFileAssociations: Boolean = false
 ) {
-  files(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-    search: $search
-  ) {
+  files(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...File
       fileCategory @include(if: $withFileCategory) {
@@ -226,9 +200,7 @@ query file(
   }
 }
 
-mutation createFileAssociation(
-  $createFileAssociationDto: FileAssociationCreateDto!
-) {
+mutation createFileAssociation($createFileAssociationDto: FileAssociationCreateDto!) {
   createFileAssociation(createFileAssociationDto: $createFileAssociationDto) {
     ...FileAssociation
   }
