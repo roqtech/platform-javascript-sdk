@@ -31,6 +31,7 @@ export type AppUriUpdateDto = {
 };
 
 export type AuthFormConfigDto = {
+  defaultRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   privacyPolicyLink?: InputMaybe<Scalars['String']>;
   requireEmailConfirmation?: InputMaybe<Scalars['Boolean']>;
   showCompany?: InputMaybe<Scalars['Boolean']>;
@@ -41,12 +42,14 @@ export type AuthFormConfigDto = {
 };
 
 export type AuthFormThemeCreateDto = {
+  defaultRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   theme: Scalars['JsonObject'];
 };
 
 export type AuthUiThemeModel = {
   __typename?: 'AuthUiThemeModel';
   createdAt?: Maybe<Scalars['Date']>;
+  defaultRoleKeys?: Maybe<Array<Scalars['String']>>;
   id?: Maybe<Scalars['ID']>;
   theme?: Maybe<Scalars['JsonObject']>;
   updatedAt?: Maybe<Scalars['Date']>;
@@ -167,6 +170,7 @@ export type ConversationModel = {
   isGroup: Scalars['Boolean'];
   ownerId: Scalars['String'];
   participants: ParticipantPageModel;
+  tags: ConversationTagPageModel;
   title: Scalars['String'];
   updatedAt: Scalars['Date'];
 };
@@ -193,6 +197,19 @@ export type ConversationPageModel = {
 export type ConversationSearchArgType = {
   key: Scalars['String'];
   value: Scalars['String'];
+};
+
+export type ConversationTagModel = {
+  __typename?: 'ConversationTagModel';
+  conversationId: Scalars['ID'];
+  id: Scalars['ID'];
+  tag: Scalars['String'];
+};
+
+export type ConversationTagPageModel = {
+  __typename?: 'ConversationTagPageModel';
+  data: Array<ConversationTagModel>;
+  totalCount: Scalars['Float'];
 };
 
 export type ConversationUserModel = {
@@ -1043,6 +1060,15 @@ export type MessageCreateDto = {
   isSystem: Scalars['Boolean'];
 };
 
+export type MessageFilterArgType = {
+  body?: InputMaybe<StringFilterArgType>;
+  conversationId?: InputMaybe<IdFilterArgType>;
+  conversationUserId?: InputMaybe<IdFilterArgType>;
+  fileId?: InputMaybe<IdFilterArgType>;
+  id?: InputMaybe<IdFilterArgType>;
+  messageStatusId?: InputMaybe<IdFilterArgType>;
+};
+
 export type MessageModel = {
   __typename?: 'MessageModel';
   body: Scalars['String'];
@@ -1053,10 +1079,28 @@ export type MessageModel = {
   conversationUserId: Scalars['String'];
   createdAt: Scalars['Date'];
   deletedAt: Scalars['Date'];
+  file?: Maybe<FileModel>;
+  fileId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   messageStatus?: Maybe<MessageStatusModel>;
   messageStatusId?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
+};
+
+export type MessageOrderArgType = {
+  order: Scalars['String'];
+  sort: Scalars['String'];
+};
+
+export type MessagePageModel = {
+  __typename?: 'MessagePageModel';
+  data: Array<MessageModel>;
+  totalCount: Scalars['Float'];
+};
+
+export type MessageSearchArgType = {
+  key: Scalars['String'];
+  value: Scalars['String'];
 };
 
 export type MessageStatusModel = {
@@ -1068,6 +1112,13 @@ export type MessageStatusModel = {
   notified?: Maybe<Scalars['Boolean']>;
   read: Scalars['Boolean'];
   updatedAt: Scalars['Date'];
+};
+
+export type MultiTenancyStatusModel = {
+  __typename?: 'MultiTenancyStatusModel';
+  active: Scalars['Boolean'];
+  count: Scalars['Int'];
+  registrationEnabled: Scalars['Boolean'];
 };
 
 export type Mutation = {
@@ -1858,6 +1909,7 @@ export type Query = {
   fileCategoryContentTypes: FileCategoryContentTypePageModel;
   files: FilePageModel;
   messageFileUrl: Scalars['String'];
+  messages: MessagePageModel;
   notificationPreference: Array<NotificationPreferenceModel>;
   notifications: NotificationPageModel;
   role: RoleModel;
@@ -1938,6 +1990,15 @@ export type QueryFilesArgs = {
 export type QueryMessageFileUrlArgs = {
   fileId: Scalars['ID'];
   id: Scalars['ID'];
+};
+
+
+export type QueryMessagesArgs = {
+  filter?: InputMaybe<MessageFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<MessageOrderArgType>;
+  search?: InputMaybe<MessageSearchArgType>;
 };
 
 
@@ -2084,6 +2145,7 @@ export enum ResourceOperationEnum {
 
 export type RoleCreateDto = {
   description?: InputMaybe<Scalars['String']>;
+  inviteRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
@@ -2094,6 +2156,7 @@ export type RoleCreateDto = {
 export type RoleFilterArgType = {
   description?: InputMaybe<StringFilterArgType>;
   id?: InputMaybe<IdFilterArgType>;
+  invite?: InputMaybe<BooleanFilterArgType>;
   isSystemManaged?: InputMaybe<BooleanFilterArgType>;
   key?: InputMaybe<StringFilterArgType>;
   name?: InputMaybe<StringFilterArgType>;
@@ -2106,6 +2169,7 @@ export type RoleModel = {
   __typename?: 'RoleModel';
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  inviteRoleKeys?: Maybe<Array<Scalars['String']>>;
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
@@ -2156,6 +2220,7 @@ export enum RoleSearchKeyEnum {
 
 export type RoleUpdateDto = {
   description?: InputMaybe<Scalars['String']>;
+  inviteRoleKeys?: InputMaybe<Array<Scalars['String']>>;
   isSystemManaged?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   permissionAssignments: Array<RolePermissionAssignDto>;
@@ -2959,6 +3024,27 @@ export type CreateMessageMutationVariables = Exact<{
 
 export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
 
+export type MessageFragment = { __typename?: 'MessageModel', id: string, body: string, bodyUpdatedAt: string, conversationId: string, conversationUserId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string };
+
+export type ConversationUserFragment = { __typename?: 'ConversationUserModel', id: string, conversationId: string, userId: string, createdAt: string, updatedAt: string };
+
+export type MessageStatusFragment = { __typename?: 'MessageStatusModel', id: string, messageId: string, notified?: boolean | null, read: boolean, createdAt: string, updatedAt: string };
+
+export type MessagesQueryVariables = Exact<{
+  filter?: InputMaybe<MessageFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<MessageOrderArgType>;
+  search?: InputMaybe<MessageSearchArgType>;
+  withConversation?: InputMaybe<Scalars['Boolean']>;
+  withConversationUser?: InputMaybe<Scalars['Boolean']>;
+  withMessageStatus?: InputMaybe<Scalars['Boolean']>;
+  withFile?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type MessagesQuery = { __typename?: 'Query', messages: { __typename?: 'MessagePageModel', totalCount: number, data: Array<{ __typename?: 'MessageModel', id: string, body: string, bodyUpdatedAt: string, conversationId: string, conversationUserId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string, conversation?: { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string }, conversationUser?: { __typename?: 'ConversationUserModel', id: string, conversationId: string, userId: string, createdAt: string, updatedAt: string }, messageStatus?: { __typename?: 'MessageStatusModel', id: string, messageId: string, notified?: boolean | null, read: boolean, createdAt: string, updatedAt: string } | null, file?: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } | null }> } };
+
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
 export type FileCategoryContentGroupFragment = { __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string };
@@ -3411,6 +3497,38 @@ export const ConversationFragmentDoc = gql`
   updatedAt
 }
     `;
+export const MessageFragmentDoc = gql`
+    fragment Message on MessageModel {
+  id
+  body
+  bodyUpdatedAt
+  conversationId
+  conversationUserId
+  fileId
+  messageStatusId
+  createdAt
+  updatedAt
+}
+    `;
+export const ConversationUserFragmentDoc = gql`
+    fragment ConversationUser on ConversationUserModel {
+  id
+  conversationId
+  userId
+  createdAt
+  updatedAt
+}
+    `;
+export const MessageStatusFragmentDoc = gql`
+    fragment MessageStatus on MessageStatusModel {
+  id
+  messageId
+  notified
+  read
+  createdAt
+  updatedAt
+}
+    `;
 export const UserFragmentDoc = gql`
     fragment User on UserModel {
   id
@@ -3598,6 +3716,38 @@ export const CreateMessageDocument = gql`
   createMessage(message: $message)
 }
     `;
+export const MessagesDocument = gql`
+    query messages($filter: MessageFilterArgType, $limit: Int, $offset: Int, $order: MessageOrderArgType, $search: MessageSearchArgType, $withConversation: Boolean = false, $withConversationUser: Boolean = false, $withMessageStatus: Boolean = false, $withFile: Boolean = false) {
+  messages(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...Message
+      conversation @include(if: $withConversation) {
+        ...Conversation
+      }
+      conversationUser @include(if: $withConversationUser) {
+        ...ConversationUser
+      }
+      messageStatus @include(if: $withMessageStatus) {
+        ...MessageStatus
+      }
+      file @include(if: $withFile) {
+        ...File
+      }
+    }
+    totalCount
+  }
+}
+    ${MessageFragmentDoc}
+${ConversationFragmentDoc}
+${ConversationUserFragmentDoc}
+${MessageStatusFragmentDoc}
+${FileFragmentDoc}`;
 export const FileCategoryContentTypesDocument = gql`
     query fileCategoryContentTypes($filter: FileCategoryContentTypeFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentTypeOrderArgType, $search: FileCategoryContentTypeSearchArgType) {
   fileCategoryContentTypes(
@@ -4203,6 +4353,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     createMessage(variables: CreateMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateMessageMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateMessageMutation>(CreateMessageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createMessage', 'mutation');
+    },
+    messages(variables?: MessagesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MessagesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MessagesQuery>(MessagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'messages', 'query');
     },
     fileCategoryContentTypes(variables?: FileCategoryContentTypesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentTypesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentTypesQuery>(FileCategoryContentTypesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentTypes', 'query');

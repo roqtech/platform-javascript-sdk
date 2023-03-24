@@ -34,3 +34,70 @@ mutation deleteConversation($id: ID!) {
 mutation createMessage($message: MessageCreateDto!) {
   createMessage(message: $message)
 }
+
+
+fragment Message on MessageModel {
+  id
+  body
+  bodyUpdatedAt
+  conversationId
+  conversationUserId
+  fileId
+  messageStatusId
+  createdAt
+  updatedAt
+}
+
+fragment ConversationUser on ConversationUserModel {
+  id
+  conversationId
+  userId
+  createdAt
+  updatedAt
+}
+
+fragment MessageStatus on MessageStatusModel {
+  id
+  messageId
+  notified
+  read
+  createdAt
+  updatedAt
+}
+
+query messages(
+  $filter: MessageFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: MessageOrderArgType
+  $search: MessageSearchArgType
+  $withConversation: Boolean = false
+  $withConversationUser: Boolean = false
+  $withMessageStatus: Boolean = false
+  $withFile: Boolean = false
+) {
+  messages(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...Message
+      conversation @include(if: $withConversation) {
+        ...Conversation
+      }
+      conversationUser @include(if: $withConversationUser) {
+        ...ConversationUser
+      }
+      messageStatus @include(if: $withMessageStatus) {
+        ...MessageStatus
+      }
+      file @include(if: $withFile) {
+        ...File
+      }
+    }
+    totalCount
+  }
+}
