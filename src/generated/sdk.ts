@@ -3024,7 +3024,7 @@ export type CreateMessageMutationVariables = Exact<{
 
 export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
 
-export type MessageFragment = { __typename?: 'MessageModel', id: string, body: string, bodyUpdatedAt: string, conversationId: string, conversationUserId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string };
+export type MessageFragment = { __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string };
 
 export type ConversationUserFragment = { __typename?: 'ConversationUserModel', id: string, conversationId: string, userId: string, createdAt: string, updatedAt: string };
 
@@ -3036,14 +3036,11 @@ export type MessagesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<MessageOrderArgType>;
   search?: InputMaybe<MessageSearchArgType>;
-  withConversation?: InputMaybe<Scalars['Boolean']>;
-  withConversationUser?: InputMaybe<Scalars['Boolean']>;
-  withMessageStatus?: InputMaybe<Scalars['Boolean']>;
   withFile?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: { __typename?: 'MessagePageModel', totalCount: number, data: Array<{ __typename?: 'MessageModel', id: string, body: string, bodyUpdatedAt: string, conversationId: string, conversationUserId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string, conversation?: { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string }, conversationUser?: { __typename?: 'ConversationUserModel', id: string, conversationId: string, userId: string, createdAt: string, updatedAt: string }, messageStatus?: { __typename?: 'MessageStatusModel', id: string, messageId: string, notified?: boolean | null, read: boolean, createdAt: string, updatedAt: string } | null, file?: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } | null }> } };
+export type MessagesQuery = { __typename?: 'Query', messages: { __typename?: 'MessagePageModel', totalCount: number, data: Array<{ __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string, file?: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } | null }> } };
 
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
@@ -3501,9 +3498,7 @@ export const MessageFragmentDoc = gql`
     fragment Message on MessageModel {
   id
   body
-  bodyUpdatedAt
   conversationId
-  conversationUserId
   fileId
   messageStatusId
   createdAt
@@ -3717,7 +3712,7 @@ export const CreateMessageDocument = gql`
 }
     `;
 export const MessagesDocument = gql`
-    query messages($filter: MessageFilterArgType, $limit: Int, $offset: Int, $order: MessageOrderArgType, $search: MessageSearchArgType, $withConversation: Boolean = false, $withConversationUser: Boolean = false, $withMessageStatus: Boolean = false, $withFile: Boolean = false) {
+    query messages($filter: MessageFilterArgType, $limit: Int, $offset: Int, $order: MessageOrderArgType, $search: MessageSearchArgType, $withFile: Boolean = false) {
   messages(
     filter: $filter
     limit: $limit
@@ -3727,15 +3722,6 @@ export const MessagesDocument = gql`
   ) {
     data {
       ...Message
-      conversation @include(if: $withConversation) {
-        ...Conversation
-      }
-      conversationUser @include(if: $withConversationUser) {
-        ...ConversationUser
-      }
-      messageStatus @include(if: $withMessageStatus) {
-        ...MessageStatus
-      }
       file @include(if: $withFile) {
         ...File
       }
@@ -3744,9 +3730,6 @@ export const MessagesDocument = gql`
   }
 }
     ${MessageFragmentDoc}
-${ConversationFragmentDoc}
-${ConversationUserFragmentDoc}
-${MessageStatusFragmentDoc}
 ${FileFragmentDoc}`;
 export const FileCategoryContentTypesDocument = gql`
     query fileCategoryContentTypes($filter: FileCategoryContentTypeFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentTypeOrderArgType, $search: FileCategoryContentTypeSearchArgType) {

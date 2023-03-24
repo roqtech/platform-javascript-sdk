@@ -39,9 +39,7 @@ mutation createMessage($message: MessageCreateDto!) {
 fragment Message on MessageModel {
   id
   body
-  bodyUpdatedAt
   conversationId
-  conversationUserId
   fileId
   messageStatusId
   createdAt
@@ -71,9 +69,6 @@ query messages(
   $offset: Int
   $order: MessageOrderArgType
   $search: MessageSearchArgType
-  $withConversation: Boolean = false
-  $withConversationUser: Boolean = false
-  $withMessageStatus: Boolean = false
   $withFile: Boolean = false
 ) {
   messages(
@@ -85,15 +80,6 @@ query messages(
   ) {
     data {
       ...Message
-      conversation @include(if: $withConversation) {
-        ...Conversation
-      }
-      conversationUser @include(if: $withConversationUser) {
-        ...ConversationUser
-      }
-      messageStatus @include(if: $withMessageStatus) {
-        ...MessageStatus
-      }
       file @include(if: $withFile) {
         ...File
       }
