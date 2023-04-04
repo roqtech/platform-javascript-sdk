@@ -276,13 +276,6 @@ export type DeleteUserTokenFilterArgType = {
   userId?: InputMaybe<DeleteArgType>;
 };
 
-export type DeploymentInfoModel = {
-  __typename?: 'DeploymentInfoModel';
-  branch: Scalars['String'];
-  commit: Scalars['String'];
-  timestamp: Scalars['String'];
-};
-
 export type EntityNameFilterArgType = {
   equalTo?: InputMaybe<Scalars['String']>;
 };
@@ -1072,17 +1065,12 @@ export type MessageFilterArgType = {
 export type MessageModel = {
   __typename?: 'MessageModel';
   body: Scalars['String'];
-  bodyUpdatedAt: Scalars['Date'];
-  conversation: ConversationModel;
   conversationId: Scalars['String'];
-  conversationUser: ConversationUserModel;
-  conversationUserId: Scalars['String'];
   createdAt: Scalars['Date'];
   deletedAt: Scalars['Date'];
   file?: Maybe<FileModel>;
   fileId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  messageStatus?: Maybe<MessageStatusModel>;
   messageStatusId?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
 };
@@ -1142,6 +1130,7 @@ export type Mutation = {
   deleteFiles: Array<Scalars['ID']>;
   makeFilePrivate: FileModel;
   makeFilePublic: FileModel;
+  markAllNotificationsAsRead: Scalars['Int'];
   markNotifications: Array<NotificationModel>;
   notify: NotificationCreateModel;
   removeUsersFromUserGroup: Scalars['Boolean'];
@@ -2983,6 +2972,25 @@ export type UserValidateEmailTokenCreateDto = {
 export type UsersCountModel = {
   __typename?: 'UsersCountModel';
   totalCount: Scalars['Int'];
+};
+
+export type WebhookConfigModel = {
+  __typename?: 'WebhookConfigModel';
+  active: Scalars['Boolean'];
+  createdAt?: Maybe<Scalars['Date']>;
+  entityEnabledConfig: Scalars['JsonObject'];
+  id: Scalars['ID'];
+  timeout: Scalars['Int'];
+  updatedAt?: Maybe<Scalars['Date']>;
+  url: Scalars['String'];
+  webhookKey: Scalars['String'];
+};
+
+export type WebhookConfigUpdateDto = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  entityEnabledConfig?: InputMaybe<Scalars['JsonObject']>;
+  timeout?: InputMaybe<Scalars['Int']>;
+  url?: InputMaybe<Scalars['String']>;
 };
 
 export type ConversationFragment = { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string };

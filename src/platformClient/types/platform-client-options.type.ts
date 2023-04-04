@@ -3,4 +3,5 @@ export type PlatformClientOptionsType = {
   environmentId: string;
   host: string;
   cacheTtlInSeconds?: number;
+  webhookKey?: string;
 };
