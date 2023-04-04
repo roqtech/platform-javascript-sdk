@@ -19,12 +19,7 @@ query translation($id: ID!) {
   }
 }
 
-query translations(
-  $filter: TranslationFilterArgType
-  $limit: Int
-  $offset: Int
-  $order: TranslationOrderArgType
-) {
+query translations($filter: TranslationFilterArgType, $limit: Int, $offset: Int, $order: TranslationOrderArgType) {
   translations(filter: $filter, limit: $limit, offset: $offset, order: $order) {
     data {
       ...Translation
@@ -52,12 +47,7 @@ query translationKeys(
   $order: TranslationKeyOrderArgType
   $withTranslations: Boolean = false
 ) {
-  translationKeys(
-    filter: $filter
-    limit: $limit
-    offset: $offset
-    order: $order
-  ) {
+  translationKeys(filter: $filter, limit: $limit, offset: $offset, order: $order) {
     data {
       ...TranslationKey
       translations @include(if: $withTranslations) {
@@ -68,5 +58,29 @@ query translationKeys(
       }
     }
     totalCount
+  }
+}
+
+mutation createTranslationKey($translationKey: TranslationKeyCreateDto!) {
+  createTranslationKey(translationKey: $translationKey) {
+    ...TranslationKey
+    translations {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
+  }
+}
+
+mutation updateTranslationKey($id: ID!, $translationKey: TranslationKeyUpdateDto!) {
+  updateTranslationKey(id: $id, translationKey: $translationKey) {
+    ...TranslationKey
+    translations {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
   }
 }

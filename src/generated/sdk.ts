@@ -276,13 +276,6 @@ export type DeleteUserTokenFilterArgType = {
   userId?: InputMaybe<DeleteArgType>;
 };
 
-export type DeploymentInfoModel = {
-  __typename?: 'DeploymentInfoModel';
-  branch: Scalars['String'];
-  commit: Scalars['String'];
-  timestamp: Scalars['String'];
-};
-
 export type EntityNameFilterArgType = {
   equalTo?: InputMaybe<Scalars['String']>;
 };
@@ -1072,17 +1065,12 @@ export type MessageFilterArgType = {
 export type MessageModel = {
   __typename?: 'MessageModel';
   body: Scalars['String'];
-  bodyUpdatedAt: Scalars['Date'];
-  conversation: ConversationModel;
   conversationId: Scalars['String'];
-  conversationUser: ConversationUserModel;
-  conversationUserId: Scalars['String'];
   createdAt: Scalars['Date'];
   deletedAt: Scalars['Date'];
   file?: Maybe<FileModel>;
   fileId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  messageStatus?: Maybe<MessageStatusModel>;
   messageStatusId?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
 };
@@ -1135,6 +1123,7 @@ export type Mutation = {
   createFileUpload: FileCreateUploadModel;
   createMessage: Scalars['Boolean'];
   createTenant: TenantModel;
+  createTranslationKey: TranslationKeyModel;
   createUser: UserModel;
   createUserGroup: UserGroupModel;
   deleteConversation: Scalars['ID'];
@@ -1142,6 +1131,7 @@ export type Mutation = {
   deleteFiles: Array<Scalars['ID']>;
   makeFilePrivate: FileModel;
   makeFilePublic: FileModel;
+  markAllNotificationsAsRead: Scalars['Int'];
   markNotifications: Array<NotificationModel>;
   notify: NotificationCreateModel;
   removeUsersFromUserGroup: Scalars['Boolean'];
@@ -1157,6 +1147,7 @@ export type Mutation = {
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
   updateProfile: UserProfileModel;
+  updateTranslationKey: TranslationKeyModel;
   updateUser: UserModel;
   updateUserGroup: UserGroupModel;
   updateUserInvite: UserInviteModel;
@@ -1226,6 +1217,11 @@ export type MutationCreateMessageArgs = {
 
 export type MutationCreateTenantArgs = {
   tenant: TenantCreateDto;
+};
+
+
+export type MutationCreateTranslationKeyArgs = {
+  translationKey: TranslationKeyCreateDto;
 };
 
 
@@ -1339,6 +1335,12 @@ export type MutationUpdateNotificationPreferenceArgs = {
 export type MutationUpdateProfileArgs = {
   id: Scalars['ID'];
   user: UserUpdateProfileDto;
+};
+
+
+export type MutationUpdateTranslationKeyArgs = {
+  id: Scalars['ID'];
+  translationKey: TranslationKeyUpdateDto;
 };
 
 
@@ -2985,6 +2987,25 @@ export type UsersCountModel = {
   totalCount: Scalars['Int'];
 };
 
+export type WebhookConfigModel = {
+  __typename?: 'WebhookConfigModel';
+  active: Scalars['Boolean'];
+  createdAt?: Maybe<Scalars['Date']>;
+  entityEnabledConfig: Scalars['JsonObject'];
+  id: Scalars['ID'];
+  timeout: Scalars['Int'];
+  updatedAt?: Maybe<Scalars['Date']>;
+  url: Scalars['String'];
+  webhookKey: Scalars['String'];
+};
+
+export type WebhookConfigUpdateDto = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  entityEnabledConfig?: InputMaybe<Scalars['JsonObject']>;
+  timeout?: InputMaybe<Scalars['Int']>;
+  url?: InputMaybe<Scalars['String']>;
+};
+
 export type ConversationFragment = { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string };
 
 export type CreateConversationMutationVariables = Exact<{
@@ -3272,6 +3293,21 @@ export type TranslationKeysQueryVariables = Exact<{
 
 
 export type TranslationKeysQuery = { __typename?: 'Query', translationKeys: { __typename?: 'TranslationKeyPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations?: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } }> } };
+
+export type CreateTranslationKeyMutationVariables = Exact<{
+  translationKey: TranslationKeyCreateDto;
+}>;
+
+
+export type CreateTranslationKeyMutation = { __typename?: 'Mutation', createTranslationKey: { __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } } };
+
+export type UpdateTranslationKeyMutationVariables = Exact<{
+  id: Scalars['ID'];
+  translationKey: TranslationKeyUpdateDto;
+}>;
+
+
+export type UpdateTranslationKeyMutation = { __typename?: 'Mutation', updateTranslationKey: { __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } } };
 
 export type TenantFragment = { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string };
 
@@ -4040,6 +4076,34 @@ export const TranslationKeysDocument = gql`
 }
     ${TranslationKeyFragmentDoc}
 ${TranslationFragmentDoc}`;
+export const CreateTranslationKeyDocument = gql`
+    mutation createTranslationKey($translationKey: TranslationKeyCreateDto!) {
+  createTranslationKey(translationKey: $translationKey) {
+    ...TranslationKey
+    translations {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
+  }
+}
+    ${TranslationKeyFragmentDoc}
+${TranslationFragmentDoc}`;
+export const UpdateTranslationKeyDocument = gql`
+    mutation updateTranslationKey($id: ID!, $translationKey: TranslationKeyUpdateDto!) {
+  updateTranslationKey(id: $id, translationKey: $translationKey) {
+    ...TranslationKey
+    translations {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
+  }
+}
+    ${TranslationKeyFragmentDoc}
+${TranslationFragmentDoc}`;
 export const UserDocument = gql`
     query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
   user(id: $id) {
@@ -4414,6 +4478,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     translationKeys(variables?: TranslationKeysQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TranslationKeysQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<TranslationKeysQuery>(TranslationKeysDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'translationKeys', 'query');
+    },
+    createTranslationKey(variables: CreateTranslationKeyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateTranslationKeyMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateTranslationKeyMutation>(CreateTranslationKeyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTranslationKey', 'mutation');
+    },
+    updateTranslationKey(variables: UpdateTranslationKeyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateTranslationKeyMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateTranslationKeyMutation>(UpdateTranslationKeyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateTranslationKey', 'mutation');
     },
     user(variables: UserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<UserQuery>(UserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'user', 'query');
