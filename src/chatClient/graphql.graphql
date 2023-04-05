@@ -9,14 +9,16 @@ fragment Conversation on ConversationModel {
   updatedAt
 }
 
+fragment Tag on ConversationTagModel {
+  id
+  conversationId
+  tag
+}
+
 mutation createConversation($conversation: ConversationCreateDto!) {
   createConversation(conversation: $conversation) {
     ...Conversation
   }
-}
-
-mutation deleteConversation($id: ID!) {
-  deleteConversation(id: $id)
 }
 
 mutation assignTagsToConversation($tags: [String!]!, $conversationId: ID!) {
@@ -42,6 +44,7 @@ fragment Message on MessageModel {
   conversationId
   fileId
   messageStatusId
+  authorId
   createdAt
   updatedAt
 }
@@ -49,7 +52,6 @@ fragment Message on MessageModel {
 fragment ConversationUser on ConversationUserModel {
   id
   conversationId
-  userId
   createdAt
   updatedAt
 }
@@ -82,6 +84,41 @@ query messages(
       ...Message
       file @include(if: $withFile) {
         ...File
+      }
+    }
+    totalCount
+  }
+}
+
+query conversations(
+  $filter: ConversationFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: ConversationOrderArgType
+  $search: ConversationSearchArgType
+  $withUsers: Boolean = false
+  $withTags: Boolean = false
+) {
+  conversations(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...Conversation
+      users @include(if: $withUsers) {
+        data {
+          ...ConversationUser
+        }
+        totalCount
+      }
+      tags @include(if: $withTags) {
+        data {
+          ...Tag
+        }
+        totalCount
       }
     }
     totalCount

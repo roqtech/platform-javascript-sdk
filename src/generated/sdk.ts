@@ -169,10 +169,10 @@ export type ConversationModel = {
   id: Scalars['ID'];
   isGroup: Scalars['Boolean'];
   ownerId: Scalars['String'];
-  participants: ParticipantPageModel;
   tags: ConversationTagPageModel;
   title: Scalars['String'];
   updatedAt: Scalars['Date'];
+  users: ConversationUserPageModel;
 };
 
 export type ConversationOrderArgType = {
@@ -218,7 +218,12 @@ export type ConversationUserModel = {
   createdAt: Scalars['Date'];
   id: Scalars['ID'];
   updatedAt: Scalars['Date'];
-  userId: Scalars['String'];
+};
+
+export type ConversationUserPageModel = {
+  __typename?: 'ConversationUserPageModel';
+  data: Array<ConversationUserModel>;
+  totalCount: Scalars['Float'];
 };
 
 export type CreateUserInviteErrorModel = {
@@ -1064,6 +1069,7 @@ export type MessageFilterArgType = {
 
 export type MessageModel = {
   __typename?: 'MessageModel';
+  authorId?: Maybe<Scalars['String']>;
   body: Scalars['String'];
   conversationId: Scalars['String'];
   createdAt: Scalars['Date'];
@@ -1788,28 +1794,6 @@ export enum OrderEnum {
   Desc = 'DESC'
 }
 
-export type ParticipantModel = {
-  __typename?: 'ParticipantModel';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['Date'];
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  id: Scalars['ID'];
-  isOptedIn: Scalars['Boolean'];
-  isOwner: Scalars['Boolean'];
-  lastName: Scalars['String'];
-  locale: Scalars['String'];
-  phone: Scalars['String'];
-  timezone: Scalars['String'];
-  updatedAt: Scalars['Date'];
-};
-
-export type ParticipantPageModel = {
-  __typename?: 'ParticipantPageModel';
-  data: Array<ParticipantModel>;
-  totalCount: Scalars['Float'];
-};
-
 export type PermissionCreateDto = {
   key: Scalars['String'];
   operation: ResourceOperationEnum;
@@ -1890,6 +1874,7 @@ export type PermissionUpdateDto = {
 export type Query = {
   __typename?: 'Query';
   checkUserInviteToken: CheckUserInviteTokenModel;
+  conversations: ConversationPageModel;
   file: FileModel;
   fileCategories: FileCategoryPageModel;
   fileCategory: FileCategoryModel;
@@ -1922,6 +1907,15 @@ export type Query = {
 
 export type QueryCheckUserInviteTokenArgs = {
   token: Scalars['String'];
+};
+
+
+export type QueryConversationsArgs = {
+  filter?: InputMaybe<ConversationFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<ConversationOrderArgType>;
+  search?: InputMaybe<ConversationSearchArgType>;
 };
 
 
@@ -2978,9 +2972,9 @@ export type WebhookConfigModel = {
   __typename?: 'WebhookConfigModel';
   active: Scalars['Boolean'];
   createdAt?: Maybe<Scalars['Date']>;
-  entityEnabledConfig: Scalars['JsonObject'];
+  entityEnabledConfig?: Maybe<Scalars['JsonObject']>;
   id: Scalars['ID'];
-  timeout: Scalars['Int'];
+  timeout?: Maybe<Scalars['Int']>;
   updatedAt?: Maybe<Scalars['Date']>;
   url: Scalars['String'];
   webhookKey: Scalars['String'];
@@ -2995,19 +2989,14 @@ export type WebhookConfigUpdateDto = {
 
 export type ConversationFragment = { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string };
 
+export type TagFragment = { __typename?: 'ConversationTagModel', id: string, conversationId: string, tag: string };
+
 export type CreateConversationMutationVariables = Exact<{
   conversation: ConversationCreateDto;
 }>;
 
 
 export type CreateConversationMutation = { __typename?: 'Mutation', createConversation: { __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string } };
-
-export type DeleteConversationMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConversation: string };
 
 export type AssignTagsToConversationMutationVariables = Exact<{
   tags: Array<Scalars['String']> | Scalars['String'];
@@ -3025,6 +3014,13 @@ export type UnassignTagsFromConversationMutationVariables = Exact<{
 
 export type UnassignTagsFromConversationMutation = { __typename?: 'Mutation', unassignTagsFromConversation: boolean };
 
+export type DeleteConversationMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConversation: string };
+
 export type CreateMessageMutationVariables = Exact<{
   message: MessageCreateDto;
 }>;
@@ -3032,9 +3028,9 @@ export type CreateMessageMutationVariables = Exact<{
 
 export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
 
-export type MessageFragment = { __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string };
+export type MessageFragment = { __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, messageStatusId?: string | null, authorId?: string | null, createdAt: string, updatedAt: string };
 
-export type ConversationUserFragment = { __typename?: 'ConversationUserModel', id: string, conversationId: string, userId: string, createdAt: string, updatedAt: string };
+export type ConversationUserFragment = { __typename?: 'ConversationUserModel', id: string, conversationId: string, createdAt: string, updatedAt: string };
 
 export type MessageStatusFragment = { __typename?: 'MessageStatusModel', id: string, messageId: string, notified?: boolean | null, read: boolean, createdAt: string, updatedAt: string };
 
@@ -3048,7 +3044,20 @@ export type MessagesQueryVariables = Exact<{
 }>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: { __typename?: 'MessagePageModel', totalCount: number, data: Array<{ __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, messageStatusId?: string | null, createdAt: string, updatedAt: string, file?: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } | null }> } };
+export type MessagesQuery = { __typename?: 'Query', messages: { __typename?: 'MessagePageModel', totalCount: number, data: Array<{ __typename?: 'MessageModel', id: string, body: string, conversationId: string, fileId?: string | null, messageStatusId?: string | null, authorId?: string | null, createdAt: string, updatedAt: string, file?: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } | null }> } };
+
+export type ConversationsQueryVariables = Exact<{
+  filter?: InputMaybe<ConversationFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<ConversationOrderArgType>;
+  search?: InputMaybe<ConversationSearchArgType>;
+  withUsers?: InputMaybe<Scalars['Boolean']>;
+  withTags?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type ConversationsQuery = { __typename?: 'Query', conversations: { __typename?: 'ConversationPageModel', totalCount: number, data: Array<{ __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string, users?: { __typename?: 'ConversationUserPageModel', totalCount: number, data: Array<{ __typename?: 'ConversationUserModel', id: string, conversationId: string, createdAt: string, updatedAt: string }> }, tags?: { __typename?: 'ConversationTagPageModel', totalCount: number, data: Array<{ __typename?: 'ConversationTagModel', id: string, conversationId: string, tag: string }> } }> } };
 
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string };
 
@@ -3502,6 +3511,13 @@ export const ConversationFragmentDoc = gql`
   updatedAt
 }
     `;
+export const TagFragmentDoc = gql`
+    fragment Tag on ConversationTagModel {
+  id
+  conversationId
+  tag
+}
+    `;
 export const MessageFragmentDoc = gql`
     fragment Message on MessageModel {
   id
@@ -3509,6 +3525,7 @@ export const MessageFragmentDoc = gql`
   conversationId
   fileId
   messageStatusId
+  authorId
   createdAt
   updatedAt
 }
@@ -3517,7 +3534,6 @@ export const ConversationUserFragmentDoc = gql`
     fragment ConversationUser on ConversationUserModel {
   id
   conversationId
-  userId
   createdAt
   updatedAt
 }
@@ -3699,11 +3715,6 @@ export const CreateConversationDocument = gql`
   }
 }
     ${ConversationFragmentDoc}`;
-export const DeleteConversationDocument = gql`
-    mutation deleteConversation($id: ID!) {
-  deleteConversation(id: $id)
-}
-    `;
 export const AssignTagsToConversationDocument = gql`
     mutation assignTagsToConversation($tags: [String!]!, $conversationId: ID!) {
   assignTagsToConversation(conversationId: $conversationId, tags: $tags)
@@ -3712,6 +3723,11 @@ export const AssignTagsToConversationDocument = gql`
 export const UnassignTagsFromConversationDocument = gql`
     mutation unassignTagsFromConversation($tags: [String!]!, $conversationId: ID!) {
   unassignTagsFromConversation(conversationId: $conversationId, tags: $tags)
+}
+    `;
+export const DeleteConversationDocument = gql`
+    mutation deleteConversation($id: ID!) {
+  deleteConversation(id: $id)
 }
     `;
 export const CreateMessageDocument = gql`
@@ -3739,6 +3755,36 @@ export const MessagesDocument = gql`
 }
     ${MessageFragmentDoc}
 ${FileFragmentDoc}`;
+export const ConversationsDocument = gql`
+    query conversations($filter: ConversationFilterArgType, $limit: Int, $offset: Int, $order: ConversationOrderArgType, $search: ConversationSearchArgType, $withUsers: Boolean = false, $withTags: Boolean = false) {
+  conversations(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    order: $order
+    search: $search
+  ) {
+    data {
+      ...Conversation
+      users @include(if: $withUsers) {
+        data {
+          ...ConversationUser
+        }
+        totalCount
+      }
+      tags @include(if: $withTags) {
+        data {
+          ...Tag
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+    ${ConversationFragmentDoc}
+${ConversationUserFragmentDoc}
+${TagFragmentDoc}`;
 export const FileCategoryContentTypesDocument = gql`
     query fileCategoryContentTypes($filter: FileCategoryContentTypeFilterArgType, $limit: Int, $offset: Int, $order: FileCategoryContentTypeOrderArgType, $search: FileCategoryContentTypeSearchArgType) {
   fileCategoryContentTypes(
@@ -4333,20 +4379,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     createConversation(variables: CreateConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateConversationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateConversationMutation>(CreateConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createConversation', 'mutation');
     },
-    deleteConversation(variables: DeleteConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteConversationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteConversationMutation>(DeleteConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteConversation', 'mutation');
-    },
     assignTagsToConversation(variables: AssignTagsToConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssignTagsToConversationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<AssignTagsToConversationMutation>(AssignTagsToConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'assignTagsToConversation', 'mutation');
     },
     unassignTagsFromConversation(variables: UnassignTagsFromConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UnassignTagsFromConversationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UnassignTagsFromConversationMutation>(UnassignTagsFromConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'unassignTagsFromConversation', 'mutation');
     },
+    deleteConversation(variables: DeleteConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteConversationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteConversationMutation>(DeleteConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteConversation', 'mutation');
+    },
     createMessage(variables: CreateMessageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateMessageMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateMessageMutation>(CreateMessageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createMessage', 'mutation');
     },
     messages(variables?: MessagesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MessagesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MessagesQuery>(MessagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'messages', 'query');
+    },
+    conversations(variables?: ConversationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ConversationsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ConversationsQuery>(ConversationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'conversations', 'query');
     },
     fileCategoryContentTypes(variables?: FileCategoryContentTypesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileCategoryContentTypesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileCategoryContentTypesQuery>(FileCategoryContentTypesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fileCategoryContentTypes', 'query');
