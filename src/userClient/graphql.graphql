@@ -58,6 +58,24 @@ fragment Role on RoleModel {
   reference
 }
 
+fragment UserInvite on UserInviteModel {
+  acceptedByUserId
+  createdAt
+  createdByUserId
+  data
+  email
+  firstName
+  id
+  locale
+  lastName
+  roleKeys
+  status
+  statusUpdatedAt
+  tenantId
+  updatedAt
+  userTokenId
+}
+
 query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
   user(id: $id) {
     ...User
@@ -280,6 +298,12 @@ mutation createTenant($tenant: TenantCreateDto!) {
   }
 }
 
+mutation updateTenant($id: ID!, $tenant: TenantUpdateDto!) {
+  updateTenant(id: $id, tenant: $tenant) {
+    ...Tenant
+  }
+}
+
 mutation createUser($user: UserCreateDto!) {
   createUser(user: $user) {
     ...User
@@ -318,4 +342,64 @@ mutation changeUserPassword($id: ID!, $input: UserPasswordUpdateDto!) {
 
 mutation verifyPassword($password: String!, $userId: ID!) {
   verifyPassword(password: $password, userId: $userId)
+}
+
+mutation sendUserInvites($userInvites: UserInvitesCreateDto!) {
+  sendUserInvites(userInvites: $userInvites) {
+    success {
+      ...UserInvite
+    }
+    errors {
+      email
+      error
+      firstName
+      lastName
+    }
+  }
+}
+
+mutation resendUserInvite($userInviteId: ID!) {
+  resendUserInvite(id: $userInviteId) {
+    ...UserInvite
+  }
+}
+
+query userInvites(
+  $filter: UserInviteFilterArgType
+  $limit: Int
+  $offset: Int
+  $order: UserInviteOrderArgType
+  $search: UserInviteSearchArgType
+
+) {
+  userInvites(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
+    data {
+      ...UserInvite
+    }
+    totalCount
+  }
+}
+
+query userInvite($id: ID!) {
+  userInvite(id: $id) {
+    ...UserInvite
+  }
+}
+
+mutation cancelUserInvite($userInviteId: ID!) {
+  cancelUserInvite(id: $userInviteId) {
+    ...UserInvite
+  }
+}
+
+mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteDto!) {
+  acceptUserInvite(acceptUserInvite: $acceptUserInvite) {
+    ...UserInvite
+  }
+}
+
+mutation updateUserInvite($id: ID!, $userInvite:UserInviteUpdateDto!) {
+  updateUserInvite(id: $id, userInvite:$userInvite) {
+    ...UserInvite
+  }
 }
