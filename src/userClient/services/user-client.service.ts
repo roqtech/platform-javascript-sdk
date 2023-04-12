@@ -24,6 +24,14 @@ export class UserClientService {
   public updateUserGroup: Sdk['updateUserGroup'];
   public changeUserPassword: Sdk['changeUserPassword'];
   public verifyPassword: Sdk['verifyPassword'];
+  public updateTenant: Sdk['updateTenant'];
+  public sendUserInvites: Sdk['sendUserInvites'];
+  public resendUserInvite: Sdk['resendUserInvite'];
+  public userInvite: Sdk['userInvite'];
+  public userInvites: Sdk['userInvites'];
+  public cancelUserInvite: Sdk['cancelUserInvite'];
+  public acceptUserInvite: Sdk['acceptUserInvite'];
+  public updateUserInvite: Sdk['updateUserInvite'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -49,5 +57,13 @@ export class UserClientService {
     this.roles = this.gqlSdk.roles;
     this.changeUserPassword = this.gqlSdk.changeUserPassword;
     this.verifyPassword = this.gqlSdk.verifyPassword;
+    this.updateTenant = this.gqlSdk.updateTenant;
+    this.sendUserInvites = this.gqlSdk.sendUserInvites;
+    this.resendUserInvite = this.gqlSdk.resendUserInvite;
+    this.userInvites = this.gqlSdk.userInvites;
+    this.userInvite = this.gqlSdk.userInvite;
+    this.cancelUserInvite = this.gqlSdk.cancelUserInvite;
+    this.acceptUserInvite = this.gqlSdk.acceptUserInvite;
+    this.updateUserInvite = this.gqlSdk.updateUserInvite;
   }
 }
