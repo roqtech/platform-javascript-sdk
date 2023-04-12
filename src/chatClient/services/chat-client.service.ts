@@ -8,6 +8,7 @@ export class ChatClientService {
   public unassignTagsFromConversation: Sdk['unassignTagsFromConversation'];
   public createMessage: Sdk['createMessage'];
   public messages: Sdk['messages'];
+  public conversations: Sdk['conversations'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -17,5 +18,6 @@ export class ChatClientService {
     this.unassignTagsFromConversation = this.gqlSdk.unassignTagsFromConversation;
     this.createMessage = this.gqlSdk.createMessage;
     this.messages = this.gqlSdk.messages;
+    this.conversations = this.gqlSdk.conversations;
   }
 }

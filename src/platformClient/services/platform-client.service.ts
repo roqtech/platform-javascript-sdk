@@ -17,6 +17,7 @@ export class PlatformClientService {
   private readonly host: string;
   private readonly apiKey: string;
   private readonly environmentId: string;
+  private readonly webhookKey: string;
   private readonly graphqlClient: GraphQLClient;
 
   public readonly authorization: AuthorizationClientService;
@@ -26,9 +27,14 @@ export class PlatformClientService {
     this.apiKey = options.apiKey;
     this.graphqlUrl = options.host + defaultGraphqlEndpoint;
     this.host = options.host;
+    this.webhookKey = options.webhookKey;
     this.graphqlClient = new GraphQLClient(this.graphqlUrl);
 
     this.authorization = new AuthorizationClientService(options);
+  }
+
+  public verifyWebhookHeader(webhookHeader: string) {
+    return webhookHeader === this.webhookKey;
   }
 
   public asUser(userId: string, expiresIn?: string) {
