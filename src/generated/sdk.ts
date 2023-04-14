@@ -3337,6 +3337,13 @@ export type UpdateTranslationKeyMutationVariables = Exact<{
 
 export type UpdateTranslationKeyMutation = { __typename?: 'Mutation', updateTranslationKey: { __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } } };
 
+export type UpsertTranslationKeysMutationVariables = Exact<{
+  translationKeys: Array<TranslationKeyCreateDto> | TranslationKeyCreateDto;
+}>;
+
+
+export type UpsertTranslationKeysMutation = { __typename?: 'Mutation', upsertTranslationKeys: Array<{ __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } }> };
+
 export type TenantFragment = { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string };
 
 export type UserGroupFragment = { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string };
@@ -4252,6 +4259,20 @@ export const UpdateTranslationKeyDocument = gql`
 }
     ${TranslationKeyFragmentDoc}
 ${TranslationFragmentDoc}`;
+export const UpsertTranslationKeysDocument = gql`
+    mutation upsertTranslationKeys($translationKeys: [TranslationKeyCreateDto!]!) {
+  upsertTranslationKeys(translationKeys: $translationKeys) {
+    ...TranslationKey
+    translations {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
+  }
+}
+    ${TranslationKeyFragmentDoc}
+${TranslationFragmentDoc}`;
 export const UserDocument = gql`
     query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
   user(id: $id) {
@@ -4708,6 +4729,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     updateTranslationKey(variables: UpdateTranslationKeyMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateTranslationKeyMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateTranslationKeyMutation>(UpdateTranslationKeyDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateTranslationKey', 'mutation');
+    },
+    upsertTranslationKeys(variables: UpsertTranslationKeysMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpsertTranslationKeysMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpsertTranslationKeysMutation>(UpsertTranslationKeysDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'upsertTranslationKeys', 'mutation');
     },
     user(variables: UserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<UserQuery>(UserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'user', 'query');

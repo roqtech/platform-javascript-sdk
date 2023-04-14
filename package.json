@@ -1,6 +1,6 @@
 {
   "name": "@roq/nodejs",
-  "version": "0.1.25-rc2",
+  "version": "1.0.1",
   "description": "Roq NodeJs SDK package",
   "main": "dist/src/index.js",
   "files": [

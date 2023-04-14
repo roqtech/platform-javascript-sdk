@@ -8,6 +8,7 @@ export class TranslationClientService {
   public translationKeys: Sdk['translationKeys'];
   public createTranslationKey: Sdk['createTranslationKey'];
   public updateTranslationKey: Sdk['updateTranslationKey'];
+  public upsertTranslationKeys: Sdk['upsertTranslationKeys'];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -17,5 +18,6 @@ export class TranslationClientService {
     this.translationKeys = this.gqlSdk.translationKeys;
     this.createTranslationKey = this.gqlSdk.createTranslationKey;
     this.updateTranslationKey = this.gqlSdk.updateTranslationKey;
+    this.upsertTranslationKeys = this.gqlSdk.upsertTranslationKeys;
   }
 }

@@ -84,3 +84,15 @@ mutation updateTranslationKey($id: ID!, $translationKey: TranslationKeyUpdateDto
     }
   }
 }
+
+mutation upsertTranslationKeys($translationKeys: [TranslationKeyCreateDto!]!) {
+  upsertTranslationKeys(translationKeys: $translationKeys) {
+    ...TranslationKey
+    translations {
+      data {
+        ...Translation
+      }
+      totalCount
+    }
+  }
+}
