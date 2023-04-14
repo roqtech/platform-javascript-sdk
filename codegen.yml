@@ -1,6 +1,6 @@
 overwrite: true
-schema: "https://jupiter-pp.roq-platform.com/v01/server/graphql"
-documents: "src/**/graphql.graphql"
+schema: 'https://jupiter-pp.roq-platform.com/v01/server/graphql'
+documents: 'src/**/graphql.graphql'
 generates:
   src/generated/sdk.ts:
     plugins:

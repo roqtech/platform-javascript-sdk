@@ -142,7 +142,7 @@ export class FileClientService {
         type: 'FileUpload',
         payload: createFileUploadResponse,
       });
-      await this.validateFileUpload(file, createFileUploadResponse?.createFileUpload);
+      await this.validateFileUpload(file as unknown as File, createFileUploadResponse?.createFileUpload);
       const { id, uploadUrl, formFields, isPublic } = createFileUploadResponse.createFileUpload;
       const formData = new FormData();
       Object.keys(formFields).forEach(function (key) {
