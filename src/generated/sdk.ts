@@ -3617,6 +3617,13 @@ export type UpdateUserInviteMutationVariables = Exact<{
 
 export type UpdateUserInviteMutation = { __typename?: 'Mutation', updateUserInvite: { __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string } };
 
+export type SendUserResetPasswordMailMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type SendUserResetPasswordMailMutation = { __typename?: 'Mutation', sendUserResetPasswordMail: boolean };
+
 export const ConversationFragmentDoc = gql`
     fragment Conversation on ConversationModel {
   id
@@ -4620,6 +4627,11 @@ export const UpdateUserInviteDocument = gql`
   }
 }
     ${UserInviteFragmentDoc}`;
+export const SendUserResetPasswordMailDocument = gql`
+    mutation sendUserResetPasswordMail($userId: ID!) {
+  sendUserResetPasswordMail(userId: $userId)
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -4822,6 +4834,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     updateUserInvite(variables: UpdateUserInviteMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserInviteMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserInviteMutation>(UpdateUserInviteDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUserInvite', 'mutation');
+    },
+    sendUserResetPasswordMail(variables: SendUserResetPasswordMailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendUserResetPasswordMailMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SendUserResetPasswordMailMutation>(SendUserResetPasswordMailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendUserResetPasswordMail', 'mutation');
     }
   };
 }

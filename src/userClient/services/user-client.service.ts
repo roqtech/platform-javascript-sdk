@@ -1,4 +1,4 @@
-import { Sdk } from '../../generated/sdk';
+import { Sdk } from "../../generated/sdk";
 
 export class UserClientService {
   private gqlSdk: Sdk;
@@ -31,7 +31,8 @@ export class UserClientService {
   public userInvites: Sdk['userInvites'];
   public cancelUserInvite: Sdk['cancelUserInvite'];
   public acceptUserInvite: Sdk['acceptUserInvite'];
-  public updateUserInvite: Sdk['updateUserInvite'];
+  public updateUserInvite: Sdk["updateUserInvite"];
+  public sendUserResetPasswordMail: Sdk["sendUserResetPasswordMail"];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -65,5 +66,6 @@ export class UserClientService {
     this.cancelUserInvite = this.gqlSdk.cancelUserInvite;
     this.acceptUserInvite = this.gqlSdk.acceptUserInvite;
     this.updateUserInvite = this.gqlSdk.updateUserInvite;
+    this.sendUserResetPasswordMail = this.gqlSdk.sendUserResetPasswordMail;
   }
 }

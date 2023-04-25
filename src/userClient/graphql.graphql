@@ -403,3 +403,7 @@ mutation updateUserInvite($id: ID!, $userInvite:UserInviteUpdateDto!) {
     ...UserInvite
   }
 }
+
+mutation sendUserResetPasswordMail($userId:ID!){
+  sendUserResetPasswordMail(userId: $userId)
+}
