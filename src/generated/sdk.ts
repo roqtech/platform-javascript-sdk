@@ -3091,8 +3091,6 @@ export type ConversationsQueryVariables = Exact<{
 
 export type ConversationsQuery = { __typename?: 'Query', conversations: { __typename?: 'ConversationPageModel', totalCount: number, data: Array<{ __typename?: 'ConversationModel', id: string, title: string, active: boolean, archived: boolean, isGroup: boolean, ownerId: string, createdAt: string, updatedAt: string, users?: { __typename?: 'ConversationUserPageModel', totalCount: number, data: Array<{ __typename?: 'ConversationUserModel', id: string, conversationId: string, createdAt: string, updatedAt: string }> }, tags?: { __typename?: 'ConversationTagPageModel', totalCount: number, data: Array<{ __typename?: 'ConversationTagModel', id: string, conversationId: string, tag: string }> } }> } };
 
-export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string };
-
 export type FileCategoryContentGroupFragment = { __typename?: 'FileCategoryContentGroupModel', id: string, createdAt: string, updatedAt: string, key: string, name: string };
 
 export type FileCategoryFragment = { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean };
@@ -3166,7 +3164,7 @@ export type FilesQueryVariables = Exact<{
 }>;
 
 
-export type FilesQuery = { __typename?: 'Query', files: { __typename?: 'FilePageModel', totalCount: number, data: Array<{ __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string } | null, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } }> } };
+export type FilesQuery = { __typename?: 'Query', files: { __typename?: 'FilePageModel', totalCount: number, data: Array<{ __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string } | null, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } }> } };
 
 export type FileQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3176,7 +3174,7 @@ export type FileQueryVariables = Exact<{
 }>;
 
 
-export type FileQuery = { __typename?: 'Query', file: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string } | null, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } } };
+export type FileQuery = { __typename?: 'Query', file: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, fileCategory?: { __typename?: 'FileCategoryModel', id: string, createdAt: string, updatedAt: string, key: string, name: string, maxSize?: number | null, isPublicByDefault: boolean }, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string } | null, fileAssociations?: { __typename?: 'FileAssociationPageModel', totalCount: number, data: Array<{ __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string }> } } };
 
 export type CreateFileAssociationMutationVariables = Exact<{
   createFileAssociationDto: FileAssociationCreateDto;
@@ -3344,11 +3342,15 @@ export type UpsertTranslationKeysMutationVariables = Exact<{
 
 export type UpsertTranslationKeysMutation = { __typename?: 'Mutation', upsertTranslationKeys: Array<{ __typename?: 'TranslationKeyModel', id: string, key: string, createdAt: string, updatedAt: string, translations: { __typename?: 'TranslationPageModel', totalCount: number, data: Array<{ __typename?: 'TranslationModel', id: string, locale: string, value: string, createdAt: string, updatedAt: string }> } }> };
 
+export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string };
+
 export type TenantFragment = { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string };
 
 export type UserGroupFragment = { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string };
 
-export type UserProfileFragment = { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null };
+export type UserProfileFragment = { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, email?: string | null, phone?: string | null, locale?: string | null, timezone?: string | null, avatarUrl?: string | null };
+
+export type UserConnectedProviderFragment = { __typename?: 'UserConnectedProviderModel', id: string, name: string, authenticationProviderId: string };
 
 export type UserGroupTypeFragment = { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string };
 
@@ -3364,7 +3366,7 @@ export type UserQueryVariables = Exact<{
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } | null } };
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } | null } };
 
 export type UsersQueryVariables = Exact<{
   filter?: InputMaybe<UserFilterArgType>;
@@ -3378,7 +3380,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } | null }> } };
+export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string, tenant?: { __typename?: 'TenantModel', id: string, reference?: string | null, isDefault: boolean, name: string, createdAt: string, updatedAt: string } | null, userGroups?: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } | null }> } };
 
 export type UserGroupQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3388,7 +3390,7 @@ export type UserGroupQueryVariables = Exact<{
 }>;
 
 
-export type UserGroupQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } } };
+export type UserGroupQuery = { __typename?: 'Query', userGroup: { __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } } };
 
 export type UserGroupsQueryVariables = Exact<{
   filter?: InputMaybe<UserGroupFilterArgType>;
@@ -3402,14 +3404,15 @@ export type UserGroupsQueryVariables = Exact<{
 }>;
 
 
-export type UserGroupsQuery = { __typename?: 'Query', userGroups: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } }> } };
+export type UserGroupsQuery = { __typename?: 'Query', userGroups: { __typename?: 'UserGroupPageModel', totalCount: number, data: Array<{ __typename?: 'UserGroupModel', id: string, reference: string, name: string, type: string, userGroupType?: { __typename?: 'UserGroupTypeModel', id: string, name: string, createdAt: string, updatedAt: string } | null, users?: { __typename?: 'UserPageModel', totalCount: number, data: Array<{ __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string }> } | null, roles?: { __typename?: 'RolePageModel', totalCount: number, data: Array<{ __typename?: 'RoleModel', id: string, reference?: string | null, description?: string | null, isSystemManaged: boolean, key: string, name: string }> } }> } };
 
 export type UserProfileQueryVariables = Exact<{
   id: Scalars['ID'];
+  withProviders?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UserProfileQuery = { __typename?: 'Query', userProfile: { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null } };
+export type UserProfileQuery = { __typename?: 'Query', userProfile: { __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, email?: string | null, phone?: string | null, locale?: string | null, timezone?: string | null, avatarUrl?: string | null, connectedProviders?: Array<{ __typename?: 'UserConnectedProviderModel', id: string, name: string, authenticationProviderId: string }> } };
 
 export type UserProfilesQueryVariables = Exact<{
   filter?: InputMaybe<UserFilterArgType>;
@@ -3417,10 +3420,11 @@ export type UserProfilesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<UserProfileOrderArgType>;
   search?: InputMaybe<UserProfileSearchArgType>;
+  withProviders?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UserProfilesQuery = { __typename?: 'Query', userProfiles: { __typename?: 'UserProfilePageModel', totalCount: number, data: Array<{ __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, locale?: string | null, timezone?: string | null }> } };
+export type UserProfilesQuery = { __typename?: 'Query', userProfiles: { __typename?: 'UserProfilePageModel', totalCount: number, data: Array<{ __typename?: 'UserProfileModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, email?: string | null, phone?: string | null, locale?: string | null, timezone?: string | null, avatarUrl?: string | null, connectedProviders?: Array<{ __typename?: 'UserConnectedProviderModel', id: string, name: string, authenticationProviderId: string }> }> } };
 
 export type TenantQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3506,7 +3510,7 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string } };
 
 export type CreateUserGroupMutationVariables = Exact<{
   userGroup: UserGroupCreateDto;
@@ -3537,7 +3541,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, createdAt: string, updatedAt: string } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string } };
 
 export type UpdateUserGroupMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -3673,25 +3677,6 @@ export const MessageStatusFragmentDoc = gql`
   updatedAt
 }
     `;
-export const UserFragmentDoc = gql`
-    fragment User on UserModel {
-  id
-  reference
-  firstName
-  lastName
-  active
-  email
-  phone
-  locale
-  isOptedIn
-  synced
-  tenantId
-  customData
-  timezone
-  createdAt
-  updatedAt
-}
-    `;
 export const FileCategoryContentGroupFragmentDoc = gql`
     fragment FileCategoryContentGroup on FileCategoryContentGroupModel {
   id
@@ -3786,6 +3771,26 @@ export const TranslationKeyFragmentDoc = gql`
   updatedAt
 }
     `;
+export const UserFragmentDoc = gql`
+    fragment User on UserModel {
+  id
+  reference
+  firstName
+  lastName
+  active
+  email
+  phone
+  locale
+  isOptedIn
+  synced
+  tenantId
+  customData
+  timezone
+  avatarUrl
+  createdAt
+  updatedAt
+}
+    `;
 export const TenantFragmentDoc = gql`
     fragment Tenant on TenantModel {
   id
@@ -3810,8 +3815,18 @@ export const UserProfileFragmentDoc = gql`
   reference
   firstName
   lastName
+  email
+  phone
   locale
   timezone
+  avatarUrl
+}
+    `;
+export const UserConnectedProviderFragmentDoc = gql`
+    fragment UserConnectedProvider on UserConnectedProviderModel {
+  id
+  name
+  authenticationProviderId
 }
     `;
 export const UserGroupTypeFragmentDoc = gql`
@@ -4399,14 +4414,18 @@ ${UserGroupTypeFragmentDoc}
 ${UserFragmentDoc}
 ${RoleFragmentDoc}`;
 export const UserProfileDocument = gql`
-    query userProfile($id: ID!) {
+    query userProfile($id: ID!, $withProviders: Boolean = false) {
   userProfile(id: $id) {
     ...UserProfile
+    connectedProviders @include(if: $withProviders) {
+      ...UserConnectedProvider
+    }
   }
 }
-    ${UserProfileFragmentDoc}`;
+    ${UserProfileFragmentDoc}
+${UserConnectedProviderFragmentDoc}`;
 export const UserProfilesDocument = gql`
-    query userProfiles($filter: UserFilterArgType, $limit: Int, $offset: Int, $order: UserProfileOrderArgType, $search: UserProfileSearchArgType) {
+    query userProfiles($filter: UserFilterArgType, $limit: Int, $offset: Int, $order: UserProfileOrderArgType, $search: UserProfileSearchArgType, $withProviders: Boolean = false) {
   userProfiles(
     filter: $filter
     limit: $limit
@@ -4416,11 +4435,15 @@ export const UserProfilesDocument = gql`
   ) {
     data {
       ...UserProfile
+      connectedProviders @include(if: $withProviders) {
+        ...UserConnectedProvider
+      }
     }
     totalCount
   }
 }
-    ${UserProfileFragmentDoc}`;
+    ${UserProfileFragmentDoc}
+${UserConnectedProviderFragmentDoc}`;
 export const TenantDocument = gql`
     query tenant($id: ID!, $withUserCount: Boolean = false) {
   tenant(id: $id) {

@@ -12,6 +12,7 @@ fragment User on UserModel {
   tenantId
   customData
   timezone
+  avatarUrl
   createdAt
   updatedAt
 }
@@ -37,8 +38,17 @@ fragment UserProfile on UserProfileModel {
   reference
   firstName
   lastName
+  email
+  phone
   locale
   timezone
+  avatarUrl
+}
+
+fragment UserConnectedProvider on UserConnectedProviderModel {
+  id
+  name
+  authenticationProviderId
 }
 
 fragment UserGroupType on UserGroupTypeModel {
@@ -189,9 +199,15 @@ query userGroups(
   }
 }
 
-query userProfile($id: ID!) {
+query userProfile(
+  $id: ID!,
+  $withProviders: Boolean = false
+) {
   userProfile(id: $id) {
     ...UserProfile
+    connectedProviders @include(if: $withProviders){
+      ...UserConnectedProvider
+    }
   }
 }
 
@@ -201,10 +217,14 @@ query userProfiles(
   $offset: Int
   $order: UserProfileOrderArgType
   $search: UserProfileSearchArgType
+  $withProviders: Boolean = false
 ) {
   userProfiles(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...UserProfile
+      connectedProviders @include(if: $withProviders){
+        ...UserConnectedProvider
+      }
     }
     totalCount
   }
