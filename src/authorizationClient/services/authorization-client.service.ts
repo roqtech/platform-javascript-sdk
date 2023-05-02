@@ -72,8 +72,9 @@ export class AuthorizationClientService {
     userId: string;
     expiresIn?: string;
     keepLoggedIn?: boolean;
+    scope?: string;
   }): Promise<UserTokenType> {
-    const { userId, expiresIn, keepLoggedIn = false } = options;
+    const { userId, expiresIn, scope, keepLoggedIn = false } = options;
     const serviceToken = await this.createServiceAccountToken();
     const cacheKey = `${userId}-login`;
     let token = this.getCachedUserToken(cacheKey);
@@ -90,6 +91,7 @@ export class AuthorizationClientService {
         environmentId: this.environmentId,
         apiKey: this.apiKey,
         userId,
+        scope,
         expiresIn,
         keepLoggedIn,
       },
