@@ -8,7 +8,7 @@ import {
   defaultUserTokenEndpoint,
 } from '../../constants';
 import { PlatformClientOptionsType } from '../../platformClient/types/platform-client-options.type';
-import { RequestParamsType } from '../types';
+import { UserTokenType, RequestParamsType } from '../types';
 
 export class AuthorizationClientService {
   private readonly host: string;
@@ -68,6 +68,36 @@ export class AuthorizationClientService {
     }
   }
 
+  public async createLoginToken(options: {
+    userId: string;
+    expiresIn?: string;
+    keepLoggedIn?: boolean;
+  }): Promise<UserTokenType> {
+    const { userId, expiresIn, keepLoggedIn = false } = options;
+    const serviceToken = await this.createServiceAccountToken();
+    const cacheKey = `${userId}-login`;
+    let token = this.getCachedUserToken(cacheKey);
+    if (token) {
+      return token;
+    }
+    token = await this.request({
+      endpoint: defaultUserTokenEndpoint,
+      method: 'POST',
+      headers: {
+        'roq-platform-authorization': `Bearer ${serviceToken}`,
+      },
+      body: {
+        environmentId: this.environmentId,
+        apiKey: this.apiKey,
+        userId,
+        expiresIn,
+        keepLoggedIn,
+      },
+    });
+    this.cacheToken(cacheKey, token);
+    return token;
+  }
+
   private getCachedToken(identifier: string): string {
     let token = this.cache.get<string>(identifier);
     if (token) {
@@ -81,7 +111,20 @@ export class AuthorizationClientService {
     return token;
   }
 
-  private cacheToken(identifier: string, token: string) {
+  private getCachedUserToken(identifier: string): UserTokenType {
+    let token = this.cache.get<UserTokenType>(identifier);
+    if (token) {
+      const { exp } = decode(token.accessToken) as JwtPayload;
+      if (Date.now() >= exp * 1000) {
+        return null;
+      }
+    } else {
+      return null;
+    }
+    return token;
+  }
+
+  private cacheToken(identifier: string, token: string | UserTokenType) {
     this.cache.set(identifier, token);
   }
 
