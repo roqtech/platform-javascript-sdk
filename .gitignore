@@ -46,3 +46,5 @@ Thumbs.db
 
 # Custom files
 .env*
+
+test.js
