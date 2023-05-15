@@ -33,6 +33,7 @@ export class UserClientService {
   public acceptUserInvite: Sdk['acceptUserInvite'];
   public updateUserInvite: Sdk["updateUserInvite"];
   public sendUserResetPasswordMail: Sdk["sendUserResetPasswordMail"];
+  public queryPlans: Sdk['queryPlans']
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -47,6 +48,7 @@ export class UserClientService {
     this.addUsersToUserGroup = this.gqlSdk.addUsersToUserGroup;
     this.assignRolesToUser = this.gqlSdk.assignRolesToUser;
     this.buildQueryPlan = this.gqlSdk.buildQueryPlan;
+    this.queryPlans = this.gqlSdk.queryPlans;
     this.createTenant = this.gqlSdk.createTenant;
     this.createUser = this.gqlSdk.createUser;
     this.createUserGroup = this.gqlSdk.createUserGroup;

@@ -11,6 +11,7 @@ import { FileClientService } from '../../fileClient';
 import { TranslationClientService } from '../../translationClient/services/translation-client.service';
 import { HttpException } from '../../exception/exceptions/http.exception';
 import { ChatClientService } from '../../chatClient/services/chat-client.service';
+import { JwtPayload, decode } from 'jsonwebtoken';
 
 export class PlatformClientService {
   private readonly graphqlUrl: string;
@@ -105,6 +106,13 @@ export class PlatformClientService {
       ...new FileClientService(sdk),
       ...new TranslationClientService(sdk),
       ...new ChatClientService(sdk),
+      getTokenPayload: async() => {
+        const token = await getToken();
+        if(!token) {
+          return null
+        }
+        return decode(token) as JwtPayload
+      },
       graphqlRequest,
     };
   }

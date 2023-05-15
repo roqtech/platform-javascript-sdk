@@ -303,6 +303,39 @@ export type EntityNameFilterArgType = {
   equalTo?: InputMaybe<Scalars['String']>;
 };
 
+export type EntityRelationDto = {
+  cardinality: Scalars['String'];
+  id: Scalars['ID'];
+  joinRelationTable?: InputMaybe<Scalars['String']>;
+  leftEntityId: Scalars['ID'];
+  leftRelationField?: InputMaybe<Scalars['String']>;
+  oneToOneParentEntityId?: InputMaybe<Scalars['ID']>;
+  relationField?: InputMaybe<Scalars['String']>;
+  rightEntityId: Scalars['ID'];
+  rightRelationField?: InputMaybe<Scalars['String']>;
+};
+
+export type EntityRelationModel = {
+  __typename?: 'EntityRelationModel';
+  cardinality: Scalars['String'];
+  id: Scalars['ID'];
+  joinRelationTable?: Maybe<Scalars['String']>;
+  leftEntity: Scalars['String'];
+  leftEntityId: Scalars['ID'];
+  leftRelationField?: Maybe<Scalars['String']>;
+  oneToOneParentEntityId?: Maybe<Scalars['ID']>;
+  relationField?: Maybe<Scalars['String']>;
+  rightEntity: Scalars['String'];
+  rightEntityId: Scalars['ID'];
+  rightRelationField?: Maybe<Scalars['String']>;
+};
+
+export type EntityRelationPageModel = {
+  __typename?: 'EntityRelationPageModel';
+  data: Array<EntityRelationModel>;
+  totalCount: Scalars['Int'];
+};
+
 export type EnvironmentConfigModel = {
   __typename?: 'EnvironmentConfigModel';
   applicationUrl?: Maybe<Scalars['String']>;
@@ -1146,6 +1179,7 @@ export type Mutation = {
   createFileAssociation: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
   createMessage: Scalars['Boolean'];
+  createProjectEntity: ProjectEntityModel;
   createTenant: TenantModel;
   createTranslationKey: TranslationKeyModel;
   createUser: UserModel;
@@ -1171,6 +1205,8 @@ export type Mutation = {
   updateFileStatus: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
   updateProfile: UserProfileModel;
+  updateProjectEntity: ProjectEntityModel;
+  updateProjectPermissions: RoleModel;
   updateTenant: TenantModel;
   updateTranslationKey: TranslationKeyModel;
   updateUser: UserModel;
@@ -1238,6 +1274,11 @@ export type MutationCreateFileUploadArgs = {
 
 export type MutationCreateMessageArgs = {
   message: MessageCreateDto;
+};
+
+
+export type MutationCreateProjectEntityArgs = {
+  projectEntity: ProjectEntityDto;
 };
 
 
@@ -1363,6 +1404,17 @@ export type MutationUpdateNotificationPreferenceArgs = {
 export type MutationUpdateProfileArgs = {
   id: Scalars['ID'];
   user: UserUpdateProfileDto;
+};
+
+
+export type MutationUpdateProjectEntityArgs = {
+  projectEntity: ProjectEntityDto;
+};
+
+
+export type MutationUpdateProjectPermissionsArgs = {
+  projectPermissions: ProjectPermissionsDto;
+  roleId: Scalars['ID'];
 };
 
 
@@ -1844,8 +1896,10 @@ export type PermissionCreateDto = {
   key: Scalars['String'];
   operation: ResourceOperationEnum;
   platformEntity: Scalars['String'];
+  projectEntityId?: InputMaybe<Scalars['String']>;
   roleId: Scalars['ID'];
   scope: PermissionScopeEnum;
+  type?: InputMaybe<PermissionTypeEnum>;
 };
 
 export type PermissionFilterArgType = {
@@ -1854,6 +1908,7 @@ export type PermissionFilterArgType = {
   resolverMapping?: InputMaybe<StringFilterArgType>;
   roleId?: InputMaybe<IdFilterArgType>;
   scope?: InputMaybe<StringFilterArgType>;
+  type?: InputMaybe<StringFilterArgType>;
 };
 
 export type PermissionModel = {
@@ -1913,8 +1968,71 @@ export enum PermissionTypeEnum {
 export type PermissionUpdateDto = {
   operation: ResourceOperationEnum;
   platformEntity: Scalars['String'];
+  projectEntityId?: InputMaybe<Scalars['String']>;
   roleId: Scalars['ID'];
   scope?: InputMaybe<PermissionScopeEnum>;
+};
+
+export type ProjectEntityDto = {
+  entityRelations: Array<EntityRelationDto>;
+  id: Scalars['ID'];
+  identifierField: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type ProjectEntityFilterArgType = {
+  id?: InputMaybe<IdFilterArgType>;
+};
+
+export type ProjectEntityModel = {
+  __typename?: 'ProjectEntityModel';
+  entityRelations: EntityRelationPageModel;
+  id: Scalars['ID'];
+  identifierField: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type ProjectEntityOrderArgType = {
+  order: OrderEnum;
+  sort: ProjectEntityOrderSortEnum;
+};
+
+export enum ProjectEntityOrderSortEnum {
+  CreatedAt = 'createdAt'
+}
+
+export type ProjectEntityPageModel = {
+  __typename?: 'ProjectEntityPageModel';
+  data: Array<ProjectEntityModel>;
+  totalCount: Scalars['Int'];
+};
+
+export type ProjectEntityPathDto = {
+  id: Scalars['ID'];
+  path: Array<Scalars['ID']>;
+  projectEntityId: Scalars['ID'];
+  roleId: Scalars['ID'];
+};
+
+export type ProjectEntityPathModel = {
+  __typename?: 'ProjectEntityPathModel';
+  id: Scalars['ID'];
+  path: Array<Scalars['ID']>;
+  projectEntityId: Scalars['ID'];
+  roleId: Scalars['ID'];
+};
+
+export type ProjectEntityPathPageModel = {
+  __typename?: 'ProjectEntityPathPageModel';
+  data: Array<ProjectEntityPathModel>;
+  totalCount: Scalars['Int'];
+};
+
+export type ProjectPermissionsDto = {
+  permissionAssignments: Array<RolePermissionAssignDto>;
+  projectEntityId: Scalars['ID'];
+  projectEntityPaths: Array<ProjectEntityPathDto>;
+  userIdField?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -1932,6 +2050,9 @@ export type Query = {
   messages: MessagePageModel;
   notificationPreference: Array<NotificationPreferenceModel>;
   notifications: NotificationPageModel;
+  projectEntities: ProjectEntityPageModel;
+  projectEntity: ProjectEntityModel;
+  queryPlans: Array<QueryPlanModel>;
   role: RoleModel;
   roles: RolePageModel;
   tenant: TenantModel;
@@ -2035,6 +2156,19 @@ export type QueryMessagesArgs = {
 export type QueryNotificationsArgs = {
   page?: InputMaybe<Scalars['Float']>;
   seen?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type QueryProjectEntitiesArgs = {
+  filter?: InputMaybe<ProjectEntityFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<ProjectEntityOrderArgType>;
+};
+
+
+export type QueryProjectEntityArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2149,8 +2283,12 @@ export type QueryUsersArgs = {
 
 export type QueryPlanModel = {
   __typename?: 'QueryPlanModel';
+  entity: Scalars['String'];
   kind: Scalars['String'];
+  operation: Scalars['String'];
   queryPlan?: Maybe<Scalars['JsonObject']>;
+  role: Scalars['String'];
+  userIdField: Scalars['String'];
 };
 
 export type ResolverMappingModel = {
@@ -2203,8 +2341,10 @@ export type RoleModel = {
   isSystemManaged: Scalars['Boolean'];
   key: Scalars['String'];
   name: Scalars['String'];
+  projectEntityId?: Maybe<Scalars['ID']>;
   reference?: Maybe<Scalars['String']>;
   userGroups: UserGroupPageModel;
+  userIdField?: Maybe<Scalars['String']>;
   users: UsersCountModel;
 };
 
@@ -2233,8 +2373,10 @@ export type RolePermissionAssignDto = {
   id?: InputMaybe<Scalars['ID']>;
   key?: InputMaybe<Scalars['String']>;
   operation?: InputMaybe<ResourceOperationEnum>;
-  platformEntity?: InputMaybe<Scalars['String']>;
+  platformEntity?: InputMaybe<Scalars['ID']>;
+  projectEntityId?: InputMaybe<Scalars['String']>;
   scope?: InputMaybe<PermissionScopeEnum>;
+  type?: InputMaybe<PermissionTypeEnum>;
 };
 
 export type RoleSearchArgType = {
@@ -2489,6 +2631,7 @@ export type UserFilterArgType = {
   phone?: InputMaybe<StringFilterArgType>;
   reference?: InputMaybe<StringFilterArgType>;
   roleId?: InputMaybe<IdFilterArgType>;
+  roleKey?: InputMaybe<StringFilterArgType>;
   search?: InputMaybe<Scalars['String']>;
   tenantId?: InputMaybe<IdFilterArgType>;
   timezone?: InputMaybe<StringFilterArgType>;
@@ -3511,7 +3654,12 @@ export type BuildQueryPlanMutationVariables = Exact<{
 }>;
 
 
-export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null }> };
+export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string }> };
+
+export type QueryPlansQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type QueryPlansQuery = { __typename?: 'Query', queryPlans: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string }> };
 
 export type CreateTenantMutationVariables = Exact<{
   tenant: TenantCreateDto;
@@ -4542,6 +4690,22 @@ export const BuildQueryPlanDocument = gql`
   buildQueryPlan(entity: $entity, operation: $operation) {
     kind
     queryPlan
+    role
+    entity
+    userIdField
+    operation
+  }
+}
+    `;
+export const QueryPlansDocument = gql`
+    query queryPlans {
+  queryPlans {
+    kind
+    queryPlan
+    role
+    entity
+    userIdField
+    operation
   }
 }
     `;
@@ -4829,6 +4993,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     buildQueryPlan(variables: BuildQueryPlanMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<BuildQueryPlanMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<BuildQueryPlanMutation>(BuildQueryPlanDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'buildQueryPlan', 'mutation');
+    },
+    queryPlans(variables?: QueryPlansQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<QueryPlansQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<QueryPlansQuery>(QueryPlansDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'queryPlans', 'query');
     },
     createTenant(variables: CreateTenantMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateTenantMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateTenantMutation>(CreateTenantDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTenant', 'mutation');
