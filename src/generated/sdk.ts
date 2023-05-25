@@ -38,12 +38,20 @@ export type AuthFormConfigDto = {
   showCompany?: InputMaybe<Scalars['Boolean']>;
   showFirstName?: InputMaybe<Scalars['Boolean']>;
   showLastName?: InputMaybe<Scalars['Boolean']>;
+  ssoConfig?: InputMaybe<Scalars['JsonObject']>;
+  tenantCreation?: InputMaybe<TenantCreationEnum>;
   termsConditionsLink?: InputMaybe<Scalars['String']>;
   translations: Array<FormConfigTranslationDto>;
 };
 
 export type AuthFormThemeCreateDto = {
+  key: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type AuthFormThemeUpdateDto = {
   defaultRoleKeys?: InputMaybe<Array<Scalars['String']>>;
+  tenantCreation?: InputMaybe<TenantCreationEnum>;
   theme: Scalars['JsonObject'];
 };
 
@@ -52,8 +60,17 @@ export type AuthUiThemeModel = {
   createdAt?: Maybe<Scalars['Date']>;
   defaultRoleKeys?: Maybe<Array<Scalars['String']>>;
   id?: Maybe<Scalars['ID']>;
+  key: Scalars['String'];
+  name: Scalars['String'];
+  tenantCreation?: Maybe<Scalars['String']>;
   theme?: Maybe<Scalars['JsonObject']>;
   updatedAt?: Maybe<Scalars['Date']>;
+};
+
+export type AuthUiThemePageModel = {
+  __typename?: 'AuthUiThemePageModel';
+  data: Array<AuthUiThemeModel>;
+  totalCount: Scalars['Int'];
 };
 
 export type AuthenticationAppUriModel = {
@@ -1298,6 +1315,7 @@ export type MutationSendMailArgs = {
 
 export type MutationSendUserConfirmationMailArgs = {
   userId: Scalars['ID'];
+  variantKey?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1308,6 +1326,7 @@ export type MutationSendUserInvitesArgs = {
 
 export type MutationSendUserResetPasswordMailArgs = {
   userId: Scalars['ID'];
+  variantKey?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1922,6 +1941,7 @@ export type Query = {
   translationKeys: TranslationKeyPageModel;
   translations: TranslationPageModel;
   user: UserModel;
+  userAccess: UserAccessModel;
   userGroup: UserGroupModel;
   userGroups: UserGroupPageModel;
   userInvite: UserInviteModel;
@@ -2277,6 +2297,12 @@ export type TenantCreateDto = {
   reference?: InputMaybe<Scalars['String']>;
 };
 
+export enum TenantCreationEnum {
+  Auto = 'auto',
+  Default = 'default',
+  Required = 'required'
+}
+
 export type TenantFilterArgType = {
   id?: InputMaybe<IdFilterArgType>;
   reference?: InputMaybe<StringFilterArgType>;
@@ -2423,6 +2449,11 @@ export type UpdateNotificationPreferenceDto = {
   enable: Scalars['Boolean'];
 };
 
+export type UserAccessModel = {
+  __typename?: 'UserAccessModel';
+  access: Scalars['JsonObject'];
+};
+
 export type UserConnectedProviderModel = {
   __typename?: 'UserConnectedProviderModel';
   authenticationProviderId: Scalars['String'];
@@ -2442,6 +2473,7 @@ export type UserCreateDto = {
   password?: InputMaybe<Scalars['String']>;
   phone?: InputMaybe<Scalars['String']>;
   reference: Scalars['String'];
+  roles?: InputMaybe<Array<Scalars['String']>>;
   tenantId?: InputMaybe<Scalars['ID']>;
   timezone?: InputMaybe<Scalars['String']>;
 };
@@ -2754,16 +2786,6 @@ export type UserPageModel = {
 export type UserPasswordUpdateDto = {
   newPassword: Scalars['String'];
   password: Scalars['String'];
-};
-
-export type UserPermissionModel = {
-  __typename?: 'UserPermissionModel';
-  object: Scalars['String'];
-  operation: Scalars['String'];
-  resolvers: Array<Scalars['String']>;
-  scope: PermissionScopeEnum;
-  service: Scalars['String'];
-  userGroupType: Scalars['String'];
 };
 
 export type UserProfileModel = {
