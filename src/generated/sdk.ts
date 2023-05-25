@@ -2614,6 +2614,7 @@ export type UserInviteFilterArgType = {
   lastName?: InputMaybe<StringFilterArgType>;
   locale?: InputMaybe<StringFilterArgType>;
   status?: InputMaybe<StringFilterArgType>;
+  tenantId?: InputMaybe<IdFilterArgType>;
   userTokenId?: InputMaybe<IdFilterArgType>;
 };
 
