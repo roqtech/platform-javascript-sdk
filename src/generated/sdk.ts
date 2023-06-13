@@ -909,6 +909,7 @@ export type IntegrationCredentialsDto = {
   accountSid?: InputMaybe<Scalars['String']>;
   apiKey?: InputMaybe<Scalars['String']>;
   applicationId?: InputMaybe<Scalars['String']>;
+  baseUrl?: InputMaybe<Scalars['String']>;
   clientId?: InputMaybe<Scalars['String']>;
   domain?: InputMaybe<Scalars['String']>;
   from?: InputMaybe<Scalars['String']>;
@@ -931,6 +932,7 @@ export type IntegrationCredentialsModel = {
   accountSid?: Maybe<Scalars['String']>;
   apiKey?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['String']>;
+  baseUrl?: Maybe<Scalars['String']>;
   clientId?: Maybe<Scalars['String']>;
   domain?: Maybe<Scalars['String']>;
   from?: Maybe<Scalars['String']>;
@@ -2594,6 +2596,8 @@ export type UpdateNotificationPreferenceDto = {
 export type UserAccessModel = {
   __typename?: 'UserAccessModel';
   access: Scalars['JsonObject'];
+  platform: Scalars['JsonObject'];
+  project: Scalars['JsonObject'];
 };
 
 export type UserConnectedProviderModel = {
