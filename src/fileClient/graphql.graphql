@@ -1,21 +1,3 @@
-fragment User on UserModel {
-  id
-  reference
-  firstName
-  lastName
-  active
-  email
-  phone
-  locale
-  isOptedIn
-  synced
-  tenantId
-  customData
-  timezone
-  createdAt
-  updatedAt
-}
-
 fragment FileCategoryContentGroup on FileCategoryContentGroupModel {
   id
   createdAt

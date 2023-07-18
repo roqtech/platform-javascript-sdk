@@ -1,4 +1,4 @@
-import { Sdk } from "../../generated/sdk";
+import { Sdk } from '../../generated/sdk';
 
 export class UserClientService {
   private gqlSdk: Sdk;
