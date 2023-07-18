@@ -323,6 +323,7 @@ export type EntityRelationModel = {
   leftEntity: Scalars['String'];
   leftEntityId: Scalars['ID'];
   leftRelationField?: Maybe<Scalars['String']>;
+  oneToOneParentEntity?: Maybe<Scalars['String']>;
   oneToOneParentEntityId?: Maybe<Scalars['ID']>;
   relationField?: Maybe<Scalars['String']>;
   rightEntity: Scalars['String'];
@@ -1189,6 +1190,7 @@ export type Mutation = {
   deleteConversation: Scalars['ID'];
   deleteFileAssociations: Array<Scalars['String']>;
   deleteFiles: Array<Scalars['ID']>;
+  deleteProjectEntity: Scalars['Boolean'];
   makeFilePrivate: FileModel;
   makeFilePublic: FileModel;
   markAllNotificationsAsRead: Scalars['Int'];
@@ -1316,6 +1318,11 @@ export type MutationDeleteFileAssociationsArgs = {
 
 export type MutationDeleteFilesArgs = {
   filter?: InputMaybe<DeleteFilterArgType>;
+};
+
+
+export type MutationDeleteProjectEntityArgs = {
+  id: Scalars['ID'];
 };
 
 
