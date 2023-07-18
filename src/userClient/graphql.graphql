@@ -309,6 +309,21 @@ mutation buildQueryPlan($entity: String!, $operation: ResourceOperationEnum!) {
   buildQueryPlan(entity: $entity, operation: $operation) {
     kind
     queryPlan
+    role
+    entity
+    userIdField
+    operation
+  }
+}
+
+query queryPlans {
+  queryPlans {
+    kind
+    queryPlan
+    role
+    entity
+    userIdField
+    operation
   }
 }
 
@@ -390,7 +405,6 @@ query userInvites(
   $offset: Int
   $order: UserInviteOrderArgType
   $search: UserInviteSearchArgType
-
 ) {
   userInvites(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
@@ -418,12 +432,12 @@ mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteDto!) {
   }
 }
 
-mutation updateUserInvite($id: ID!, $userInvite:UserInviteUpdateDto!) {
-  updateUserInvite(id: $id, userInvite:$userInvite) {
+mutation updateUserInvite($id: ID!, $userInvite: UserInviteUpdateDto!) {
+  updateUserInvite(id: $id, userInvite: $userInvite) {
     ...UserInvite
   }
 }
 
-mutation sendUserResetPasswordMail($userId:ID!){
+mutation sendUserResetPasswordMail($userId: ID!) {
   sendUserResetPasswordMail(userId: $userId)
 }
