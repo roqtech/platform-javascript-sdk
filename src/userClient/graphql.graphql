@@ -312,7 +312,6 @@ mutation buildQueryPlan($entity: String!, $operation: ResourceOperationEnum!) {
     operation
     scope
     tenantName
-    tenantId
   }
 }
 
@@ -324,6 +323,8 @@ query queryPlans {
     entity
     userIdField
     operation
+    scope
+    tenantName
   }
 }
 

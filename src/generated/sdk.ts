@@ -3726,12 +3726,12 @@ export type BuildQueryPlanMutationVariables = Exact<{
 }>;
 
 
-export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope: string, tenantName?: string | null, tenantId?: string | null }> };
+export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope: string, tenantName?: string | null }> };
 
 export type QueryPlansQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QueryPlansQuery = { __typename?: 'Query', queryPlans: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string }> };
+export type QueryPlansQuery = { __typename?: 'Query', queryPlans: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope: string, tenantName?: string | null }> };
 
 export type CreateTenantMutationVariables = Exact<{
   tenant: TenantCreateDto;
@@ -4768,7 +4768,6 @@ export const BuildQueryPlanDocument = gql`
     operation
     scope
     tenantName
-    tenantId
   }
 }
     `;
@@ -4781,6 +4780,8 @@ export const QueryPlansDocument = gql`
     entity
     userIdField
     operation
+    scope
+    tenantName
   }
 }
     `;
