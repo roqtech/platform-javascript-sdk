@@ -2016,6 +2016,7 @@ export type ProjectEntityDto = {
   entityRelations: Array<EntityRelationDto>;
   id: Scalars['ID'];
   identifierField: Scalars['String'];
+  isPublic?: InputMaybe<Scalars['Boolean']>;
   isTenantEntity?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
@@ -2086,6 +2087,7 @@ export type Query = {
   fileCategoryContentGroups: FileCategoryContentGroupPageModel;
   fileCategoryContentTypes: FileCategoryContentTypePageModel;
   files: FilePageModel;
+  isEntityPublic: Scalars['Boolean'];
   isTenantsActive: Scalars['Boolean'];
   messageFileUrl: Scalars['String'];
   messages: MessagePageModel;
@@ -2176,6 +2178,11 @@ export type QueryFilesArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<FileOrderArgType>;
   search?: InputMaybe<FileSearchArgType>;
+};
+
+
+export type QueryIsEntityPublicArgs = {
+  entity: Scalars['String'];
 };
 
 
@@ -2329,7 +2336,7 @@ export type QueryPlanModel = {
   operation: Scalars['String'];
   queryPlan?: Maybe<Scalars['JsonObject']>;
   role: Scalars['String'];
-  scope: Scalars['String'];
+  scope?: Maybe<Scalars['String']>;
   tenantId?: Maybe<Scalars['String']>;
   tenantName?: Maybe<Scalars['String']>;
   userIdField: Scalars['String'];
@@ -3726,12 +3733,19 @@ export type BuildQueryPlanMutationVariables = Exact<{
 }>;
 
 
-export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope: string, tenantName?: string | null }> };
+export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope?: string | null, tenantName?: string | null }> };
 
 export type QueryPlansQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QueryPlansQuery = { __typename?: 'Query', queryPlans: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope: string, tenantName?: string | null }> };
+export type QueryPlansQuery = { __typename?: 'Query', queryPlans: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope?: string | null, tenantName?: string | null }> };
+
+export type IsEntityPublicQueryVariables = Exact<{
+  entity: Scalars['String'];
+}>;
+
+
+export type IsEntityPublicQuery = { __typename?: 'Query', isEntityPublic: boolean };
 
 export type CreateTenantMutationVariables = Exact<{
   tenant: TenantCreateDto;
@@ -4785,6 +4799,11 @@ export const QueryPlansDocument = gql`
   }
 }
     `;
+export const IsEntityPublicDocument = gql`
+    query isEntityPublic($entity: String!) {
+  isEntityPublic(entity: $entity)
+}
+    `;
 export const CreateTenantDocument = gql`
     mutation createTenant($tenant: TenantCreateDto!) {
   createTenant(tenant: $tenant) {
@@ -5072,6 +5091,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     queryPlans(variables?: QueryPlansQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<QueryPlansQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<QueryPlansQuery>(QueryPlansDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'queryPlans', 'query');
+    },
+    isEntityPublic(variables: IsEntityPublicQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsEntityPublicQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IsEntityPublicQuery>(IsEntityPublicDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'isEntityPublic', 'query');
     },
     createTenant(variables: CreateTenantMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateTenantMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateTenantMutation>(CreateTenantDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTenant', 'mutation');

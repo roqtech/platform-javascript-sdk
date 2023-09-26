@@ -328,6 +328,10 @@ query queryPlans {
   }
 }
 
+query isEntityPublic($entity: String!) {
+  isEntityPublic(entity: $entity)
+}
+
 mutation createTenant($tenant: TenantCreateDto!) {
   createTenant(tenant: $tenant) {
     ...Tenant
