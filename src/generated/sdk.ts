@@ -42,6 +42,7 @@ export type AuthFormConfigDto = {
   tenantCreation?: InputMaybe<TenantCreationEnum>;
   termsConditionsLink?: InputMaybe<Scalars['String']>;
   translations: Array<FormConfigTranslationDto>;
+  twoFactorEnabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AuthFormThemeCreateDto = {
@@ -274,6 +275,7 @@ export type DataFlushDto = {
 export type DataImportDto = {
   data: Scalars['JsonObject'];
   flush?: InputMaybe<Scalars['Boolean']>;
+  skipUpdate?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type DateFilterArgType = {
@@ -352,6 +354,13 @@ export type EnvironmentConfigUpdateDto = {
 
 export type EnvironmentInitialiseDto = {
   id: Scalars['String'];
+};
+
+export type EnvironmentStatsModel = {
+  __typename?: 'EnvironmentStatsModel';
+  count: Scalars['Float'];
+  entity: StatEntityEnum;
+  timestamp: Scalars['Float'];
 };
 
 export type EventExampleDataCreateDto = {
@@ -1191,6 +1200,7 @@ export type Mutation = {
   deleteFileAssociations: Array<Scalars['String']>;
   deleteFiles: Array<Scalars['ID']>;
   deleteProjectEntity: Scalars['Boolean'];
+  generateUserPhoneOtp: Scalars['String'];
   makeFilePrivate: FileModel;
   makeFilePublic: FileModel;
   markAllNotificationsAsRead: Scalars['Int'];
@@ -1198,6 +1208,7 @@ export type Mutation = {
   notify: NotificationCreateModel;
   removeUsersFromUserGroup: Scalars['Boolean'];
   resendUserInvite: UserInviteModel;
+  resendUserPhoneOtp: ResendUserPhoneOtpResponseModel;
   sendMail: MailCreateModel;
   sendUserConfirmationMail: Scalars['Boolean'];
   /** Create UserInvite and send email */
@@ -1218,6 +1229,7 @@ export type Mutation = {
   updateUserInvite: UserInviteModel;
   upsertTranslationKeys: Array<TranslationKeyModel>;
   verifyPassword: Scalars['Boolean'];
+  verifyUserPhoneOtp: VerifyUserPhoneOtpResponseModel;
 };
 
 
@@ -1326,6 +1338,11 @@ export type MutationDeleteProjectEntityArgs = {
 };
 
 
+export type MutationGenerateUserPhoneOtpArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationMakeFilePrivateArgs = {
   id: Scalars['ID'];
 };
@@ -1355,6 +1372,12 @@ export type MutationRemoveUsersFromUserGroupArgs = {
 
 export type MutationResendUserInviteArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationResendUserPhoneOtpArgs = {
+  id: Scalars['ID'];
+  token: Scalars['String'];
 };
 
 
@@ -1465,6 +1488,12 @@ export type MutationUpsertTranslationKeysArgs = {
 export type MutationVerifyPasswordArgs = {
   password: Scalars['String'];
   userId: Scalars['ID'];
+};
+
+
+export type MutationVerifyUserPhoneOtpArgs = {
+  id: Scalars['ID'];
+  token: Scalars['String'];
 };
 
 export enum NotificationActionTypeEnum {
@@ -1957,6 +1986,7 @@ export type PermissionPageModel = {
 export enum PermissionScopeEnum {
   All = 'all',
   Own = 'own',
+  Public = 'public',
   Tenant = 'tenant'
 }
 
@@ -1986,6 +2016,8 @@ export type ProjectEntityDto = {
   entityRelations: Array<EntityRelationDto>;
   id: Scalars['ID'];
   identifierField: Scalars['String'];
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  isTenantEntity?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
 
@@ -2055,6 +2087,8 @@ export type Query = {
   fileCategoryContentGroups: FileCategoryContentGroupPageModel;
   fileCategoryContentTypes: FileCategoryContentTypePageModel;
   files: FilePageModel;
+  isEntityPublic: Scalars['Boolean'];
+  isTenantsActive: Scalars['Boolean'];
   messageFileUrl: Scalars['String'];
   messages: MessagePageModel;
   notificationPreference: Array<NotificationPreferenceModel>;
@@ -2144,6 +2178,11 @@ export type QueryFilesArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<FileOrderArgType>;
   search?: InputMaybe<FileSearchArgType>;
+};
+
+
+export type QueryIsEntityPublicArgs = {
+  entity: Scalars['String'];
 };
 
 
@@ -2297,7 +2336,17 @@ export type QueryPlanModel = {
   operation: Scalars['String'];
   queryPlan?: Maybe<Scalars['JsonObject']>;
   role: Scalars['String'];
+  scope?: Maybe<Scalars['String']>;
+  tenantId?: Maybe<Scalars['String']>;
+  tenantName?: Maybe<Scalars['String']>;
   userIdField: Scalars['String'];
+};
+
+export type ResendUserPhoneOtpResponseModel = {
+  __typename?: 'ResendUserPhoneOtpResponseModel';
+  error?: Maybe<Scalars['String']>;
+  isValid: Scalars['Boolean'];
+  retryIn?: Maybe<Scalars['Int']>;
 };
 
 export type ResolverMappingModel = {
@@ -2407,6 +2456,13 @@ export type RoleUpdateDto = {
   permissionAssignments: Array<RolePermissionAssignDto>;
   reference?: InputMaybe<Scalars['String']>;
 };
+
+export enum StatEntityEnum {
+  Conversations = 'conversations',
+  Files = 'files',
+  Tenants = 'tenants',
+  Users = 'users'
+}
 
 export type StatusFilterArgType = {
   equalTo?: InputMaybe<FileStatusEnum>;
@@ -2629,6 +2685,7 @@ export type UserCreateDto = {
   roles?: InputMaybe<Array<Scalars['String']>>;
   tenantId?: InputMaybe<Scalars['ID']>;
   timezone?: InputMaybe<Scalars['String']>;
+  twoFactorEnabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UserFilterArgType = {
@@ -2893,6 +2950,7 @@ export type UserModel = {
   tenant?: Maybe<TenantModel>;
   tenantId?: Maybe<Scalars['ID']>;
   timezone?: Maybe<Scalars['String']>;
+  twoFactorEnabled?: Maybe<Scalars['Boolean']>;
   updatedAt: Scalars['Date'];
   userGroups?: Maybe<UserGroupPageModel>;
 };
@@ -3157,6 +3215,7 @@ export type UserUpdateDto = {
   phone?: InputMaybe<Scalars['String']>;
   tenantId?: InputMaybe<Scalars['ID']>;
   timezone?: InputMaybe<Scalars['String']>;
+  twoFactorEnabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UserUpdateProfileDto = {
@@ -3175,6 +3234,15 @@ export type UserValidateEmailTokenCreateDto = {
 export type UsersCountModel = {
   __typename?: 'UsersCountModel';
   totalCount: Scalars['Int'];
+};
+
+export type VerifyUserPhoneOtpResponseModel = {
+  __typename?: 'VerifyUserPhoneOtpResponseModel';
+  error?: Maybe<Scalars['String']>;
+  isValid: Scalars['Boolean'];
+  retryIn?: Maybe<Scalars['Int']>;
+  totalTry: Scalars['Int'];
+  totalTryRemain: Scalars['Int'];
 };
 
 export type WebhookConfigModel = {
@@ -3665,12 +3733,19 @@ export type BuildQueryPlanMutationVariables = Exact<{
 }>;
 
 
-export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string }> };
+export type BuildQueryPlanMutation = { __typename?: 'Mutation', buildQueryPlan: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope?: string | null, tenantName?: string | null }> };
 
 export type QueryPlansQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QueryPlansQuery = { __typename?: 'Query', queryPlans: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string }> };
+export type QueryPlansQuery = { __typename?: 'Query', queryPlans: Array<{ __typename?: 'QueryPlanModel', kind: string, queryPlan?: Record<string, unknown> | null, role: string, entity: string, userIdField: string, operation: string, scope?: string | null, tenantName?: string | null }> };
+
+export type IsEntityPublicQueryVariables = Exact<{
+  entity: Scalars['String'];
+}>;
+
+
+export type IsEntityPublicQuery = { __typename?: 'Query', isEntityPublic: boolean };
 
 export type CreateTenantMutationVariables = Exact<{
   tenant: TenantCreateDto;
@@ -4705,6 +4780,8 @@ export const BuildQueryPlanDocument = gql`
     entity
     userIdField
     operation
+    scope
+    tenantName
   }
 }
     `;
@@ -4717,7 +4794,14 @@ export const QueryPlansDocument = gql`
     entity
     userIdField
     operation
+    scope
+    tenantName
   }
+}
+    `;
+export const IsEntityPublicDocument = gql`
+    query isEntityPublic($entity: String!) {
+  isEntityPublic(entity: $entity)
 }
     `;
 export const CreateTenantDocument = gql`
@@ -5007,6 +5091,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     queryPlans(variables?: QueryPlansQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<QueryPlansQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<QueryPlansQuery>(QueryPlansDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'queryPlans', 'query');
+    },
+    isEntityPublic(variables: IsEntityPublicQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsEntityPublicQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IsEntityPublicQuery>(IsEntityPublicDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'isEntityPublic', 'query');
     },
     createTenant(variables: CreateTenantMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateTenantMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateTenantMutation>(CreateTenantDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTenant', 'mutation');

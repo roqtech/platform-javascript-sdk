@@ -199,13 +199,10 @@ query userGroups(
   }
 }
 
-query userProfile(
-  $id: ID!,
-  $withProviders: Boolean = false
-) {
+query userProfile($id: ID!, $withProviders: Boolean = false) {
   userProfile(id: $id) {
     ...UserProfile
-    connectedProviders @include(if: $withProviders){
+    connectedProviders @include(if: $withProviders) {
       ...UserConnectedProvider
     }
   }
@@ -222,7 +219,7 @@ query userProfiles(
   userProfiles(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
     data {
       ...UserProfile
-      connectedProviders @include(if: $withProviders){
+      connectedProviders @include(if: $withProviders) {
         ...UserConnectedProvider
       }
     }
@@ -313,6 +310,8 @@ mutation buildQueryPlan($entity: String!, $operation: ResourceOperationEnum!) {
     entity
     userIdField
     operation
+    scope
+    tenantName
   }
 }
 
@@ -324,7 +323,13 @@ query queryPlans {
     entity
     userIdField
     operation
+    scope
+    tenantName
   }
+}
+
+query isEntityPublic($entity: String!) {
+  isEntityPublic(entity: $entity)
 }
 
 mutation createTenant($tenant: TenantCreateDto!) {
