@@ -27,23 +27,6 @@ client
         },
       });
       console.log(user2);
-      const conversation = await client.asSuperAdmin().createConversation({
-        conversation: {
-          title: 'some',
-          ownerId: response.createUser.id,
-          memberIds: [response.createUser.id, user2.createUser.id],
-        },
-      });
-      console.log(conversation);
-      const message = await client.asSuperAdmin().createMessage({
-        message: {
-          authorId: user2.createUser.id,
-          conversationId: conversation.createConversation.id,
-          isSystem: true,
-          body: 'HY',
-        },
-      });
-      console.log(message);
     } catch (err) {
       console.log(err);
     }

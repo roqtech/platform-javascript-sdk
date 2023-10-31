@@ -1,6 +1,5 @@
 import { defaultGraphqlEndpoint, defaultHost } from '../../constants';
 import { PlatformClientOptionsType } from '../types/platform-client-options.type';
-import { NotificationClientService } from '../../notificationClient/services/notification-client.service';
 import { AuthorizationClientService } from '../../authorizationClient';
 import { getSdk } from '../../generated/sdk';
 import { ClientError, GraphQLClient } from 'graphql-request';
@@ -8,9 +7,7 @@ import { UserClientService } from '../../userClient';
 import { Response, Variables } from 'graphql-request/src/types';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { FileClientService } from '../../fileClient';
-import { TranslationClientService } from '../../translationClient/services/translation-client.service';
 import { HttpException } from '../../exception/exceptions/http.exception';
-import { ChatClientService } from '../../chatClient/services/chat-client.service';
 import { JwtPayload, decode } from 'jsonwebtoken';
 
 export class PlatformClientService {
@@ -101,11 +98,8 @@ export class PlatformClientService {
     };
 
     return {
-      ...new NotificationClientService(sdk),
       ...new UserClientService(sdk),
       ...new FileClientService(sdk),
-      ...new TranslationClientService(sdk),
-      ...new ChatClientService(sdk),
       getTokenPayload: async() => {
         const token = await getToken();
         if(!token) {

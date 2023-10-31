@@ -86,7 +86,7 @@ fragment UserInvite on UserInviteModel {
   userTokenId
 }
 
-query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
+query userProfile($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = false, $withRoles: Boolean = false) {
   user(id: $id) {
     ...User
     tenant @include(if: $withTenant) {
@@ -107,7 +107,7 @@ query user($id: ID!, $withTenant: Boolean = false, $withUserGroups: Boolean = fa
   }
 }
 
-query users(
+query userProfiles(
   $filter: UserFilterArgType
   $limit: Int
   $offset: Int
@@ -140,202 +140,8 @@ query users(
   }
 }
 
-query userGroup(
-  $id: ID!
-  $withUserGroupType: Boolean = false
-  $withUsers: Boolean = false
-  $withRoles: Boolean = false
-) {
-  userGroup(id: $id) {
-    ...UserGroup
-    userGroupType @include(if: $withUserGroupType) {
-      ...UserGroupType
-    }
-    users @include(if: $withUsers) {
-      data {
-        ...User
-      }
-      totalCount
-    }
-    roles @include(if: $withRoles) {
-      data {
-        ...Role
-      }
-      totalCount
-    }
-  }
-}
-
-query userGroups(
-  $filter: UserGroupFilterArgType
-  $limit: Int
-  $offset: Int
-  $order: UserGroupOrderArgType
-  $search: UserGroupSearchArgType
-  $withUserGroupType: Boolean = false
-  $withUsers: Boolean = false
-  $withRoles: Boolean = false
-) {
-  userGroups(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
-    data {
-      ...UserGroup
-      userGroupType @include(if: $withUserGroupType) {
-        ...UserGroupType
-      }
-      users @include(if: $withUsers) {
-        data {
-          ...User
-        }
-        totalCount
-      }
-      roles @include(if: $withRoles) {
-        data {
-          ...Role
-        }
-        totalCount
-      }
-    }
-    totalCount
-  }
-}
-
-query userProfile($id: ID!, $withProviders: Boolean = false) {
-  userProfile(id: $id) {
-    ...UserProfile
-    connectedProviders @include(if: $withProviders) {
-      ...UserConnectedProvider
-    }
-  }
-}
-
-query userProfiles(
-  $filter: UserFilterArgType
-  $limit: Int
-  $offset: Int
-  $order: UserProfileOrderArgType
-  $search: UserProfileSearchArgType
-  $withProviders: Boolean = false
-) {
-  userProfiles(filter: $filter, limit: $limit, offset: $offset, order: $order, search: $search) {
-    data {
-      ...UserProfile
-      connectedProviders @include(if: $withProviders) {
-        ...UserConnectedProvider
-      }
-    }
-    totalCount
-  }
-}
-
-query tenant($id: ID!, $withUserCount: Boolean = false) {
-  tenant(id: $id) {
-    ...Tenant
-    users @include(if: $withUserCount) {
-      totalCount
-    }
-  }
-}
-
-query tenants(
-  $filter: TenantFilterArgType
-  $limit: Int
-  $offset: Int
-  $order: TenantOrderArgType
-  $withUserCount: Boolean = false
-) {
-  tenants(filter: $filter, limit: $limit, offset: $offset, order: $order) {
-    data {
-      ...Tenant
-      users @include(if: $withUserCount) {
-        totalCount
-      }
-    }
-    totalCount
-  }
-}
-
-query role($id: ID!, $withUserCount: Boolean = false, $withUserGroups: Boolean = false) {
-  role(id: $id) {
-    ...Role
-    userGroups @include(if: $withUserGroups) {
-      data {
-        ...UserGroup
-      }
-      totalCount
-    }
-    users @include(if: $withUserCount) {
-      totalCount
-    }
-  }
-}
-
-query roles(
-  $filter: RoleFilterArgType
-  $limit: Int
-  $offset: Int
-  $order: RoleOrderArgType
-  $withUserCount: Boolean = false
-  $withUserGroups: Boolean = false
-) {
-  roles(filter: $filter, limit: $limit, offset: $offset, order: $order) {
-    data {
-      ...Role
-      userGroups @include(if: $withUserGroups) {
-        data {
-          ...UserGroup
-        }
-        totalCount
-      }
-      users @include(if: $withUserCount) {
-        totalCount
-      }
-    }
-    totalCount
-  }
-}
-
-mutation addUsersToUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
-  addUsersToUserGroup(userGroupId: $userGroupId, userIds: $userIds)
-}
-
 mutation assignRolesToUser($roleKeys: [String!]!, $userId: ID!) {
   assignRolesToUser(roleKeys: $roleKeys, userId: $userId)
-}
-
-mutation buildQueryPlan($entity: String!, $operation: ResourceOperationEnum!) {
-  buildQueryPlan(entity: $entity, operation: $operation) {
-    kind
-    queryPlan
-    role
-    entity
-    userIdField
-    operation
-    scope
-    tenantName
-  }
-}
-
-query queryPlans {
-  queryPlans {
-    kind
-    queryPlan
-    role
-    entity
-    userIdField
-    operation
-    scope
-    tenantName
-  }
-}
-
-query isEntityPublic($entity: String!) {
-  isEntityPublic(entity: $entity)
-}
-
-mutation createTenant($tenant: TenantCreateDto!) {
-  createTenant(tenant: $tenant) {
-    ...Tenant
-  }
 }
 
 mutation updateTenant($id: ID!, $tenant: TenantUpdateDto!) {
@@ -350,16 +156,6 @@ mutation createUser($user: UserCreateDto!) {
   }
 }
 
-mutation createUserGroup($userGroup: UserGroupCreateDto!) {
-  createUserGroup(userGroup: $userGroup) {
-    ...UserGroup
-  }
-}
-
-mutation removeUsersFromUserGroup($userGroupId: ID!, $userIds: [ID!]!) {
-  removeUsersFromUserGroup(userGroupId: $userGroupId, userIds: $userIds)
-}
-
 mutation unassignRolesFromUser($roleKeys: [String!]!, $userId: ID!) {
   unassignRolesFromUser(roleKeys: $roleKeys, userId: $userId)
 }
@@ -367,12 +163,6 @@ mutation unassignRolesFromUser($roleKeys: [String!]!, $userId: ID!) {
 mutation updateUser($id: ID!, $user: UserUpdateDto!) {
   updateUser(id: $id, user: $user) {
     ...User
-  }
-}
-
-mutation updateUserGroup($id: ID!, $userGroup: UserGroupUpdateDto!) {
-  updateUserGroup(id: $id, userGroup: $userGroup) {
-    ...UserGroup
   }
 }
 
