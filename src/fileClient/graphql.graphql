@@ -52,13 +52,13 @@ query file(
 }
 
 mutation createFileAssociation($createFileAssociationDto: FileAssociationCreateDto!) {
-  createFileAssociation(createFileAssociationDto: $createFileAssociationDto) {
+  createFileAssociationV2(data: $createFileAssociationDto) {
     ...FileAssociation
   }
 }
 
-mutation createFileUpload($createFileDto: FileCreateDto!) {
-  createFileUpload(createFileDto: $createFileDto) {
+mutation createFileUpload($createFileDto: FileCreateV2Dto!) {
+  createFileUploadV2(data: $createFileDto) {
     contentType
     createdAt
     createdByUserId
@@ -93,14 +93,9 @@ mutation makeFilePublic($id: ID!) {
   }
 }
 
-mutation updateFile($id: ID!, $updateFileDto: FileUpdateDto!) {
-  updateFile(id: $id, updateFileDto: $updateFileDto) {
+mutation updateFile($updateFileDto: FileUpdateV2Dto!) {
+  updateFileV2(, data: $updateFileDto) {
     ...File
   }
 }
 
-mutation updateFileStatus($id: ID!, $status: FileStatusEnum!) {
-  updateFileStatus(id: $id, status: $status) {
-    ...File
-  }
-}

@@ -166,16 +166,16 @@ mutation updateUser($id: ID!, $user: UserUpdateDto!) {
   }
 }
 
-mutation changeUserPassword($id: ID!, $input: UserPasswordUpdateDto!) {
-  changeUserPassword(id: $id, input: $input)
+mutation changeUserPassword($data: ChangeUserPasswordDto!) {
+  changeUserPasswordV2(data: $data)
 }
 
 mutation verifyPassword($password: String!, $userId: ID!) {
   verifyPassword(password: $password, userId: $userId)
 }
 
-mutation sendUserInvites($userInvites: UserInvitesCreateDto!) {
-  sendUserInvites(userInvites: $userInvites) {
+mutation sendUserInvites($userInvites: UserInvitesCreateV2Dto!) {
+  sendUserInvitesV2(data: $userInvites) {
     success {
       ...UserInvite
     }
@@ -221,14 +221,8 @@ mutation cancelUserInvite($userInviteId: ID!) {
   }
 }
 
-mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteDto!) {
-  acceptUserInvite(acceptUserInvite: $acceptUserInvite) {
-    ...UserInvite
-  }
-}
-
-mutation updateUserInvite($id: ID!, $userInvite: UserInviteUpdateDto!) {
-  updateUserInvite(id: $id, userInvite: $userInvite) {
+mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteV2Dto!) {
+  acceptUserInviteV2(data: $acceptUserInvite) {
     ...UserInvite
   }
 }
