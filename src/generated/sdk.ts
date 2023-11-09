@@ -21,6 +21,10 @@ export type AcceptUserInviteDto = {
   token: Scalars['String'];
 };
 
+export type AcceptUserInviteV2Dto = {
+  token: Scalars['String'];
+};
+
 export type AppUriUpdateDto = {
   allowedCallbackUrls?: InputMaybe<Scalars['String']>;
   allowedLogoutUrls?: InputMaybe<Scalars['String']>;
@@ -141,6 +145,12 @@ export type AuthenticationProviderSsoConfigModel = {
 export type BooleanFilterArgType = {
   equalTo?: InputMaybe<Scalars['Boolean']>;
   notEqualTo?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ChangeUserPasswordDto = {
+  newPassword: Scalars['String'];
+  password: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type ChannelPreferenceModel = {
@@ -817,6 +827,12 @@ export type FileCreateUploadModel = {
   uploadUrl: Scalars['String'];
 };
 
+export type FileCreateV2Dto = {
+  contentType: Scalars['String'];
+  fileCategory: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type FileFilterArgType = {
   contentType?: InputMaybe<StringFilterArgType>;
   createdAt?: InputMaybe<DateFilterArgType>;
@@ -896,6 +912,12 @@ export enum FileStatusEnum {
 
 export type FileUpdateDto = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type FileUpdateV2Dto = {
+  fileId: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<FileStatusEnum>;
 };
 
 export type FormConfigTranslationDto = {
@@ -1182,15 +1204,19 @@ export type MultiTenancyStatusModel = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptUserInvite: UserInviteModel;
+  acceptUserInviteV2: UserInviteModel;
   addUsersToUserGroup: Scalars['Boolean'];
   assignRolesToUser: Scalars['Boolean'];
   assignTagsToConversation: Scalars['Boolean'];
   buildQueryPlan: Array<QueryPlanModel>;
   cancelUserInvite: UserInviteModel;
   changeUserPassword: Scalars['Boolean'];
+  changeUserPasswordV2: Scalars['Boolean'];
   createConversation: ConversationModel;
   createFileAssociation: FileAssociationModel;
+  createFileAssociationV2: FileAssociationModel;
   createFileUpload: FileCreateUploadModel;
+  createFileUploadV2: FileCreateUploadModel;
   createMessage: Scalars['Boolean'];
   createProjectEntity: ProjectEntityModel;
   createTenant: TenantModel;
@@ -1214,11 +1240,14 @@ export type Mutation = {
   sendUserConfirmationMail: Scalars['Boolean'];
   /** Create UserInvite and send email */
   sendUserInvites: CreateUserInvitesModel;
+  /** Create UserInvite and send email */
+  sendUserInvitesV2: CreateUserInvitesModel;
   sendUserResetPasswordMail: Scalars['Boolean'];
   unassignRolesFromUser: Scalars['Boolean'];
   unassignTagsFromConversation: Scalars['Boolean'];
   updateFile: FileModel;
   updateFileStatus: FileModel;
+  updateFileV2: FileModel;
   updateNotificationPreference: NotificationPreferenceModel;
   updateProfile: UserProfileModel;
   updateProjectEntity: ProjectEntityModel;
@@ -1236,6 +1265,11 @@ export type Mutation = {
 
 export type MutationAcceptUserInviteArgs = {
   acceptUserInvite: AcceptUserInviteDto;
+};
+
+
+export type MutationAcceptUserInviteV2Args = {
+  data: AcceptUserInviteV2Dto;
 };
 
 
@@ -1274,6 +1308,11 @@ export type MutationChangeUserPasswordArgs = {
 };
 
 
+export type MutationChangeUserPasswordV2Args = {
+  data: ChangeUserPasswordDto;
+};
+
+
 export type MutationCreateConversationArgs = {
   conversation: ConversationCreateDto;
 };
@@ -1284,8 +1323,18 @@ export type MutationCreateFileAssociationArgs = {
 };
 
 
+export type MutationCreateFileAssociationV2Args = {
+  data: FileAssociationCreateDto;
+};
+
+
 export type MutationCreateFileUploadArgs = {
   createFileDto: FileCreateDto;
+};
+
+
+export type MutationCreateFileUploadV2Args = {
+  data: FileCreateV2Dto;
 };
 
 
@@ -1398,6 +1447,11 @@ export type MutationSendUserInvitesArgs = {
 };
 
 
+export type MutationSendUserInvitesV2Args = {
+  data: UserInvitesCreateV2Dto;
+};
+
+
 export type MutationSendUserResetPasswordMailArgs = {
   userId: Scalars['ID'];
   variantKey?: InputMaybe<Scalars['String']>;
@@ -1425,6 +1479,11 @@ export type MutationUpdateFileArgs = {
 export type MutationUpdateFileStatusArgs = {
   id: Scalars['ID'];
   status: FileStatusEnum;
+};
+
+
+export type MutationUpdateFileV2Args = {
+  data: FileUpdateV2Dto;
 };
 
 
@@ -2031,7 +2090,9 @@ export type ProjectEntityModel = {
   entityRelations: EntityRelationPageModel;
   id: Scalars['ID'];
   identifierField: Scalars['String'];
+  isPublic: Scalars['Boolean'];
   name: Scalars['String'];
+  permissions: PermissionPageModel;
 };
 
 export type ProjectEntityOrderArgType = {
@@ -2094,6 +2155,7 @@ export type Query = {
   messages: MessagePageModel;
   notificationPreference: Array<NotificationPreferenceModel>;
   notifications: NotificationPageModel;
+  permissions: PermissionPageModel;
   projectEntities: ProjectEntityPageModel;
   projectEntity: ProjectEntityModel;
   queryPlans: Array<QueryPlanModel>;
@@ -2205,6 +2267,15 @@ export type QueryMessagesArgs = {
 export type QueryNotificationsArgs = {
   page?: InputMaybe<Scalars['Float']>;
   seen?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type QueryPermissionsArgs = {
+  filter?: InputMaybe<PermissionFilterArgType>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<PermissionOrderArgType>;
+  search?: InputMaybe<PermissionSearchArgType>;
 };
 
 
@@ -2817,6 +2888,16 @@ export type UserInviteCreateDto = {
   tenantId?: InputMaybe<Scalars['ID']>;
 };
 
+export type UserInviteCreateV2Dto = {
+  createdByUserId: Scalars['ID'];
+  email: Scalars['String'];
+  firstName?: InputMaybe<Scalars['String']>;
+  injectableVariables?: InputMaybe<Scalars['JsonObject']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  locale?: InputMaybe<Scalars['String']>;
+  roles?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type UserInviteFilterArgType = {
   acceptedByUserId?: InputMaybe<IdFilterArgType>;
   createdByUserId?: InputMaybe<IdFilterArgType>;
@@ -2930,6 +3011,11 @@ export type UserInviteUpdateDto = {
 export type UserInvitesCreateDto = {
   tenantId?: InputMaybe<Scalars['ID']>;
   userInvites: Array<UserInviteCreateDto>;
+};
+
+export type UserInvitesCreateV2Dto = {
+  tenantId: Scalars['ID'];
+  userInvites: Array<UserInviteCreateV2Dto>;
 };
 
 export type UserModel = {
@@ -3294,14 +3380,14 @@ export type CreateFileAssociationMutationVariables = Exact<{
 }>;
 
 
-export type CreateFileAssociationMutation = { __typename?: 'Mutation', createFileAssociation: { __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string } };
+export type CreateFileAssociationMutation = { __typename?: 'Mutation', createFileAssociationV2: { __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string } };
 
 export type CreateFileUploadMutationVariables = Exact<{
-  createFileDto: FileCreateDto;
+  createFileDto: FileCreateV2Dto;
 }>;
 
 
-export type CreateFileUploadMutation = { __typename?: 'Mutation', createFileUpload: { __typename?: 'FileCreateUploadModel', contentType: string, createdAt: string, createdByUserId: string, fileCategoryId: string, formFields: Record<string, unknown>, id: string, isPublic: boolean, name: string, status: FileStatusEnum, updatedAt: string, uploadUrl: string } };
+export type CreateFileUploadMutation = { __typename?: 'Mutation', createFileUploadV2: { __typename?: 'FileCreateUploadModel', contentType: string, createdAt: string, createdByUserId: string, fileCategoryId: string, formFields: Record<string, unknown>, id: string, isPublic: boolean, name: string, status: FileStatusEnum, updatedAt: string, uploadUrl: string } };
 
 export type DeleteFileAssociationsMutationVariables = Exact<{
   filter: FileAssociationBulkFilterArgType;
@@ -3332,20 +3418,11 @@ export type MakeFilePublicMutationVariables = Exact<{
 export type MakeFilePublicMutation = { __typename?: 'Mutation', makeFilePublic: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
 
 export type UpdateFileMutationVariables = Exact<{
-  id: Scalars['ID'];
-  updateFileDto: FileUpdateDto;
+  updateFileDto: FileUpdateV2Dto;
 }>;
 
 
-export type UpdateFileMutation = { __typename?: 'Mutation', updateFile: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
-
-export type UpdateFileStatusMutationVariables = Exact<{
-  id: Scalars['ID'];
-  status: FileStatusEnum;
-}>;
-
-
-export type UpdateFileStatusMutation = { __typename?: 'Mutation', updateFileStatus: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
+export type UpdateFileMutation = { __typename?: 'Mutation', updateFileV2: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
 
 export type UserFragment = { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string };
 
@@ -3427,12 +3504,11 @@ export type UpdateUserMutationVariables = Exact<{
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string } };
 
 export type ChangeUserPasswordMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: UserPasswordUpdateDto;
+  data: ChangeUserPasswordDto;
 }>;
 
 
-export type ChangeUserPasswordMutation = { __typename?: 'Mutation', changeUserPassword: boolean };
+export type ChangeUserPasswordMutation = { __typename?: 'Mutation', changeUserPasswordV2: boolean };
 
 export type VerifyPasswordMutationVariables = Exact<{
   password: Scalars['String'];
@@ -3443,11 +3519,11 @@ export type VerifyPasswordMutationVariables = Exact<{
 export type VerifyPasswordMutation = { __typename?: 'Mutation', verifyPassword: boolean };
 
 export type SendUserInvitesMutationVariables = Exact<{
-  userInvites: UserInvitesCreateDto;
+  userInvites: UserInvitesCreateV2Dto;
 }>;
 
 
-export type SendUserInvitesMutation = { __typename?: 'Mutation', sendUserInvites: { __typename?: 'CreateUserInvitesModel', success?: Array<{ __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string }> | null, errors?: Array<{ __typename?: 'CreateUserInviteErrorModel', email: string, error: string, firstName: string, lastName: string }> | null } };
+export type SendUserInvitesMutation = { __typename?: 'Mutation', sendUserInvitesV2: { __typename?: 'CreateUserInvitesModel', success?: Array<{ __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string }> | null, errors?: Array<{ __typename?: 'CreateUserInviteErrorModel', email: string, error: string, firstName: string, lastName: string }> | null } };
 
 export type ResendUserInviteMutationVariables = Exact<{
   userInviteId: Scalars['ID'];
@@ -3482,19 +3558,11 @@ export type CancelUserInviteMutationVariables = Exact<{
 export type CancelUserInviteMutation = { __typename?: 'Mutation', cancelUserInvite: { __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string } };
 
 export type AcceptUserInviteMutationVariables = Exact<{
-  acceptUserInvite: AcceptUserInviteDto;
+  acceptUserInvite: AcceptUserInviteV2Dto;
 }>;
 
 
-export type AcceptUserInviteMutation = { __typename?: 'Mutation', acceptUserInvite: { __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string } };
-
-export type UpdateUserInviteMutationVariables = Exact<{
-  id: Scalars['ID'];
-  userInvite: UserInviteUpdateDto;
-}>;
-
-
-export type UpdateUserInviteMutation = { __typename?: 'Mutation', updateUserInvite: { __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string } };
+export type AcceptUserInviteMutation = { __typename?: 'Mutation', acceptUserInviteV2: { __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string } };
 
 export type SendUserResetPasswordMailMutationVariables = Exact<{
   userId: Scalars['ID'];
@@ -3656,14 +3724,14 @@ export const FileDocument = gql`
 ${UserFragmentDoc}`;
 export const CreateFileAssociationDocument = gql`
     mutation createFileAssociation($createFileAssociationDto: FileAssociationCreateDto!) {
-  createFileAssociation(createFileAssociationDto: $createFileAssociationDto) {
+  createFileAssociationV2(data: $createFileAssociationDto) {
     ...FileAssociation
   }
 }
     ${FileAssociationFragmentDoc}`;
 export const CreateFileUploadDocument = gql`
-    mutation createFileUpload($createFileDto: FileCreateDto!) {
-  createFileUpload(createFileDto: $createFileDto) {
+    mutation createFileUpload($createFileDto: FileCreateV2Dto!) {
+  createFileUploadV2(data: $createFileDto) {
     contentType
     createdAt
     createdByUserId
@@ -3703,15 +3771,8 @@ export const MakeFilePublicDocument = gql`
 }
     ${FileFragmentDoc}`;
 export const UpdateFileDocument = gql`
-    mutation updateFile($id: ID!, $updateFileDto: FileUpdateDto!) {
-  updateFile(id: $id, updateFileDto: $updateFileDto) {
-    ...File
-  }
-}
-    ${FileFragmentDoc}`;
-export const UpdateFileStatusDocument = gql`
-    mutation updateFileStatus($id: ID!, $status: FileStatusEnum!) {
-  updateFileStatus(id: $id, status: $status) {
+    mutation updateFile($updateFileDto: FileUpdateV2Dto!) {
+  updateFileV2(data: $updateFileDto) {
     ...File
   }
 }
@@ -3807,8 +3868,8 @@ export const UpdateUserDocument = gql`
 }
     ${UserFragmentDoc}`;
 export const ChangeUserPasswordDocument = gql`
-    mutation changeUserPassword($id: ID!, $input: UserPasswordUpdateDto!) {
-  changeUserPassword(id: $id, input: $input)
+    mutation changeUserPassword($data: ChangeUserPasswordDto!) {
+  changeUserPasswordV2(data: $data)
 }
     `;
 export const VerifyPasswordDocument = gql`
@@ -3817,8 +3878,8 @@ export const VerifyPasswordDocument = gql`
 }
     `;
 export const SendUserInvitesDocument = gql`
-    mutation sendUserInvites($userInvites: UserInvitesCreateDto!) {
-  sendUserInvites(userInvites: $userInvites) {
+    mutation sendUserInvites($userInvites: UserInvitesCreateV2Dto!) {
+  sendUserInvitesV2(data: $userInvites) {
     success {
       ...UserInvite
     }
@@ -3869,15 +3930,8 @@ export const CancelUserInviteDocument = gql`
 }
     ${UserInviteFragmentDoc}`;
 export const AcceptUserInviteDocument = gql`
-    mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteDto!) {
-  acceptUserInvite(acceptUserInvite: $acceptUserInvite) {
-    ...UserInvite
-  }
-}
-    ${UserInviteFragmentDoc}`;
-export const UpdateUserInviteDocument = gql`
-    mutation updateUserInvite($id: ID!, $userInvite: UserInviteUpdateDto!) {
-  updateUserInvite(id: $id, userInvite: $userInvite) {
+    mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteV2Dto!) {
+  acceptUserInviteV2(data: $acceptUserInvite) {
     ...UserInvite
   }
 }
@@ -3921,9 +3975,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     updateFile(variables: UpdateFileMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateFileMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateFileMutation>(UpdateFileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateFile', 'mutation');
-    },
-    updateFileStatus(variables: UpdateFileStatusMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateFileStatusMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateFileStatusMutation>(UpdateFileStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateFileStatus', 'mutation');
     },
     userProfile(variables: UserProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserProfileQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<UserProfileQuery>(UserProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'userProfile', 'query');
@@ -3969,9 +4020,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     acceptUserInvite(variables: AcceptUserInviteMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AcceptUserInviteMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<AcceptUserInviteMutation>(AcceptUserInviteDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'acceptUserInvite', 'mutation');
-    },
-    updateUserInvite(variables: UpdateUserInviteMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateUserInviteMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateUserInviteMutation>(UpdateUserInviteDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateUserInvite', 'mutation');
     },
     sendUserResetPasswordMail(variables: SendUserResetPasswordMailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendUserResetPasswordMailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SendUserResetPasswordMailMutation>(SendUserResetPasswordMailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendUserResetPasswordMail', 'mutation');
