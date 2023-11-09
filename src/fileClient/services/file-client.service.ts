@@ -124,7 +124,7 @@ export class FileClientService {
     const operations = new Map<string, FileOperationRevertType>();
     try {
       const createFileUploadResponse = await this.createFileUpload({
-        createFileDto: { contentType, fileCategory, name },
+        data: { contentType, fileCategory, name },
       });
       operations.set('FileUpload', {
         type: 'FileUpload',
@@ -154,7 +154,7 @@ export class FileClientService {
       if (options?.associations?.length) {
         for (const association of options.associations) {
           const associationResponse = await this.createFileAssociation({
-            createFileAssociationDto: { ...association, fileId: id },
+            data: { ...association, fileId: id },
           });
           operations.set('FileAssociation', {
             type: 'FileAssociation',

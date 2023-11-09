@@ -51,14 +51,14 @@ query file(
   }
 }
 
-mutation createFileAssociation($createFileAssociationDto: FileAssociationCreateDto!) {
-  createFileAssociationV2(data: $createFileAssociationDto) {
+mutation createFileAssociation($data: FileAssociationCreateDto!) {
+  createFileAssociationV2(data: $data) {
     ...FileAssociation
   }
 }
 
-mutation createFileUpload($createFileDto: FileCreateV2Dto!) {
-  createFileUploadV2(data: $createFileDto) {
+mutation createFileUpload($data: FileCreateV2Dto!) {
+  createFileUploadV2(data: $data) {
     contentType
     createdAt
     createdByUserId

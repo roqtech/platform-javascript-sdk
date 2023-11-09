@@ -174,8 +174,8 @@ mutation verifyPassword($password: String!, $userId: ID!) {
   verifyPassword(password: $password, userId: $userId)
 }
 
-mutation sendUserInvites($userInvites: UserInvitesCreateV2Dto!) {
-  sendUserInvitesV2(data: $userInvites) {
+mutation sendUserInvites($data: UserInvitesCreateV2Dto!) {
+  sendUserInvitesV2(data: $data) {
     success {
       ...UserInvite
     }
@@ -221,8 +221,8 @@ mutation cancelUserInvite($userInviteId: ID!) {
   }
 }
 
-mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteV2Dto!) {
-  acceptUserInviteV2(data: $acceptUserInvite) {
+mutation acceptUserInvite($data: AcceptUserInviteV2Dto!) {
+  acceptUserInviteV2(data: $data) {
     ...UserInvite
   }
 }

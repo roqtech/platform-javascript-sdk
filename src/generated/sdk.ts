@@ -3376,14 +3376,14 @@ export type FileQueryVariables = Exact<{
 export type FileQuery = { __typename?: 'Query', file: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null, createdByUser?: { __typename?: 'UserModel', id: string, reference: string, firstName?: string | null, lastName?: string | null, active?: boolean | null, email: string, phone?: string | null, locale?: string | null, isOptedIn?: boolean | null, synced?: boolean | null, tenantId?: string | null, customData?: Record<string, unknown> | null, timezone?: string | null, avatarUrl?: string | null, createdAt: string, updatedAt: string } | null } };
 
 export type CreateFileAssociationMutationVariables = Exact<{
-  createFileAssociationDto: FileAssociationCreateDto;
+  data: FileAssociationCreateDto;
 }>;
 
 
 export type CreateFileAssociationMutation = { __typename?: 'Mutation', createFileAssociationV2: { __typename?: 'FileAssociationModel', id: string, createdAt: string, updatedAt: string, entityReference: string, entityName: string, fileId: string } };
 
 export type CreateFileUploadMutationVariables = Exact<{
-  createFileDto: FileCreateV2Dto;
+  data: FileCreateV2Dto;
 }>;
 
 
@@ -3519,7 +3519,7 @@ export type VerifyPasswordMutationVariables = Exact<{
 export type VerifyPasswordMutation = { __typename?: 'Mutation', verifyPassword: boolean };
 
 export type SendUserInvitesMutationVariables = Exact<{
-  userInvites: UserInvitesCreateV2Dto;
+  data: UserInvitesCreateV2Dto;
 }>;
 
 
@@ -3558,7 +3558,7 @@ export type CancelUserInviteMutationVariables = Exact<{
 export type CancelUserInviteMutation = { __typename?: 'Mutation', cancelUserInvite: { __typename?: 'UserInviteModel', acceptedByUserId?: string | null, createdAt: string, createdByUserId: string, data?: Record<string, unknown> | null, email: string, firstName?: string | null, id: string, locale?: string | null, lastName?: string | null, roleKeys?: Array<string> | null, status: UserInviteStatusEnum, statusUpdatedAt?: string | null, tenantId?: string | null, updatedAt?: string | null, userTokenId: string } };
 
 export type AcceptUserInviteMutationVariables = Exact<{
-  acceptUserInvite: AcceptUserInviteV2Dto;
+  data: AcceptUserInviteV2Dto;
 }>;
 
 
@@ -3723,15 +3723,15 @@ export const FileDocument = gql`
     ${FileFragmentDoc}
 ${UserFragmentDoc}`;
 export const CreateFileAssociationDocument = gql`
-    mutation createFileAssociation($createFileAssociationDto: FileAssociationCreateDto!) {
-  createFileAssociationV2(data: $createFileAssociationDto) {
+    mutation createFileAssociation($data: FileAssociationCreateDto!) {
+  createFileAssociationV2(data: $data) {
     ...FileAssociation
   }
 }
     ${FileAssociationFragmentDoc}`;
 export const CreateFileUploadDocument = gql`
-    mutation createFileUpload($createFileDto: FileCreateV2Dto!) {
-  createFileUploadV2(data: $createFileDto) {
+    mutation createFileUpload($data: FileCreateV2Dto!) {
+  createFileUploadV2(data: $data) {
     contentType
     createdAt
     createdByUserId
@@ -3878,8 +3878,8 @@ export const VerifyPasswordDocument = gql`
 }
     `;
 export const SendUserInvitesDocument = gql`
-    mutation sendUserInvites($userInvites: UserInvitesCreateV2Dto!) {
-  sendUserInvitesV2(data: $userInvites) {
+    mutation sendUserInvites($data: UserInvitesCreateV2Dto!) {
+  sendUserInvitesV2(data: $data) {
     success {
       ...UserInvite
     }
@@ -3930,8 +3930,8 @@ export const CancelUserInviteDocument = gql`
 }
     ${UserInviteFragmentDoc}`;
 export const AcceptUserInviteDocument = gql`
-    mutation acceptUserInvite($acceptUserInvite: AcceptUserInviteV2Dto!) {
-  acceptUserInviteV2(data: $acceptUserInvite) {
+    mutation acceptUserInvite($data: AcceptUserInviteV2Dto!) {
+  acceptUserInviteV2(data: $data) {
     ...UserInvite
   }
 }
