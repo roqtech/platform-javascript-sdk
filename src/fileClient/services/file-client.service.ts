@@ -8,11 +8,6 @@ import { FileUploadResponseType } from '../types/file-upload-response.type';
 
 export class FileClientService {
   private gqlSdk: Sdk;
-  public fileCategoryContentTypes: Sdk['fileCategoryContentTypes'];
-  public fileCategoryContentGroups: Sdk['fileCategoryContentGroups'];
-  public fileCategoryContentGroup: Sdk['fileCategoryContentGroup'];
-  public fileCategories: Sdk['fileCategories'];
-  public fileCategory: Sdk['fileCategory'];
   public files: Sdk['files'];
   public file: Sdk['file'];
   public createFileAssociation: Sdk['createFileAssociation'];
@@ -30,11 +25,6 @@ export class FileClientService {
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
-    this.fileCategoryContentTypes = this.gqlSdk.fileCategoryContentTypes;
-    this.fileCategoryContentGroup = this.gqlSdk.fileCategoryContentGroup;
-    this.fileCategoryContentGroups = this.gqlSdk.fileCategoryContentGroups;
-    this.fileCategories = this.gqlSdk.fileCategories;
-    this.fileCategory = this.gqlSdk.fileCategory;
     this.files = this.gqlSdk.files;
     this.file = this.gqlSdk.file;
     this.createFileAssociation = this.gqlSdk.createFileAssociation;
