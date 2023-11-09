@@ -3418,7 +3418,7 @@ export type MakeFilePublicMutationVariables = Exact<{
 export type MakeFilePublicMutation = { __typename?: 'Mutation', makeFilePublic: { __typename?: 'FileModel', id: string, createdAt: string, updatedAt: string, contentType: string, createdByUserId: string, fileCategoryId: string, isPublic: boolean, name: string, status: FileStatusEnum, url?: string | null } };
 
 export type UpdateFileMutationVariables = Exact<{
-  updateFileDto: FileUpdateV2Dto;
+  data: FileUpdateV2Dto;
 }>;
 
 
@@ -3771,8 +3771,8 @@ export const MakeFilePublicDocument = gql`
 }
     ${FileFragmentDoc}`;
 export const UpdateFileDocument = gql`
-    mutation updateFile($updateFileDto: FileUpdateV2Dto!) {
-  updateFileV2(data: $updateFileDto) {
+    mutation updateFile($data: FileUpdateV2Dto!) {
+  updateFileV2(data: $data) {
     ...File
   }
 }

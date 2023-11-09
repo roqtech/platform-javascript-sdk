@@ -17,7 +17,6 @@ export class FileClientService {
   public makeFilePrivate: Sdk['makeFilePrivate'];
   public makeFilePublic: Sdk['makeFilePublic'];
   public updateFile: Sdk['updateFile'];
-  public updateFileStatus: Sdk['updateFileStatus'];
   public uploadFile: (params: {
     fileInfo: FileUploadInfoType;
     options?: FileUploadOptionsType;
@@ -34,7 +33,6 @@ export class FileClientService {
     this.makeFilePrivate = this.gqlSdk.makeFilePrivate;
     this.makeFilePublic = this.gqlSdk.makeFilePublic;
     this.updateFile = this.gqlSdk.updateFile;
-    this.updateFileStatus = this.gqlSdk.updateFileStatus;
     this.uploadFile = this._uploadFile.bind(this);
   }
 
@@ -52,7 +50,7 @@ export class FileClientService {
 
   private validateFileUpload(
     file: File,
-    fileUploadData: Pick<CreateFileUploadMutation['createFileUpload'], 'contentType' | 'uploadUrl' | 'formFields'>,
+    fileUploadData: Pick<CreateFileUploadMutation['createFileUploadV2'], 'contentType' | 'uploadUrl' | 'formFields'>,
   ): void {
     const { uploadUrl, formFields } = fileUploadData;
     if (!uploadUrl) {
@@ -89,7 +87,7 @@ export class FileClientService {
         switch (operation.type) {
           case 'FileUpload': {
             await this.deleteFiles({
-              filter: { id: { equalTo: (operation.payload as CreateFileUploadMutation).createFileUpload.id } },
+              filter: { id: { equalTo: (operation.payload as CreateFileUploadMutation).createFileUploadV2.id } },
             });
             ops.pop();
             break;
@@ -99,7 +97,7 @@ export class FileClientService {
               filter: {
                 id: {
                   valueIn: (operation.payload as CreateFileAssociationMutation[])?.map(
-                    (association) => association.createFileAssociation.id,
+                    (association) => association.createFileAssociationV2.id,
                   ),
                 },
               },
@@ -132,8 +130,8 @@ export class FileClientService {
         type: 'FileUpload',
         payload: createFileUploadResponse,
       });
-      await this.validateFileUpload(file as unknown as File, createFileUploadResponse?.createFileUpload);
-      const { id, uploadUrl, formFields, isPublic } = createFileUploadResponse.createFileUpload;
+      await this.validateFileUpload(file as unknown as File, createFileUploadResponse?.createFileUploadV2);
+      const { id, uploadUrl, formFields, isPublic } = createFileUploadResponse.createFileUploadV2;
       const formData = new FormData();
       Object.keys(formFields).forEach(function (key) {
         formData.append(key, formFields[key]);
@@ -144,7 +142,7 @@ export class FileClientService {
         body: formData,
       });
       if (!fileUploadToBucketResponse.ok) throw new Error('File Upload to bucket failed');
-      await this.updateFileStatus({ id, status: FileStatusEnum.Ready });
+      await this.updateFile({ data: { fileId: id, status: FileStatusEnum.Ready } });
       if (options?.isPublic !== undefined) {
         if (options.isPublic && !isPublic) {
           await this.makeFilePublic({ id });
@@ -168,8 +166,8 @@ export class FileClientService {
         }
       }
       const fileUploadResponse = {
-        id: createFileUploadResponse.createFileUpload.id,
-        name: createFileUploadResponse.createFileUpload.name,
+        id: createFileUploadResponse.createFileUploadV2.id,
+        name: createFileUploadResponse.createFileUploadV2.name,
         status: FileStatusEnum.Ready,
         isPublic: options?.isPublic !== undefined ? options.isPublic : isPublic,
       };

@@ -93,8 +93,8 @@ mutation makeFilePublic($id: ID!) {
   }
 }
 
-mutation updateFile($updateFileDto: FileUpdateV2Dto!) {
-  updateFileV2(, data: $updateFileDto) {
+mutation updateFile($data: FileUpdateV2Dto!) {
+  updateFileV2(data: $data) {
     ...File
   }
 }
