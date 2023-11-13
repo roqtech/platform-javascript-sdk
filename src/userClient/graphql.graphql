@@ -230,3 +230,11 @@ mutation acceptUserInvite($data: AcceptUserInviteV2Dto!) {
 mutation sendUserResetPasswordMail($userId: ID!) {
   sendUserResetPasswordMail(userId: $userId)
 }
+
+mutation sendMail($mail:MailCreateDto!){
+  sendMail(mail:$mail){
+    mailsSent{
+      count
+    }
+  }
+}

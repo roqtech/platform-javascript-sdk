@@ -18,6 +18,7 @@ export class UserClientService {
   public cancelUserInvite: Sdk['cancelUserInvite'];
   public acceptUserInvite: Sdk['acceptUserInvite'];
   public sendUserResetPasswordMail: Sdk["sendUserResetPasswordMail"];
+  public sendMail: Sdk["sendMail"];
 
   constructor(gqlSdk: Sdk) {
     this.gqlSdk = gqlSdk;
@@ -37,5 +38,6 @@ export class UserClientService {
     this.cancelUserInvite = this.gqlSdk.cancelUserInvite;
     this.acceptUserInvite = this.gqlSdk.acceptUserInvite;
     this.sendUserResetPasswordMail = this.gqlSdk.sendUserResetPasswordMail;
+    this.sendMail = this.gqlSdk.sendMail;
   }
 }

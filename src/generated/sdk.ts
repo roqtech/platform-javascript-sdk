@@ -3571,6 +3571,13 @@ export type SendUserResetPasswordMailMutationVariables = Exact<{
 
 export type SendUserResetPasswordMailMutation = { __typename?: 'Mutation', sendUserResetPasswordMail: boolean };
 
+export type SendMailMutationVariables = Exact<{
+  mail: MailCreateDto;
+}>;
+
+
+export type SendMailMutation = { __typename?: 'Mutation', sendMail: { __typename?: 'MailCreateModel', mailsSent: { __typename?: 'MailCreateUserModel', count: number } } };
+
 export const FileFragmentDoc = gql`
     fragment File on FileModel {
   id
@@ -3941,6 +3948,15 @@ export const SendUserResetPasswordMailDocument = gql`
   sendUserResetPasswordMail(userId: $userId)
 }
     `;
+export const SendMailDocument = gql`
+    mutation sendMail($mail: MailCreateDto!) {
+  sendMail(mail: $mail) {
+    mailsSent {
+      count
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -4023,6 +4039,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     sendUserResetPasswordMail(variables: SendUserResetPasswordMailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendUserResetPasswordMailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SendUserResetPasswordMailMutation>(SendUserResetPasswordMailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendUserResetPasswordMail', 'mutation');
+    },
+    sendMail(variables: SendMailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendMailMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SendMailMutation>(SendMailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'sendMail', 'mutation');
     }
   };
 }
