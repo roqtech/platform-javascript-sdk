@@ -1,6 +1,5 @@
-import { decode, JwtPayload } from 'jsonwebtoken';
+import { decodeJwt } from 'jose';
 import * as NodeCache from 'node-cache';
-import fetch from 'node-fetch';
 import {
   defaultCreateTokenEndpoint,
   defaultHost,
@@ -103,7 +102,7 @@ export class AuthorizationClientService {
   private getCachedToken(identifier: string): string {
     let token = this.cache.get<string>(identifier);
     if (token) {
-      const { exp } = decode(token) as JwtPayload;
+      const { exp } = decodeJwt(token);
       if (Date.now() >= exp * 1000) {
         return null;
       }
@@ -116,7 +115,7 @@ export class AuthorizationClientService {
   private getCachedUserToken(identifier: string): UserTokenType {
     let token = this.cache.get<UserTokenType>(identifier);
     if (token) {
-      const { exp } = decode(token.accessToken) as JwtPayload;
+      const { exp } = decodeJwt(token.accessToken)
       if (Date.now() >= exp * 1000) {
         return null;
       }

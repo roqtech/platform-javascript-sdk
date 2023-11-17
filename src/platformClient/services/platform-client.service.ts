@@ -8,7 +8,32 @@ import { Response, Variables } from 'graphql-request/src/types';
 import * as Dom from 'graphql-request/dist/types.dom';
 import { FileClientService } from '../../fileClient';
 import { HttpException } from '../../exception/exceptions/http.exception';
-import { JwtPayload, decode } from 'jsonwebtoken';
+
+const base64UrlDecode = (str: string ) => {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (str.length % 4) {
+      str += '=';
+  }
+  return Buffer.from(str, 'base64').toString();
+}
+const decodeJWT = (jwt: string) => {
+  if(!jwt) {
+    throw new Error('ROQ Platform Authorization is required')
+  }
+  const parts = jwt.split('.');
+  if (parts.length !== 3) {
+    throw new Error('The JWT is not correctly formatted');
+  }
+  const header = JSON.parse(base64UrlDecode(parts[0]));
+  const payload = JSON.parse(base64UrlDecode(parts[1]));
+  const signature = parts[2];
+
+  return {
+    header,
+    payload,
+    signature
+  };
+}
 
 export class PlatformClientService {
   private readonly graphqlUrl: string;
@@ -37,6 +62,11 @@ export class PlatformClientService {
 
   public asUser(userId: string, expiresIn?: string) {
     return this.initialise(() => this.authorization.createUserToken(userId, expiresIn));
+  }
+
+  public withBaasToken(token: string) {
+    const { payload } = decodeJWT(token)
+    return this.initialise(() => Promise.resolve(payload?.roqAccessToken));
   }
 
   public asSuperAdmin() {
@@ -100,13 +130,6 @@ export class PlatformClientService {
     return {
       ...new UserClientService(sdk),
       ...new FileClientService(sdk),
-      getTokenPayload: async() => {
-        const token = await getToken();
-        if(!token) {
-          return null
-        }
-        return decode(token) as JwtPayload
-      },
       graphqlRequest,
     };
   }

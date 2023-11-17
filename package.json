@@ -1,6 +1,6 @@
 {
   "name": "@roq/nodejs",
-  "version": "1.0.18",
+  "version": "1.0.20",
   "description": "Roq NodeJs SDK package",
   "main": "dist/src/index.js",
   "files": [
@@ -33,6 +33,7 @@
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
     "graphql-tag": "^2.12.6",
+    "jose": "^5.1.1",
     "jsonwebtoken": "^9.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7"
