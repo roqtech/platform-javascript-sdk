@@ -1,5 +1,4 @@
 import * as FormData from 'form-data';
-import fetch, { File } from 'node-fetch';
 import { CreateFileAssociationMutation, CreateFileUploadMutation, FileStatusEnum, Sdk } from '../../generated/sdk';
 import { FileUploadInfoType } from '../types/file-upload-info.type';
 import { FileUploadOptionsType } from '../types/file-upload-options.type';
@@ -139,7 +138,7 @@ export class FileClientService {
       formData.append('file', file);
       const fileUploadToBucketResponse = await fetch(uploadUrl, {
         method: 'POST',
-        body: formData,
+        body: formData as unknown as BodyInit,
       });
       if (!fileUploadToBucketResponse.ok) throw new Error('File Upload to bucket failed');
       await this.updateFile({ data: { fileId: id, status: FileStatusEnum.Ready } });
